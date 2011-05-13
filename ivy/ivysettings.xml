@@ -1,0 +1,14 @@
+<ivysettings>
+  <settings defaultResolver="chain-example"/>
+  <resolvers>
+    <chain name="chain-example">
+      <ibiblio name="ibiblio" m2compatible="true" />
+      <ibiblio name="netty" m2compatible="true" root="http://repository.jboss.org/nexus/content/groups/public/"/>
+      <ibiblio name="gson" m2compatible="true" root="http://google-gson.googlecode.com/svn/mavenrepo"/>
+
+      <filesystem name="libraries">
+        <artifact pattern="${basedir}/ivy/local-repo/[artifact]-[revision].[ext]" />
+      </filesystem>
+    </chain>
+  </resolvers>
+</ivysettings>

@@ -1,0 +1,13 @@
+<ivy-module version="2.0">
+  <info organisation="com.twitter" module="twitter-academia-tools" revision="${version}"/>
+
+  <publications>
+    <artifact type="pom" ext="pom" conf="default"/>
+    <artifact type="jar" ext="jar" conf="default"/>
+  </publications>
+
+  <dependencies>
+    <dependency org="com.ning" name="async-http-client" rev="1.6.2"/>
+    <dependency org="junit" name="junit" rev="4.8.2" />
+  </dependencies>
+</ivy-module>
