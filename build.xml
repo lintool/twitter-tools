@@ -1,6 +1,6 @@
-<project name="twitter-academia-tools" default="jar"
+<project name="twitter-corpus-tools" default="jar"
          xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:artifact="antlib:org.apache.maven.artifact.ant" basedir=".">
-  <description>Twitter tools for academia</description>
+  <description>Twitter tools for researchers</description>
 
   <property name="lib.dir" value="lib" />
   <property name="build.dir" value="build"/>
@@ -73,12 +73,12 @@
   </target>
 
   <target name="jar" depends="compile" description="generate the distribution">
-    <jar jarfile="${dist.dir}/twitter-academia-tools-${version}.jar" basedir="${build.dir}" />
+    <jar jarfile="${dist.dir}/twitter-corpus-tools-${version}.jar" basedir="${build.dir}" />
   </target>
 
   <target name="dist" depends="jar,javadoc" description="generate the distribution">
-    <jar jarfile="${dist.dir}/twitter-academia-tools-${version}-sources.jar" basedir="${src.dir}" />
-    <jar jarfile="${dist.dir}/twitter-academia-tools-${version}-javadoc.jar" basedir="${javadoc.dir}" />
+    <jar jarfile="${dist.dir}/twitter-corpus-tools-${version}-sources.jar" basedir="${src.dir}" />
+    <jar jarfile="${dist.dir}/twitter-corpus-tools-${version}-javadoc.jar" basedir="${javadoc.dir}" />
   </target>
 
   <target name="clean" description="clean up">

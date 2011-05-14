@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-  <info organisation="com.twitter" module="twitter-academia-tools" revision="${version}"/>
+  <info organisation="com.twitter" module="twitter-corpus-tools" revision="${version}"/>
 
   <publications>
     <artifact type="pom" ext="pom" conf="default"/>
