@@ -1,0 +1,9 @@
+build/
+/dist/
+lib/
+ivy/ivy.jar
+docs/api
+test/*
+.classpath
+.project
+*~
