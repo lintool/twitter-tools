@@ -13,32 +13,22 @@ import org.apache.log4j.Logger;
 
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.AsyncHttpClientConfig;
 import com.ning.http.client.Response;
-import com.ning.http.client.AsyncHttpClientConfig.Builder;
-import com.ning.http.client.extra.ThrottleRequestFilter;
+import com.twitter.corpus.data.Status;
 
 public class AsyncStatusBlockFetcher {
   private static final Logger LOG = Logger.getLogger(AsyncStatusBlockFetcher.class);
+  private static final int MAX_RETRY_ATTEMPTS = 3;
 
-  private File file;
-  private String output;
-  private ConcurrentSkipListMap<Long, String> tweets = new ConcurrentSkipListMap<Long, String>();
-
+  private final File file;
+  private final String output;
   private final AsyncHttpClient asyncHttpClient;
+  private final ConcurrentSkipListMap<Long, String> tweets = new ConcurrentSkipListMap<Long, String>();
+  private final ConcurrentSkipListMap<Long, Integer> retries = new ConcurrentSkipListMap<Long, Integer>();
 
   private static String prefix;
 
-  private int timeout = 5000;
-  private int connections = 100;
-
   public AsyncStatusBlockFetcher(File file, String output) {
-    Builder builder = new AsyncHttpClientConfig.Builder();
-    builder.setConnectionTimeoutInMs(timeout)
-      .setRequestTimeoutInMs(timeout)
-      .setMaximumConnectionsTotal(connections)
-      .addRequestFilter(new ThrottleRequestFilter(connections));
-
     this.asyncHttpClient = new AsyncHttpClient();
     this.file = file;
     this.output = output;
@@ -65,6 +55,7 @@ public class AsyncStatusBlockFetcher {
           try{
             Thread.sleep(5000);
           } catch (Exception e) {
+            e.printStackTrace();
           }
         }
       }
@@ -72,9 +63,11 @@ public class AsyncStatusBlockFetcher {
       e.printStackTrace();
     }    
 
-    try{
-      Thread.sleep(2 * timeout);
+    // Wait for the last requests to complete.
+    try {
+      Thread.sleep(10000);
     } catch (Exception e) {
+      e.printStackTrace();
     }
     
     asyncHttpClient.close();
@@ -88,9 +81,10 @@ public class AsyncStatusBlockFetcher {
     int written = 0;
     FileWriter out = new FileWriter(new File(output));
     for ( Map.Entry<Long, String> entry : tweets.entrySet()) {
-      if (entry.getValue().matches("\\s*")) {
-        continue;
-      }
+      // Skip empty results.
+//      if (entry.getValue().matches("\\s*")) {
+//        continue;
+//      }
       written++;
       out.write(entry.getValue() + "\n");
     }
@@ -112,12 +106,31 @@ public class AsyncStatusBlockFetcher {
     public Response onCompleted(Response response) throws Exception {
       if (response.getStatusCode() == 200) {
         String s = response.getResponseBody();
+
+        if ( "".equals(s) ) {
+          LOG.warn("Empty result: " + id);
+          return response;
+        }
+
+        // Try to decode the JSON.
+        try {
+          Status.fromJson(s);
+        } catch (Exception e) {
+          // If there's an exception, it means we got an incomplete JSON result. Try again.
+          LOG.warn("Incomplete JSON status: " + id);
+          String url = String.format("%s/1/statuses/show/%s.json", prefix, id);
+          retry(url, id, username);
+
+          return response;
+        }
+
         tweets.put(id, s);
       } else if (response.getStatusCode() >= 500) {
+        // Retry by submitting another request.
+
         LOG.warn("Error status " + response.getStatusCode() + ": " + id);
         String url = String.format("%s/1/statuses/show/%s.json", prefix, id);
-        LOG.warn("Resubmitting: " + url);
-        asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username));
+        retry(url, id, username);
       }
 
       return response;
@@ -125,16 +138,35 @@ public class AsyncStatusBlockFetcher {
 
     @Override
     public void onThrowable(Throwable t) {
-      String url = String.format("%s/1/statuses/show/%s.json", prefix, id);
+      // Retry by submitting another request.
 
       LOG.warn("Error: " + t);
-      LOG.warn("Resubmitting: " + url);
+      String url = String.format("%s/1/statuses/show/%s.json", prefix, id);
       try {
-        asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username));
+        retry(url, id, username);
       } catch (IOException e) {
-        // Give up...
         e.printStackTrace();
       }
+    }
+
+    private synchronized void retry(String url, long id, String username) throws IOException {
+      if ( !retries.containsKey(id)) {
+        retries.put(id, 1);
+        LOG.warn("Retrying: " + url + " attempt 1");
+        asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username));
+        return;
+      }
+
+      int attempts = retries.get(id);
+      if (attempts > MAX_RETRY_ATTEMPTS) {
+        LOG.warn("Abandoning: " + url + " after max retry attempts");
+        return;
+      }
+
+      attempts++;
+      LOG.warn("Retrying: " + url + " attempt " + attempts);
+      asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username));
+      retries.put(id, attempts);
     }
   }
   

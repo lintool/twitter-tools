@@ -3,6 +3,9 @@ package com.twitter.corpus.data;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+/**
+ * Object representing a status, backed by a JsonObject.
+ */
 public class Status {
   private static final JsonParser parser = new JsonParser();
 
