@@ -15,6 +15,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Logger;
 
 import com.twitter.corpus.data.Status;
 import com.twitter.corpus.data.StatusBlockReader;
@@ -22,8 +23,9 @@ import com.twitter.corpus.data.StatusCorpusReader;
 import com.twitter.corpus.data.StatusStream;
 
 public class VerifyStatusBlock {
-  private VerifyStatusBlock() {
-  }
+  private static final Logger LOG = Logger.getLogger(VerifyStatusBlock.class);
+
+  private VerifyStatusBlock() {}
 
   private static final String STATUSES_OPTION = "statuses";
   private static final String DATA_OPTION = "data";
@@ -97,6 +99,7 @@ public class VerifyStatusBlock {
         successOut.write(line + "\n");
         successCnt++;
       } else {
+        //LOG.warn(String.format("Id %d not found", id));
         failureOut.write(line + "\n");
         failureCnt++;
       }
