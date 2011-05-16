@@ -19,6 +19,8 @@ Use the `-data` option to specify the status block (`.dat` file) to read. Use th
 
 You'll need to fetch all blocks in the corpus using `com.twitter.corpus.download.AsyncStatusBlockFetcher`. It makes sense to do some lightweight scripting (e.g., shell scripts, Python, Perl, etc.) to accomplish this. We have decided not to include these scripts because 1.) they are easy enough to write, and 2.) most likely, you may wish to download the blocks in parallel from multiple machines, in which no general purpose script would be particularly useful.
 
+**Tip:** The fetcher may not succeed in downloading all tweets in a particular block. Don't worry about that for now: we're in the process of writing a "verification" tool that will allow you to repair downloaded status blocks and refetch missing statuses.
+
 Reading the Corpus
 ------------------
 

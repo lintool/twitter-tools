@@ -29,7 +29,8 @@ import com.twitter.corpus.demo.ReadStatuses;
 public class AsyncStatusBlockFetcher {
   private static final Logger LOG = Logger.getLogger(AsyncStatusBlockFetcher.class);
   private static final int MAX_RETRY_ATTEMPTS = 3;
-  private static final String DEFAULT_URL_PREFIX = "http://twitter.com";
+
+  public static final String DEFAULT_URL_PREFIX = "http://twitter.com";
 
   // Change these values at your own risk. Hitting Twitter too fast will get you banned.
   private static final int TWEET_BLOCK_SIZE = 500;
@@ -53,7 +54,7 @@ public class AsyncStatusBlockFetcher {
     this.prefix = prefix;
   }
 
-  private static String getUrl(String prefix, long id, String username) {
+  public static String getUrl(String prefix, long id, String username) {
     return String.format("%s/statuses/show/%s.json", prefix, id);
   }
 

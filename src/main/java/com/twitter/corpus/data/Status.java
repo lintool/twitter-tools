@@ -10,6 +10,7 @@ public class Status {
   private static final JsonParser parser = new JsonParser();
 
   private JsonObject jsonObject;
+  private String jsonString;
 
   private long id;
   private String screenname;
@@ -38,6 +39,10 @@ public class Status {
     return jsonObject;
   }
 
+  public String getJsonString() {
+    return jsonString;
+  }
+
   public static Status fromJson(String json) {
     JsonObject obj = (JsonObject) parser.parse(json);
 
@@ -50,6 +55,7 @@ public class Status {
     // TODO: We need to parse out the other fields.
 
     status.jsonObject = obj;
+    status.jsonString = json;
 
     return status;
   }
