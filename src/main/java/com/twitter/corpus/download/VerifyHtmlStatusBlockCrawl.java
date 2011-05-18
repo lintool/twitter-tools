@@ -116,20 +116,24 @@ public class VerifyHtmlStatusBlockCrawl {
         }
         successCnt++;
       } else {
-        Response response = fetchUrl(AsyncHtmlStatusBlockCrawler.getUrl(id, username));
-        if (response.getStatusCode() == 302) {
-          String redirect = response.getHeader("Location");
-          response = fetchUrl(redirect);
+        // Check to see if we should actually bother repairing.
+        if (repairedOutput != null) {
 
-          crawl.put(new PairOfLongString(id, username),
-              new HtmlStatus(302, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
-        } else {
-          // Status 200 = okay
-          // Status 4XX = delete, forbid, etc. add a tombstone.
-          crawl.put(new PairOfLongString(id, username),
-              new HtmlStatus(200, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
+          Response response = fetchUrl(AsyncHtmlStatusBlockCrawler.getUrl(id, username));
+          if (response.getStatusCode() == 302) {
+            String redirect = response.getHeader("Location");
+            response = fetchUrl(redirect);
+
+            crawl.put(new PairOfLongString(id, username),
+                new HtmlStatus(302, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
+          } else {
+            // Status 200 = okay
+            // Status 4XX = delete, forbid, etc. add a tombstone.
+            crawl.put(new PairOfLongString(id, username),
+                new HtmlStatus(200, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
+          }
+          fetchedCnt++;
         }
-        fetchedCnt++;
 
         if (failureOut != null) {
           failureOut.write(line + "\n");

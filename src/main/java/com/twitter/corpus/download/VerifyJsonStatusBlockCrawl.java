@@ -111,38 +111,43 @@ public class VerifyJsonStatusBlockCrawl {
         }
         successCnt++;
       } else {
-        Response response = null;
-        while (true) {
-          try {
-            response = client.prepareGet(
-                AsyncJsonStatusBlockCrawler.getUrl(AsyncJsonStatusBlockCrawler.DEFAULT_URL_PREFIX, id, arr[1]))
-                .execute().get();
+        // Check to see if we should actually bother repairing.
+        if (repairedOutput != null) {
+          Response response = null;
+          while (true) {
+            try {
+              response = client.prepareGet(
+                  AsyncJsonStatusBlockCrawler.getUrl(
+                      AsyncJsonStatusBlockCrawler.DEFAULT_URL_PREFIX, id, arr[1]))
+                  .execute().get();
 
-            if (response.getStatusCode() < 500) {
-              break;
+              if (response.getStatusCode() < 500) {
+                break;
+              }
+            } catch (InterruptedException e) {
+              // Do nothing, just retry.
+            } catch (ExecutionException e) {
+              // Do nothing, just retry.
             }
-          } catch (InterruptedException e) {
-            // Do nothing, just retry.
-          } catch (ExecutionException e) {
-            // Do nothing, just retry.
+
+            try {
+              Thread.sleep(1000);
+            } catch (Exception e) {
+            }
+            LOG.warn("Error: retrying.");
           }
 
-          try {
-            Thread.sleep(1000);
-          } catch (Exception e) {}
-          LOG.warn("Error: retrying.");
+          String s = response.getResponseBody();
+          if (isTweetNoLongerAvailable(s)) {
+            LOG.info(String.format("Missing status %d: no longer available.", id));
+            notAvailableCnt++;
+          } else {
+            LOG.info(String.format("Missing status %d: successfully fetched.", id));
+            ids.put(id, response.getResponseBody());
+            fetchedCnt++;
+          }
         }
-
-        String s = response.getResponseBody();
-        if (isTweetNoLongerAvailable(s)) {
-          LOG.info(String.format("Missing status %d: no longer available.", id));
-          notAvailableCnt++;
-        } else {
-          LOG.info(String.format("Missing status %d: successfully fetched.", id));
-          ids.put(id, response.getResponseBody());
-          fetchedCnt++;
-        }
-
+      
         if (failureOut != null) {
           failureOut.write(line + "\n");
         }
