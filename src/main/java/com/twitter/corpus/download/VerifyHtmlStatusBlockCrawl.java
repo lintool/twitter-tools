@@ -28,7 +28,6 @@ import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 import com.twitter.corpus.data.HtmlStatus;
 
-import edu.umd.cloud9.io.pair.PairOfIntString;
 import edu.umd.cloud9.io.pair.PairOfLongString;
 
 public class VerifyHtmlStatusBlockCrawl {
@@ -157,7 +156,7 @@ public class VerifyHtmlStatusBlockCrawl {
       LOG.info("Writing tweets...");
       int written = 0;
       SequenceFile.Writer repaired = SequenceFile.createWriter(fs, fs.getConf(), repairedOutput,
-          PairOfLongString.class, PairOfIntString.class, SequenceFile.CompressionType.BLOCK);
+          PairOfLongString.class, HtmlStatus.class, SequenceFile.CompressionType.BLOCK);
 
       for (Map.Entry<PairOfLongString, HtmlStatus> entry : crawl.entrySet()) {
         written++;

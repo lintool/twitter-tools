@@ -29,8 +29,8 @@ import com.twitter.corpus.data.Status;
 import com.twitter.corpus.data.JsonStatusBlockReader;
 import com.twitter.corpus.data.StatusStream;
 
-public class VerifyJsonStatusBlock {
-  private static final Logger LOG = Logger.getLogger(VerifyJsonStatusBlock.class);
+public class VerifyJsonStatusBlockCrawl {
+  private static final Logger LOG = Logger.getLogger(VerifyJsonStatusBlockCrawl.class);
 
   private final File data;
   private final File statuses;
@@ -40,7 +40,7 @@ public class VerifyJsonStatusBlock {
   private File outputFailure = null;
   private File repairedOutput = null;
 
-  public VerifyJsonStatusBlock(File data, File statuses) {
+  public VerifyJsonStatusBlockCrawl(File data, File statuses) {
     this.statuses = Preconditions.checkNotNull(statuses);
     this.data = Preconditions.checkNotNull(data);
 
@@ -49,17 +49,17 @@ public class VerifyJsonStatusBlock {
     }
   }
 
-  public VerifyJsonStatusBlock withOutputSuccess(File file) {
+  public VerifyJsonStatusBlockCrawl withOutputSuccess(File file) {
     this.outputSuccess = Preconditions.checkNotNull(file);
     return this;
   }
 
-  public VerifyJsonStatusBlock withOutputFailure(File file) {
+  public VerifyJsonStatusBlockCrawl withOutputFailure(File file) {
     this.outputFailure = Preconditions.checkNotNull(file);
     return this;
   }
 
-  public VerifyJsonStatusBlock withRepairedOutput(File file) {
+  public VerifyJsonStatusBlockCrawl withRepairedOutput(File file) {
     this.repairedOutput = Preconditions.checkNotNull(file);
     return this;
   }
@@ -225,11 +225,11 @@ public class VerifyJsonStatusBlock {
 
     if (!cmdline.hasOption(STATUSES_OPTION) || !cmdline.hasOption(DATA_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(VerifyJsonStatusBlock.class.getName(), options);
+      formatter.printHelp(VerifyJsonStatusBlockCrawl.class.getName(), options);
       System.exit(-1);
     }
 
-    VerifyJsonStatusBlock v = new VerifyJsonStatusBlock(new File(cmdline.getOptionValue(DATA_OPTION)),
+    VerifyJsonStatusBlockCrawl v = new VerifyJsonStatusBlockCrawl(new File(cmdline.getOptionValue(DATA_OPTION)),
         new File(cmdline.getOptionValue(STATUSES_OPTION)));
 
     if (cmdline.hasOption(OUTPUT_SUCCESS_OPTION)) {

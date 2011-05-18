@@ -46,9 +46,13 @@ public class AsyncHtmlStatusBlockCrawler {
   private final ConcurrentSkipListMap<PairOfLongString, HtmlStatus> crawl =
       new ConcurrentSkipListMap<PairOfLongString, HtmlStatus>();
 
-  public AsyncHtmlStatusBlockCrawler(File file, String output) {
+  public AsyncHtmlStatusBlockCrawler(File file, String output) throws IOException {
     this.file = Preconditions.checkNotNull(file);
     this.output = Preconditions.checkNotNull(output);
+
+    if (!file.exists()) {
+      throw new IOException(file + " does not exist!");
+    }
 
     this.asyncHttpClient = new AsyncHttpClient();
   }

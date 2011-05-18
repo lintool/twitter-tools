@@ -44,14 +44,18 @@ public class AsyncJsonStatusBlockCrawler {
   private final ConcurrentSkipListMap<Long, Integer> retries = new ConcurrentSkipListMap<Long, Integer>();
   private final String prefix;
 
-  public AsyncJsonStatusBlockCrawler(File file, String output) {
+  public AsyncJsonStatusBlockCrawler(File file, String output) throws IOException {
     this(file, output, DEFAULT_URL_PREFIX);
   }
 
-  public AsyncJsonStatusBlockCrawler(File file, String output, String prefix) {
+  public AsyncJsonStatusBlockCrawler(File file, String output, String prefix) throws IOException {
     this.file = Preconditions.checkNotNull(file);
     this.output = Preconditions.checkNotNull(output);
     this.prefix = Preconditions.checkNotNull(prefix);
+
+    if (!file.exists()) {
+      throw new IOException(file + " does not exist!");
+    }
 
     this.asyncHttpClient = new AsyncHttpClient();
   }
