@@ -14,11 +14,11 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 
-import com.twitter.corpus.data.StatusHtml;
+import com.twitter.corpus.data.HtmlStatus;
 
 import edu.umd.cloud9.io.pair.PairOfLongString;
 
-public class DumpCrawl {
+public class DumpHtmlStatusCrawl {
   private static final String INPUT_OPTION = "input";
 
   @SuppressWarnings("static-access")
@@ -38,7 +38,7 @@ public class DumpCrawl {
 
     if (!cmdline.hasOption(INPUT_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(DumpCrawl.class.getName(), options);
+      formatter.printHelp(DumpHtmlStatusCrawl.class.getName(), options);
       System.exit(-1);
     }
 
@@ -48,7 +48,7 @@ public class DumpCrawl {
     SequenceFile.Reader reader = new SequenceFile.Reader(fs, path, conf);
 
     PairOfLongString key = new PairOfLongString();
-    StatusHtml value = new StatusHtml();
+    HtmlStatus value = new HtmlStatus();
 
     PrintStream out = new PrintStream(System.out, true, "UTF-8");
     while (reader.next(key, value)) {

@@ -1,33 +1,36 @@
 package com.twitter.corpus.data;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import com.google.common.base.Preconditions;
 
 /**
  * Abstraction for a corpus of statuses. A corpus is assumed to consist of a number of blocks, each
- * represented by SequenceFile, under a single directory. This object allows the caller to read
+ * represented by a gzipped file within a root directory. This object will allow to caller to read
  * through all blocks, in sorted lexicographic order of the files.
  */
-public class StatusCorpusReader implements StatusStream {
-  private final FileStatus[] files;
-  private final FileSystem fs;
-
+public class JsonStatusCorpusReader implements StatusStream {
+  private final File[] files;
   private int nextFile = 0;
-  private StatusBlockReader currentBlock = null;
+  private JsonStatusBlockReader currentBlock = null;
 
-  public StatusCorpusReader(Path directory, FileSystem fs) throws IOException {
-    this.fs = fs;
-    if (!fs.getFileStatus(directory).isDir()) {
-      throw new IOException("Expecting " + directory + " to be a directory!");
+  public JsonStatusCorpusReader(File file) throws IOException {
+    Preconditions.checkNotNull(file);
+
+    if (!file.isDirectory()) {
+      throw new IOException("Expecting " + file + " to be a directory!");
     }
 
-    files = fs.listStatus(directory);
+    files = file.listFiles(new FileFilter() {
+      public boolean accept(File path) {
+        return path.getName().endsWith(".gz") ? true : false;
+      }
+    });
 
     if (files.length == 0) {
-      throw new IOException(directory + " does not contain any files!");
+      throw new IOException(file + " does not contain any .gz files!");
     }
   }
 
@@ -36,7 +39,7 @@ public class StatusCorpusReader implements StatusStream {
    */
   public Status next() throws IOException {
     if (currentBlock == null) {
-      currentBlock = new StatusBlockReader(files[nextFile].getPath(), fs);
+      currentBlock = new JsonStatusBlockReader(files[nextFile]);
       nextFile++;
     }
 
@@ -54,7 +57,7 @@ public class StatusCorpusReader implements StatusStream {
 
       currentBlock.close();
       // Move to next file.
-      currentBlock = new StatusBlockReader(files[nextFile].getPath(), fs);
+      currentBlock = new JsonStatusBlockReader(files[nextFile]);
       nextFile++;
     }
   }

@@ -15,7 +15,7 @@ import com.twitter.corpus.data.Status;
 public class FetchStatusTest {
   @Test
   public void basicFamous() throws Exception {
-    String url = AsyncStatusBlockCrawler.getUrl(1121915133L, "jkrums");
+    String url = AsyncHtmlStatusBlockCrawler.getUrl(1121915133L, "jkrums");
     AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
     AsyncHttpClient.BoundRequestBuilder request = asyncHttpClient.prepareGet(url);
     Future<Response> f = request.execute();

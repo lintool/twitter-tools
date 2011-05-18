@@ -5,16 +5,19 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
-public class HtmlTweetExtractor {
+import com.google.common.base.Preconditions;
+
+public class HtmlStatusExtractor {
   private final String TWEET_BEGIN_DELIMITER = "<span class=\"entry-content\">";
   private final String TWEET_END_DELIMITER = "<span class=\"meta entry-meta\"";
 
   private final Pattern TIMESTAMP_PATTERN =
       Pattern.compile("<span class=\"published timestamp\" data=\"\\{time:'([^']+)'\\}\">");
 
-  public HtmlTweetExtractor() {}
+  public HtmlStatusExtractor() {}
 
   public String extractTweet(String html) {
+    Preconditions.checkNotNull(html);
     int begin = html.indexOf(TWEET_BEGIN_DELIMITER);
     int end = html.indexOf(TWEET_END_DELIMITER);
 
@@ -30,6 +33,7 @@ public class HtmlTweetExtractor {
   }
 
   public String extractTimestamp(String html) {
+    Preconditions.checkNotNull(html);
     Matcher matcher = TIMESTAMP_PATTERN.matcher(html);
     if (!matcher.find()) {
       return null;

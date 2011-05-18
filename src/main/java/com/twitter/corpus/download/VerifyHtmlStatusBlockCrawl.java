@@ -26,13 +26,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
-import com.twitter.corpus.data.StatusHtml;
+import com.twitter.corpus.data.HtmlStatus;
 
 import edu.umd.cloud9.io.pair.PairOfIntString;
 import edu.umd.cloud9.io.pair.PairOfLongString;
 
-public class VerifyStatusBlockCrawl {
-  private static final Logger LOG = Logger.getLogger(VerifyStatusBlockCrawl.class);
+public class VerifyHtmlStatusBlockCrawl {
+  private static final Logger LOG = Logger.getLogger(VerifyHtmlStatusBlockCrawl.class);
 
   private final File data;
   private final Path statuses;
@@ -43,7 +43,7 @@ public class VerifyStatusBlockCrawl {
   private File outputFailure = null;
   private Path repairedOutput = null;
 
-  public VerifyStatusBlockCrawl(File data, Path statuses, FileSystem fs) throws IOException {
+  public VerifyHtmlStatusBlockCrawl(File data, Path statuses, FileSystem fs) throws IOException {
     this.data = Preconditions.checkNotNull(data);
     this.statuses = Preconditions.checkNotNull(statuses);
     this.fs = Preconditions.checkNotNull(fs);
@@ -57,17 +57,17 @@ public class VerifyStatusBlockCrawl {
     }
   }
 
-  public VerifyStatusBlockCrawl withOutputSuccess(File file) {
+  public VerifyHtmlStatusBlockCrawl withOutputSuccess(File file) {
     this.outputSuccess = Preconditions.checkNotNull(file);
     return this;
   }
 
-  public VerifyStatusBlockCrawl withOutputFailure(File file) {
+  public VerifyHtmlStatusBlockCrawl withOutputFailure(File file) {
     this.outputFailure = Preconditions.checkNotNull(file);
     return this;
   }
 
-  public VerifyStatusBlockCrawl withRepairedOutput(Path path) {
+  public VerifyHtmlStatusBlockCrawl withRepairedOutput(Path path) {
     this.repairedOutput = Preconditions.checkNotNull(path);
     return this;
   }
@@ -75,11 +75,11 @@ public class VerifyStatusBlockCrawl {
   public boolean verify() throws IOException {
     LOG.info(String.format("Reading statuses read from %s.", statuses));
 
-    Map<PairOfLongString, StatusHtml> crawl = Maps.newTreeMap();
+    Map<PairOfLongString, HtmlStatus> crawl = Maps.newTreeMap();
 
     SequenceFile.Reader reader = new SequenceFile.Reader(fs, statuses, fs.getConf());
     PairOfLongString key = new PairOfLongString();
-    StatusHtml value = new StatusHtml();
+    HtmlStatus value = new HtmlStatus();
 
     int cnt = 0;
     while (reader.next(key, value)) {
@@ -117,18 +117,18 @@ public class VerifyStatusBlockCrawl {
         }
         successCnt++;
       } else {
-        Response response = fetchUrl(AsyncStatusBlockCrawler.getUrl(id, username));
+        Response response = fetchUrl(AsyncHtmlStatusBlockCrawler.getUrl(id, username));
         if (response.getStatusCode() == 302) {
           String redirect = response.getHeader("Location");
           response = fetchUrl(redirect);
 
           crawl.put(new PairOfLongString(id, username),
-              new StatusHtml(302, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
+              new HtmlStatus(302, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
         } else {
           // Status 200 = okay
           // Status 4XX = delete, forbid, etc. add a tombstone.
           crawl.put(new PairOfLongString(id, username),
-              new StatusHtml(200, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
+              new HtmlStatus(200, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
         }
         fetchedCnt++;
 
@@ -159,7 +159,7 @@ public class VerifyStatusBlockCrawl {
       SequenceFile.Writer repaired = SequenceFile.createWriter(fs, fs.getConf(), repairedOutput,
           PairOfLongString.class, PairOfIntString.class, SequenceFile.CompressionType.BLOCK);
 
-      for (Map.Entry<PairOfLongString, StatusHtml> entry : crawl.entrySet()) {
+      for (Map.Entry<PairOfLongString, HtmlStatus> entry : crawl.entrySet()) {
         written++;
         repaired.append(entry.getKey(), entry.getValue());
       }
@@ -199,7 +199,7 @@ public class VerifyStatusBlockCrawl {
     return response;
   }
 
-  private static final String STATUSES_OPTION = "statuses";
+  private static final String STATUSES_OPTION = "statuses_input";
   private static final String STATUSES_REPAIRED_OPTION = "statuses_repaired";
   private static final String DATA_OPTION = "data";
   private static final String OUTPUT_SUCCESS_OPTION = "output_success";
@@ -209,10 +209,10 @@ public class VerifyStatusBlockCrawl {
   public static void main(String[] args) throws Exception {
     Options options = new Options();
     options.addOption(OptionBuilder.withArgName("path").hasArg()
-        .withDescription("gzipped JSON-encoded statuses, output of the AsynchStatusBlockFetcher")
+        .withDescription("inputd HTML statuses")
         .create(STATUSES_OPTION));
     options.addOption(OptionBuilder.withArgName("path").hasArg()
-        .withDescription("output gzipped JSON-encoded statuses after repair")
+        .withDescription("repaired HTML statuses")
         .create(STATUSES_REPAIRED_OPTION));
     options.addOption(OptionBuilder.withArgName("path").hasArg()
         .withDescription("data file with tweet ids").create(DATA_OPTION));
@@ -232,12 +232,12 @@ public class VerifyStatusBlockCrawl {
 
     if (!cmdline.hasOption(STATUSES_OPTION) || !cmdline.hasOption(DATA_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(VerifyStatusBlockCrawl.class.getName(), options);
+      formatter.printHelp(VerifyHtmlStatusBlockCrawl.class.getName(), options);
       System.exit(-1);
     }
 
     FileSystem fs = FileSystem.get(new Configuration());
-    VerifyStatusBlockCrawl v = new VerifyStatusBlockCrawl(new File(cmdline
+    VerifyHtmlStatusBlockCrawl v = new VerifyHtmlStatusBlockCrawl(new File(cmdline
         .getOptionValue(DATA_OPTION)),
         new Path(cmdline.getOptionValue(STATUSES_OPTION)), fs);
 

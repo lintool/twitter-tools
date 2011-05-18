@@ -6,7 +6,9 @@ import java.io.IOException;
 
 import org.apache.hadoop.io.Writable;
 
-public class StatusHtml implements Writable {
+import com.google.common.base.Preconditions;
+
+public class HtmlStatus implements Writable {
   // We want to keep track of version to future-proof.
   private static final byte VERSION = 1;
 
@@ -15,15 +17,15 @@ public class StatusHtml implements Writable {
   private long timestamp;
   private String html;
 
-  public StatusHtml() {
+  public HtmlStatus() {
     this.version = VERSION;
   }
 
-  public StatusHtml(int httpStatusCode, long timestamp, String html) {
+  public HtmlStatus(int httpStatusCode, long timestamp, String html) {
     this.version = VERSION;
     this.httpStatusCode = httpStatusCode;
     this.timestamp = timestamp;
-    this.html = html;
+    this.html = Preconditions.checkNotNull(html);
   }
 
   public int getHttpStatusCode() {
@@ -59,8 +61,8 @@ public class StatusHtml implements Writable {
   }
 
   @Override
-  public StatusHtml clone() {
-    return new StatusHtml(httpStatusCode, timestamp, html);
+  public HtmlStatus clone() {
+    return new HtmlStatus(httpStatusCode, timestamp, html);
   }
 
   @Override
