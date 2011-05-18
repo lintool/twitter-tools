@@ -87,9 +87,9 @@ Searching the Corpus
 We've also provided a reference implementation of using Lucene to index the statuses:
 
     java -cp lib/*:dist/twitter-corpus-tools-0.0.1.jar com.twitter.corpus.demo.IndexStatuses \
-        -input json/ -index index -json
+        -input html/ -index index/ -html
 
 Simple program to search the built index:
 
     java -cp lib/*:dist/twitter-corpus-tools-0.0.1.jar com.twitter.corpus.demo.SearchStatuses \
-    -index index -query egypt -num_hits 100
+    -index index/ -query egypt -num_hits 100

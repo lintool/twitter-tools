@@ -189,7 +189,7 @@ public class VerifyJsonStatusBlockCrawl {
 
   public static boolean isTweetNoLongerAvailable(String s) {
     return s.contains("Sorry, you are not authorized to see this status.") ||
-        s.contains("No status found with that ID.");
+        s.contains("No status found with that ID.") || s.equals("");
   }
 
   private static final String STATUSES_OPTION = "statuses_input";
