@@ -3,13 +3,10 @@ package com.twitter.corpus.download;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -18,44 +15,44 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.SequenceFile;
 import org.apache.log4j.Logger;
 
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
-import com.twitter.corpus.data.Status;
 import com.twitter.corpus.demo.ReadStatuses;
 
-public class AsyncStatusBlockFetcher {
-  private static final Logger LOG = Logger.getLogger(AsyncStatusBlockFetcher.class);
+import edu.umd.cloud9.io.pair.PairOfIntString;
+import edu.umd.cloud9.io.pair.PairOfLongString;
+
+public class AsyncStatusBlockCrawler {
+  private static final Logger LOG = Logger.getLogger(AsyncStatusBlockCrawler.class);
   private static final int MAX_RETRY_ATTEMPTS = 3;
-
-  public static final String DEFAULT_URL_PREFIX = "http://twitter.com";
-
-  // Change these values at your own risk. Hitting Twitter too fast will get you banned.
   private static final int TWEET_BLOCK_SIZE = 500;
-  private static final int TWEET_BLOCK_SLEEP = 5000;
 
   private final File file;
   private final String output;
   private final AsyncHttpClient asyncHttpClient;
-  private final ConcurrentSkipListMap<Long, String> tweets = new ConcurrentSkipListMap<Long, String>();
+
+  // Storing the number of retries.
   private final ConcurrentSkipListMap<Long, Integer> retries = new ConcurrentSkipListMap<Long, Integer>();
-  private final String prefix;
 
-  public AsyncStatusBlockFetcher(File file, String output) {
-    this(file, output, DEFAULT_URL_PREFIX);
-  }
+  // key = (statud id, username), value = (http status code, raw html) 
+  private final ConcurrentSkipListMap<PairOfLongString, PairOfIntString> crawl =
+    new ConcurrentSkipListMap<PairOfLongString, PairOfIntString>();
 
-  public AsyncStatusBlockFetcher(File file, String output, String prefix) {
+  public AsyncStatusBlockCrawler(File file, String output) {
     this.asyncHttpClient = new AsyncHttpClient();
     this.file = file;
     this.output = output;
-    this.prefix = prefix;
   }
 
-  public static String getUrl(String prefix, long id, String username) {
-    return String.format("%s/statuses/show/%s.json", prefix, id);
+  public static String getUrl(long id, String username) {
+    return String.format("http://twitter.com/%s/status/%d", username, id);
   }
 
   public void fetch() throws IOException {
@@ -70,23 +67,18 @@ public class AsyncStatusBlockFetcher {
         String[] arr = line.split("\t");
         long id = Long.parseLong(arr[0]);
         String username = arr[1];
-        String url = getUrl(prefix, id, username);
-        asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username));
+        String url = getUrl(id, username);
+        asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username, url, false));
 
         cnt++;
 
-        if ( cnt % TWEET_BLOCK_SIZE == 0 ) {
+        if (cnt % TWEET_BLOCK_SIZE == 0) {
           LOG.info(cnt + " requests submitted");
-          try{
-            Thread.sleep(TWEET_BLOCK_SLEEP);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
         }
       }
     } catch (IOException e) {
       e.printStackTrace();
-    }    
+    }
 
     // Wait for the last requests to complete.
     try {
@@ -94,66 +86,65 @@ public class AsyncStatusBlockFetcher {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    
+
     asyncHttpClient.close();
 
     long end = System.currentTimeMillis();
     long duration = end - start;
     LOG.info("Total request submitted: " + cnt);
-    LOG.info(tweets.size() + " tweets fetched in " + duration + "ms");
+    LOG.info(crawl.size() + " tweets fetched in " + duration + "ms");
 
     LOG.info("Writing tweets...");
     int written = 0;
-    OutputStreamWriter out =
-      new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(output)));
-    for ( Map.Entry<Long, String> entry : tweets.entrySet()) {
+    Configuration conf = new Configuration();
+    FileSystem fs = FileSystem.get(conf);
+    SequenceFile.Writer out = SequenceFile.createWriter(fs, conf, new Path(output),
+        PairOfLongString.class, PairOfIntString.class, SequenceFile.CompressionType.BLOCK);
+
+    for (Map.Entry<PairOfLongString, PairOfIntString> entry : crawl.entrySet()) {
       written++;
-      out.write(entry.getValue() + "\n");
+      out.append(entry.getKey(), entry.getValue());
     }
     out.close();
+
     LOG.info(written + " statuses written.");
     LOG.info("Done!");
   }
 
   private class TweetFetcherHandler extends AsyncCompletionHandler<Response> {
-    private long id;
-    private String username;
-    
-    public TweetFetcherHandler(long id, String username) {
+    private final long id;
+    private final String username;
+    private final String url;
+    private final boolean isRedirect;
+
+    public TweetFetcherHandler(long id, String username, String url, boolean isRedirect) {
       this.id = id;
       this.username = username;
+      this.url = url;
+      this.isRedirect = isRedirect;
     }
 
     @Override
     public Response onCompleted(Response response) throws Exception {
-      if (response.getStatusCode() == 200) {
-        String s = response.getResponseBody();
-
-        if ( "".equals(s) ) {
-          LOG.warn("Empty result: " + id);
-          return response;
-        }
-
-        // Try to decode the JSON.
-        try {
-          Status.fromJson(s).getId();
-        } catch (Exception e) {
-          // If there's an exception, it means we got an incomplete JSON result. Try again.
-          LOG.warn("Incomplete JSON status: " + id);
-          String url = getUrl(prefix, id, username);
-          retry(url, id, username);
-
-          return response;
-        }
-
-        tweets.put(id, s);
-      } else if (response.getStatusCode() >= 500) {
+      if (response.getStatusCode() >= 500) {
         // Retry by submitting another request.
+        LOG.warn("Error status " + response.getStatusCode() + ": " + url);
+        retry();
 
-        LOG.warn("Error status " + response.getStatusCode() + ": " + id);
-        String url = getUrl(prefix, id, username);
-        retry(url, id, username);
+        return response;
       }
+
+      if (response.getStatusCode() == 302) {
+        String redirect = response.getHeader("Location");
+
+        LOG.info(String.format("id %d redirecting to %s", id, redirect));
+        asyncHttpClient.prepareGet(redirect).execute(new TweetFetcherHandler(id, username, redirect, true));
+
+        return response;
+      }
+
+      crawl.put(new PairOfLongString(id, username),
+          new PairOfIntString((isRedirect ? 302 : response.getStatusCode()), response.getResponseBody("UTF-8")));
 
       return response;
     }
@@ -163,26 +154,21 @@ public class AsyncStatusBlockFetcher {
       // Retry by submitting another request.
 
       LOG.warn("Error: " + t);
-      String url = getUrl(prefix, id, username);
       try {
-        retry(url, id, username);
-      } catch (IOException e) {
-        e.printStackTrace();
+        retry();
+      } catch (Exception e) {
+        // Ignore silently.
       }
     }
 
-    private synchronized void retry(String url, long id, String username) throws IOException {
+    private synchronized void retry() throws Exception {
       // Wait before retrying.
-      try {
-        Thread.sleep(1000);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+      Thread.sleep(1000);
 
-      if ( !retries.containsKey(id)) {
+      if (!retries.containsKey(id)) {
         retries.put(id, 1);
         LOG.warn("Retrying: " + url + " attempt 1");
-        asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username));
+        asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username, url, isRedirect));
         return;
       }
 
@@ -194,7 +180,7 @@ public class AsyncStatusBlockFetcher {
 
       attempts++;
       LOG.warn("Retrying: " + url + " attempt " + attempts);
-      asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username));
+      asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username, url, isRedirect));
       retries.put(id, attempts);
     }
   }
@@ -229,16 +215,6 @@ public class AsyncStatusBlockFetcher {
     }
 
     String output = cmdline.getOptionValue(OUTPUT_OPTION);
-    if ( !output.endsWith(".gz")) {
-      output += ".gz";
-      LOG.warn("Output file specified does not contain the .gz suffix. Appending automatically.");
-    }
-
-    if (cmdline.hasOption(URL_PREFIX_OPTION)) {
-      new AsyncStatusBlockFetcher(new File(cmdline.getOptionValue(DATA_OPTION)),
-          output, cmdline.getOptionValue(URL_PREFIX_OPTION)).fetch();
-    } else {
-      new AsyncStatusBlockFetcher(new File(cmdline.getOptionValue(DATA_OPTION)), output).fetch();
-    }
+    new AsyncStatusBlockCrawler(new File(cmdline.getOptionValue(DATA_OPTION)), output).fetch();
   }
 }

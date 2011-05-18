@@ -3,15 +3,12 @@ package com.twitter.corpus.download;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
+import java.io.PrintStream;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -20,66 +17,76 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.SequenceFile;
 import org.apache.log4j.Logger;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
-import com.twitter.corpus.data.Status;
-import com.twitter.corpus.data.StatusBlockReader;
-import com.twitter.corpus.data.StatusStream;
 
-public class VerifyStatusBlock {
-  private static final Logger LOG = Logger.getLogger(VerifyStatusBlock.class);
+import edu.umd.cloud9.io.pair.PairOfIntString;
+import edu.umd.cloud9.io.pair.PairOfLongString;
+
+public class VerifyStatusBlockCrawl {
+  private static final Logger LOG = Logger.getLogger(VerifyStatusBlockCrawl.class);
 
   private final File data;
-  private final File statuses;
+  private final Path statuses;
   private final AsyncHttpClient client = new AsyncHttpClient();
+  private final FileSystem fs;
 
   private File outputSuccess = null;
   private File outputFailure = null;
-  private File repairedOutput = null;
+  private Path repairedOutput = null;
 
-  public VerifyStatusBlock(File data, File statuses) {
-    this.statuses = statuses;
-    if (!statuses.exists()) {
+  public VerifyStatusBlockCrawl(File data, Path statuses, FileSystem fs) throws IOException {
+    this.data = Preconditions.checkNotNull(data);
+    this.statuses = Preconditions.checkNotNull(statuses);
+    this.fs = Preconditions.checkNotNull(fs);
+
+    if (!fs.exists(statuses)) {
       throw new RuntimeException(statuses + " does not exist!");
     }
 
-    this.data = data;
+    if (fs.getFileStatus(statuses).isDir()) {
+      throw new RuntimeException(statuses + " does not exist!");
+    }
   }
 
-  public VerifyStatusBlock withOutputSuccess(File file) {
-    this.outputSuccess = file;
+  public VerifyStatusBlockCrawl withOutputSuccess(File file) {
+    this.outputSuccess = Preconditions.checkNotNull(file);
     return this;
   }
 
-  public VerifyStatusBlock withOutputFailure(File file) {
-    this.outputFailure = file;
+  public VerifyStatusBlockCrawl withOutputFailure(File file) {
+    this.outputFailure = Preconditions.checkNotNull(file);
     return this;
   }
 
-  public VerifyStatusBlock withRepairedOutput(File file) {
-    this.repairedOutput = file;
+  public VerifyStatusBlockCrawl withRepairedOutput(Path path) {
+    this.repairedOutput = Preconditions.checkNotNull(path);
     return this;
   }
 
   public boolean verify() throws IOException {
     LOG.info(String.format("Reading statuses read from %s.", statuses));
 
-    StatusStream stream;
-    if (statuses.isDirectory()) {
-      throw new RuntimeException(statuses + " cannot be a directory!");
-    }
-    stream = new StatusBlockReader(statuses);
+    Map<PairOfLongString, PairOfIntString> crawl = Maps.newTreeMap();
 
-    Map<Long, String> ids = new HashMap<Long, String>();
+    SequenceFile.Reader reader = new SequenceFile.Reader(fs, statuses, fs.getConf());
+    PairOfLongString key = new PairOfLongString();
+    PairOfIntString value = new PairOfIntString();
 
     int cnt = 0;
-    Status status;
-    while ((status = stream.next()) != null) {
-      ids.put(status.getId(), status.getJsonString());
+    while (reader.next(key, value)) {
+      crawl.put(key.clone(), value.clone());
       cnt++;
     }
+    reader.close();
     LOG.info(String.format("Total of %d statuses read.", cnt));
 
     BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(data)));
@@ -97,50 +104,33 @@ public class VerifyStatusBlock {
     int successCnt = 0;
     int failureCnt = 0;
     int fetchedCnt = 0;
-    int notAvailableCnt = 0;
     String line;
     while ((line = in.readLine()) != null) {
       String[] arr = line.split("\\t");
       long id = Long.parseLong(arr[0]);
+      String username = arr[1];
       totalCnt++;
 
-      if (ids.containsKey(id)) {
+      if (crawl.containsKey(new PairOfLongString(id, username))) {
         if (successOut != null) {
           successOut.write(line + "\n");
         }
         successCnt++;
       } else {
-        Response response = null;
-        while (true) {
-          try {
-            response = client.prepareGet(
-                AsyncStatusBlockFetcher.getUrl(AsyncStatusBlockFetcher.DEFAULT_URL_PREFIX, id, arr[1]))
-                .execute().get();
+        Response response = fetchUrl(AsyncStatusBlockCrawler.getUrl(id, username));
+        if (response.getStatusCode() == 302) {
+          String redirect = response.getHeader("Location");
+          response = fetchUrl(redirect);
 
-            if (response.getStatusCode() < 500) {
-              break;
-            }
-          } catch (InterruptedException e) {
-            // Do nothing, just retry.
-          } catch (ExecutionException e) {
-            // Do nothing, just retry.
-          }
-
-          try {
-            Thread.sleep(1000);
-          } catch (Exception e) {}
-          LOG.warn("Error: retrying.");
-        }
-
-        String s = response.getResponseBody();
-        if (isTweetNoLongerAvailable(s)) {
-          LOG.info(String.format("Missing status %d: no longer available.", id));
-          notAvailableCnt++;
+          crawl.put(new PairOfLongString(id, username),
+              new PairOfIntString(302, response.getResponseBody("UTF-8")));
         } else {
-          LOG.info(String.format("Missing status %d: successfully fetched.", id));
-          ids.put(id, response.getResponseBody());
-          fetchedCnt++;
+          // Status 200 = okay
+          // Status 4XX = delete, forbid, etc. add a tombstone.
+          crawl.put(new PairOfLongString(id, username),
+                new PairOfIntString(200, response.getResponseBody("UTF-8")));
         }
+        fetchedCnt++;
 
         if (failureOut != null) {
           failureOut.write(line + "\n");
@@ -149,14 +139,7 @@ public class VerifyStatusBlock {
       }
     }
 
-    LOG.info(String.format("Total of %d statuses in %s.", cnt, statuses));
-    LOG.info(String.format("Total of %d entries in %s.", totalCnt, data));
-    LOG.info(String.format("%d statuses no longer available.", notAvailableCnt));
     LOG.info(String.format("%d missing statuses fetched.", fetchedCnt));
-
-    if (cnt + notAvailableCnt + fetchedCnt == totalCnt) {
-      LOG.info("SUCCESS! All statuses accounted for.");
-    }
 
     if (outputSuccess != null) {
       LOG.info(String.format("Total of %d status id written to %s.", successCnt, outputSuccess));
@@ -173,12 +156,15 @@ public class VerifyStatusBlock {
     if (repairedOutput != null) {
       LOG.info("Writing tweets...");
       int written = 0;
-      OutputStreamWriter out = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(repairedOutput)));
-      for (Map.Entry<Long, String> entry : ids.entrySet()) {
+      SequenceFile.Writer repaired = SequenceFile.createWriter(fs, fs.getConf(), repairedOutput,
+          PairOfLongString.class, PairOfIntString.class, SequenceFile.CompressionType.BLOCK);
+
+      for (Map.Entry<PairOfLongString, PairOfIntString> entry : crawl.entrySet()) {
         written++;
-        out.write(entry.getValue() + "\n");
+        repaired.append(entry.getKey(), entry.getValue());
       }
-      out.close();
+      repaired.close();
+
       LOG.info(written + " statuses written.");
       LOG.info("Done!");
     }
@@ -186,9 +172,30 @@ public class VerifyStatusBlock {
     return true;
   }
 
-  public static boolean isTweetNoLongerAvailable(String s) {
-    return s.contains("Sorry, you are not authorized to see this status.") ||
-        s.contains("No status found with that ID.");
+  private Response fetchUrl(String url) {
+    Response response = null;
+    while (true) {
+      try {
+        response = client.prepareGet(url).execute().get();
+
+        if (response.getStatusCode() < 500) {
+          break;
+        }
+      } catch (InterruptedException e) {
+        // Do nothing, just retry.
+      } catch (ExecutionException e) {
+        // Do nothing, just retry.
+      } catch (IOException e) {
+        // Do nothing, just retry.
+      }
+
+      try {
+        Thread.sleep(1000);
+      } catch (Exception e) {}
+      LOG.warn("Error: retrying.");
+    }
+
+    return response;
   }
 
   private static final String STATUSES_OPTION = "statuses";
@@ -224,12 +231,14 @@ public class VerifyStatusBlock {
 
     if (!cmdline.hasOption(STATUSES_OPTION) || !cmdline.hasOption(DATA_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(VerifyStatusBlock.class.getName(), options);
+      formatter.printHelp(VerifyStatusBlockCrawl.class.getName(), options);
       System.exit(-1);
     }
 
-    VerifyStatusBlock v = new VerifyStatusBlock(new File(cmdline.getOptionValue(DATA_OPTION)),
-        new File(cmdline.getOptionValue(STATUSES_OPTION)));
+    FileSystem fs = FileSystem.get(new Configuration());
+    VerifyStatusBlockCrawl v = new VerifyStatusBlockCrawl(new File(cmdline
+        .getOptionValue(DATA_OPTION)),
+        new Path(cmdline.getOptionValue(STATUSES_OPTION)), fs);
 
     if (cmdline.hasOption(OUTPUT_SUCCESS_OPTION)) {
       v.withOutputSuccess(new File(cmdline.getOptionValue(OUTPUT_SUCCESS_OPTION)));
@@ -240,7 +249,7 @@ public class VerifyStatusBlock {
     }
 
     if (cmdline.hasOption(STATUSES_REPAIRED_OPTION)) {
-      v.withRepairedOutput(new File(cmdline.getOptionValue(STATUSES_REPAIRED_OPTION)));
+      v.withRepairedOutput(new Path(cmdline.getOptionValue(STATUSES_REPAIRED_OPTION)));
     }
 
     v.verify();

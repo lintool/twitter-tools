@@ -1,6 +1,5 @@
 package com.twitter.corpus.demo;
 
-import java.io.File;
 import java.io.PrintStream;
 
 import org.apache.commons.cli.CommandLine;
@@ -10,6 +9,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 
 import com.twitter.corpus.data.Status;
 import com.twitter.corpus.data.StatusBlockReader;
@@ -49,8 +51,9 @@ public class ReadStatuses {
       System.exit(-1);
     }
 
-    File file = new File(cmdline.getOptionValue(INPUT_OPTION));
-    if (!file.exists()) {
+    FileSystem fs = FileSystem.get(new Configuration());
+    Path file = new Path(cmdline.getOptionValue(INPUT_OPTION));
+    if (!fs.exists(file)) {
       System.err.println("Error: " + file + " does not exist!");
       System.exit(-1);
     }
@@ -58,18 +61,22 @@ public class ReadStatuses {
     PrintStream out = new PrintStream(System.out, true, "UTF-8");
 
     StatusStream stream;
-    if (file.isDirectory()) {
-      stream = new StatusCorpusReader(file);
+    if (fs.getFileStatus(file).isDir()) {
+      stream = new StatusCorpusReader(file, fs);
     } else {
-      stream = new StatusBlockReader(file);
+      stream = new StatusBlockReader(file, fs);
     }
 
     int cnt = 0;
     Status status;
     while ((status = stream.next()) != null) {
       if (cmdline.hasOption(DUMP_OPTION)) {
-        out.println(String.format("%d\t%s\t%s\t%s", status.getId(), status.getScreenname(),
-            status.getCreatedAt(), status.getText().replaceAll("\\n", " ")));
+        String text = status.getText();
+        if (text != null) {
+          text = text.replaceAll("\\n", " ");
+        }
+        out.println(String.format("%d\t%s\t%d\t%s\t%s", status.getId(), status.getScreenname(),
+            status.getHttpStatusCode(), status.getCreatedAt(), text));
       }
       cnt++;
       if ( cnt % 10000 == 0 && cmdline.hasOption(VERBOSE_OPTION)) {

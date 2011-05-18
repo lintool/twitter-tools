@@ -10,6 +10,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
@@ -76,19 +79,20 @@ public class IndexStatuses {
 
     File indexLocation = new File(cmdline.getOptionValue(INDEX_OPTION));
 
-    File file = new File(cmdline.getOptionValue(INPUT_OPTION));
-    if (!file.exists()) {
+    FileSystem fs = FileSystem.get(new Configuration());
+    Path file = new Path(cmdline.getOptionValue(INPUT_OPTION));
+    if (!fs.exists(file)) {
       System.err.println("Error: " + file + " does not exist!");
       System.exit(-1);
     }
 
     PrintStream out = new PrintStream(System.out, true, "UTF-8");
-
+    
     StatusStream stream;
-    if (file.isDirectory()) {
-      stream = new StatusCorpusReader(file);
+    if (fs.getFileStatus(file).isDir()) {
+      stream = new StatusCorpusReader(file, fs);
     } else {
-      stream = new StatusBlockReader(file);
+      stream = new StatusBlockReader(file, fs);
     }
 
     Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_31);

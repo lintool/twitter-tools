@@ -1,42 +1,39 @@
 package com.twitter.corpus.data;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.zip.GZIPInputStream;
+
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.SequenceFile;
+
+import edu.umd.cloud9.io.pair.PairOfIntString;
+import edu.umd.cloud9.io.pair.PairOfLongString;
 
 /**
- * Abstraction for an stream of statuses, backed by an underlying gzipped file with JSON-encoded
- * tweets, one per line.
+ * Abstraction for an stream of statuses, backed by an underlying SequenceFile.
  */
 public class StatusBlockReader implements StatusStream {
-  private final BufferedReader br;
+  private final SequenceFile.Reader reader;
 
-  public StatusBlockReader(File file) throws IOException {
-    if (!file.getName().endsWith(".gz")) {
-      throw new IOException("Expecting .gz compressed file!");
-    }
+  private final PairOfLongString key = new PairOfLongString();
+  private final PairOfIntString value = new PairOfIntString();
 
-    br = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file)), "UTF-8"));
+  public StatusBlockReader(Path path, FileSystem fs) throws IOException {
+    reader = new SequenceFile.Reader(fs, path, fs.getConf());
   }
 
   /**
    * Returns the next status, or <code>null</code> if no more statuses.
    */
   public Status next() throws IOException {
-    String raw = br.readLine();
-
-    // Check to see if we've reached end of file.
-    if ( raw == null) {
+    if (!reader.next(key, value))
       return null;
-    }
 
-    return Status.fromJson(raw);
+    return Status.fromHtml(key.getLeftElement(), key.getRightElement(),
+        value.getLeftElement(), value.getRightElement());
   }
 
   public void close() throws IOException {
-    br.close();
+    reader.close();
   }
 }
