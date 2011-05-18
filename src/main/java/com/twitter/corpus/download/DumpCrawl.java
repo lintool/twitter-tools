@@ -14,7 +14,8 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 
-import edu.umd.cloud9.io.pair.PairOfIntString;
+import com.twitter.corpus.data.StatusHtml;
+
 import edu.umd.cloud9.io.pair.PairOfLongString;
 
 public class DumpCrawl {
@@ -47,7 +48,7 @@ public class DumpCrawl {
     SequenceFile.Reader reader = new SequenceFile.Reader(fs, path, conf);
 
     PairOfLongString key = new PairOfLongString();
-    PairOfIntString value = new PairOfIntString();
+    StatusHtml value = new StatusHtml();
 
     PrintStream out = new PrintStream(System.out, true, "UTF-8");
     while (reader.next(key, value)) {

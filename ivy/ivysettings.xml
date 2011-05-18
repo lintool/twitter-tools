@@ -6,6 +6,9 @@
       <ibiblio name="netty" m2compatible="true" root="https://oss.sonatype.org/content/repositories/releases/"/>
       <ibiblio name="netty" m2compatible="true" root="http://repository.jboss.org/nexus/content/groups/public/"/>
       <ibiblio name="gson" m2compatible="true" root="http://google-gson.googlecode.com/svn/mavenrepo"/>
+      <ibiblio name="cloudera" m2compatible="true" root="https://repository.cloudera.com/content/groups/cdh-releases-rcs/"/>
+      <ibiblio name="spy" m2compatible="true" root="http://bleu.west.spy.net/~dustin/m2repo/"/>
+      <ibiblio name="bliki" m2compatible="true" root="http://gwtwiki.googlecode.com/svn/maven-repository/"/>
 
       <filesystem name="libraries">
         <artifact pattern="${basedir}/ivy/local-repo/[artifact]-[revision].[ext]" />

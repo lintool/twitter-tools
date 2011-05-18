@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -27,6 +26,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
+import com.twitter.corpus.data.StatusHtml;
 
 import edu.umd.cloud9.io.pair.PairOfIntString;
 import edu.umd.cloud9.io.pair.PairOfLongString;
@@ -75,11 +75,11 @@ public class VerifyStatusBlockCrawl {
   public boolean verify() throws IOException {
     LOG.info(String.format("Reading statuses read from %s.", statuses));
 
-    Map<PairOfLongString, PairOfIntString> crawl = Maps.newTreeMap();
+    Map<PairOfLongString, StatusHtml> crawl = Maps.newTreeMap();
 
     SequenceFile.Reader reader = new SequenceFile.Reader(fs, statuses, fs.getConf());
     PairOfLongString key = new PairOfLongString();
-    PairOfIntString value = new PairOfIntString();
+    StatusHtml value = new StatusHtml();
 
     int cnt = 0;
     while (reader.next(key, value)) {
@@ -123,12 +123,12 @@ public class VerifyStatusBlockCrawl {
           response = fetchUrl(redirect);
 
           crawl.put(new PairOfLongString(id, username),
-              new PairOfIntString(302, response.getResponseBody("UTF-8")));
+              new StatusHtml(302, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
         } else {
           // Status 200 = okay
           // Status 4XX = delete, forbid, etc. add a tombstone.
           crawl.put(new PairOfLongString(id, username),
-                new PairOfIntString(200, response.getResponseBody("UTF-8")));
+              new StatusHtml(200, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
         }
         fetchedCnt++;
 
@@ -159,7 +159,7 @@ public class VerifyStatusBlockCrawl {
       SequenceFile.Writer repaired = SequenceFile.createWriter(fs, fs.getConf(), repairedOutput,
           PairOfLongString.class, PairOfIntString.class, SequenceFile.CompressionType.BLOCK);
 
-      for (Map.Entry<PairOfLongString, PairOfIntString> entry : crawl.entrySet()) {
+      for (Map.Entry<PairOfLongString, StatusHtml> entry : crawl.entrySet()) {
         written++;
         repaired.append(entry.getKey(), entry.getValue());
       }
@@ -191,7 +191,8 @@ public class VerifyStatusBlockCrawl {
 
       try {
         Thread.sleep(1000);
-      } catch (Exception e) {}
+      } catch (Exception e) {
+      }
       LOG.warn("Error: retrying.");
     }
 

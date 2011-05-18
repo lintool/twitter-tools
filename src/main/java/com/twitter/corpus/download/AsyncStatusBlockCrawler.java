@@ -24,9 +24,9 @@ import org.apache.log4j.Logger;
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
+import com.twitter.corpus.data.StatusHtml;
 import com.twitter.corpus.demo.ReadStatuses;
 
-import edu.umd.cloud9.io.pair.PairOfIntString;
 import edu.umd.cloud9.io.pair.PairOfLongString;
 
 public class AsyncStatusBlockCrawler {
@@ -41,9 +41,9 @@ public class AsyncStatusBlockCrawler {
   // Storing the number of retries.
   private final ConcurrentSkipListMap<Long, Integer> retries = new ConcurrentSkipListMap<Long, Integer>();
 
-  // key = (statud id, username), value = (http status code, raw html) 
-  private final ConcurrentSkipListMap<PairOfLongString, PairOfIntString> crawl =
-    new ConcurrentSkipListMap<PairOfLongString, PairOfIntString>();
+  // key = (statud id, username), value = StatusHtml object
+  private final ConcurrentSkipListMap<PairOfLongString, StatusHtml> crawl =
+      new ConcurrentSkipListMap<PairOfLongString, StatusHtml>();
 
   public AsyncStatusBlockCrawler(File file, String output) {
     this.asyncHttpClient = new AsyncHttpClient();
@@ -99,9 +99,9 @@ public class AsyncStatusBlockCrawler {
     Configuration conf = new Configuration();
     FileSystem fs = FileSystem.get(conf);
     SequenceFile.Writer out = SequenceFile.createWriter(fs, conf, new Path(output),
-        PairOfLongString.class, PairOfIntString.class, SequenceFile.CompressionType.BLOCK);
+        PairOfLongString.class, StatusHtml.class, SequenceFile.CompressionType.BLOCK);
 
-    for (Map.Entry<PairOfLongString, PairOfIntString> entry : crawl.entrySet()) {
+    for (Map.Entry<PairOfLongString, StatusHtml> entry : crawl.entrySet()) {
       written++;
       out.append(entry.getKey(), entry.getValue());
     }
@@ -138,13 +138,15 @@ public class AsyncStatusBlockCrawler {
         String redirect = response.getHeader("Location");
 
         LOG.info(String.format("id %d redirecting to %s", id, redirect));
-        asyncHttpClient.prepareGet(redirect).execute(new TweetFetcherHandler(id, username, redirect, true));
+        asyncHttpClient.prepareGet(redirect).execute(
+            new TweetFetcherHandler(id, username, redirect, true));
 
         return response;
       }
 
       crawl.put(new PairOfLongString(id, username),
-          new PairOfIntString((isRedirect ? 302 : response.getStatusCode()), response.getResponseBody("UTF-8")));
+          new StatusHtml((isRedirect ? 302 : response.getStatusCode()), System.currentTimeMillis(), 
+              response.getResponseBody("UTF-8")));
 
       return response;
     }
@@ -168,7 +170,8 @@ public class AsyncStatusBlockCrawler {
       if (!retries.containsKey(id)) {
         retries.put(id, 1);
         LOG.warn("Retrying: " + url + " attempt 1");
-        asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username, url, isRedirect));
+        asyncHttpClient.prepareGet(url).execute(
+            new TweetFetcherHandler(id, username, url, isRedirect));
         return;
       }
 
@@ -180,7 +183,8 @@ public class AsyncStatusBlockCrawler {
 
       attempts++;
       LOG.warn("Retrying: " + url + " attempt " + attempts);
-      asyncHttpClient.prepareGet(url).execute(new TweetFetcherHandler(id, username, url, isRedirect));
+      asyncHttpClient.prepareGet(url).execute(
+          new TweetFetcherHandler(id, username, url, isRedirect));
       retries.put(id, attempts);
     }
   }
