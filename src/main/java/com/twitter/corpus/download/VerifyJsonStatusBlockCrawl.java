@@ -22,14 +22,15 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 
+import com.google.common.base.Preconditions;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 import com.twitter.corpus.data.Status;
-import com.twitter.corpus.data.StatusBlockReader;
+import com.twitter.corpus.data.JsonStatusBlockReader;
 import com.twitter.corpus.data.StatusStream;
 
-public class VerifyStatusBlock {
-  private static final Logger LOG = Logger.getLogger(VerifyStatusBlock.class);
+public class VerifyJsonStatusBlockCrawl {
+  private static final Logger LOG = Logger.getLogger(VerifyJsonStatusBlockCrawl.class);
 
   private final File data;
   private final File statuses;
@@ -39,27 +40,27 @@ public class VerifyStatusBlock {
   private File outputFailure = null;
   private File repairedOutput = null;
 
-  public VerifyStatusBlock(File data, File statuses) {
-    this.statuses = statuses;
+  public VerifyJsonStatusBlockCrawl(File data, File statuses) {
+    this.statuses = Preconditions.checkNotNull(statuses);
+    this.data = Preconditions.checkNotNull(data);
+
     if (!statuses.exists()) {
       throw new RuntimeException(statuses + " does not exist!");
     }
-
-    this.data = data;
   }
 
-  public VerifyStatusBlock withOutputSuccess(File file) {
-    this.outputSuccess = file;
+  public VerifyJsonStatusBlockCrawl withOutputSuccess(File file) {
+    this.outputSuccess = Preconditions.checkNotNull(file);
     return this;
   }
 
-  public VerifyStatusBlock withOutputFailure(File file) {
-    this.outputFailure = file;
+  public VerifyJsonStatusBlockCrawl withOutputFailure(File file) {
+    this.outputFailure = Preconditions.checkNotNull(file);
     return this;
   }
 
-  public VerifyStatusBlock withRepairedOutput(File file) {
-    this.repairedOutput = file;
+  public VerifyJsonStatusBlockCrawl withRepairedOutput(File file) {
+    this.repairedOutput = Preconditions.checkNotNull(file);
     return this;
   }
 
@@ -70,7 +71,7 @@ public class VerifyStatusBlock {
     if (statuses.isDirectory()) {
       throw new RuntimeException(statuses + " cannot be a directory!");
     }
-    stream = new StatusBlockReader(statuses);
+    stream = new JsonStatusBlockReader(statuses);
 
     Map<Long, String> ids = new HashMap<Long, String>();
 
@@ -110,38 +111,43 @@ public class VerifyStatusBlock {
         }
         successCnt++;
       } else {
-        Response response = null;
-        while (true) {
-          try {
-            response = client.prepareGet(
-                AsyncStatusBlockFetcher.getUrl(AsyncStatusBlockFetcher.DEFAULT_URL_PREFIX, id, arr[1]))
-                .execute().get();
+        // Check to see if we should actually bother repairing.
+        if (repairedOutput != null) {
+          Response response = null;
+          while (true) {
+            try {
+              response = client.prepareGet(
+                  AsyncJsonStatusBlockCrawler.getUrl(
+                      AsyncJsonStatusBlockCrawler.DEFAULT_URL_PREFIX, id, arr[1]))
+                  .execute().get();
 
-            if (response.getStatusCode() < 500) {
-              break;
+              if (response.getStatusCode() < 500) {
+                break;
+              }
+            } catch (InterruptedException e) {
+              // Do nothing, just retry.
+            } catch (ExecutionException e) {
+              // Do nothing, just retry.
             }
-          } catch (InterruptedException e) {
-            // Do nothing, just retry.
-          } catch (ExecutionException e) {
-            // Do nothing, just retry.
+
+            try {
+              Thread.sleep(1000);
+            } catch (Exception e) {
+            }
+            LOG.warn("Error: retrying.");
           }
 
-          try {
-            Thread.sleep(1000);
-          } catch (Exception e) {}
-          LOG.warn("Error: retrying.");
+          String s = response.getResponseBody();
+          if (isTweetNoLongerAvailable(s)) {
+            LOG.info(String.format("Missing status %d: no longer available.", id));
+            notAvailableCnt++;
+          } else {
+            LOG.info(String.format("Missing status %d: successfully fetched.", id));
+            ids.put(id, response.getResponseBody());
+            fetchedCnt++;
+          }
         }
-
-        String s = response.getResponseBody();
-        if (isTweetNoLongerAvailable(s)) {
-          LOG.info(String.format("Missing status %d: no longer available.", id));
-          notAvailableCnt++;
-        } else {
-          LOG.info(String.format("Missing status %d: successfully fetched.", id));
-          ids.put(id, response.getResponseBody());
-          fetchedCnt++;
-        }
-
+      
         if (failureOut != null) {
           failureOut.write(line + "\n");
         }
@@ -188,10 +194,10 @@ public class VerifyStatusBlock {
 
   public static boolean isTweetNoLongerAvailable(String s) {
     return s.contains("Sorry, you are not authorized to see this status.") ||
-        s.contains("No status found with that ID.");
+        s.contains("No status found with that ID.") || s.equals("");
   }
 
-  private static final String STATUSES_OPTION = "statuses";
+  private static final String STATUSES_OPTION = "statuses_input";
   private static final String STATUSES_REPAIRED_OPTION = "statuses_repaired";
   private static final String DATA_OPTION = "data";
   private static final String OUTPUT_SUCCESS_OPTION = "output_success";
@@ -201,10 +207,10 @@ public class VerifyStatusBlock {
   public static void main(String[] args) throws Exception {
     Options options = new Options();
     options.addOption(OptionBuilder.withArgName("path").hasArg()
-        .withDescription("gzipped JSON-encoded statuses, output of the AsynchStatusBlockFetcher")
+        .withDescription("input JSON statuses")
         .create(STATUSES_OPTION));
     options.addOption(OptionBuilder.withArgName("path").hasArg()
-        .withDescription("output gzipped JSON-encoded statuses after repair")
+        .withDescription("repaired JSON statuses")
         .create(STATUSES_REPAIRED_OPTION));
     options.addOption(OptionBuilder.withArgName("path").hasArg()
         .withDescription("data file with tweet ids").create(DATA_OPTION));
@@ -224,11 +230,11 @@ public class VerifyStatusBlock {
 
     if (!cmdline.hasOption(STATUSES_OPTION) || !cmdline.hasOption(DATA_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(VerifyStatusBlock.class.getName(), options);
+      formatter.printHelp(VerifyJsonStatusBlockCrawl.class.getName(), options);
       System.exit(-1);
     }
 
-    VerifyStatusBlock v = new VerifyStatusBlock(new File(cmdline.getOptionValue(DATA_OPTION)),
+    VerifyJsonStatusBlockCrawl v = new VerifyJsonStatusBlockCrawl(new File(cmdline.getOptionValue(DATA_OPTION)),
         new File(cmdline.getOptionValue(STATUSES_OPTION)));
 
     if (cmdline.hasOption(OUTPUT_SUCCESS_OPTION)) {

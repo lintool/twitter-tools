@@ -13,13 +13,9 @@ import com.ning.http.client.Response;
 import com.twitter.corpus.data.Status;
 
 public class FetchStatusTest {
-  private String getUrl(String username, long id) throws Exception {
-    return String.format("http://twitter.com/statuses/show/%d.json", id);
-  }
-
   @Test
   public void basicFamous() throws Exception {
-    String url = getUrl("jkrums", 1121915133L);
+    String url = AsyncHtmlStatusBlockCrawler.getUrl(1121915133L, "jkrums");
     AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
     AsyncHttpClient.BoundRequestBuilder request = asyncHttpClient.prepareGet(url);
     Future<Response> f = request.execute();
@@ -27,11 +23,14 @@ public class FetchStatusTest {
 
     // Make sure status is OK.
     assertEquals(200, response.getStatusCode());
-    String s = response.getResponseBody();
+    String html = response.getResponseBody("UTF-8");
 
-    Status status = Status.fromJson(s);
+    Status status = Status.fromHtml(1121915133L, "jkrums", 200, html);
     assertEquals(1121915133L, status.getId());
     assertEquals("jkrums", status.getScreenname());
+    assertEquals("http://twitpic.com/135xa - There's a plane in the Hudson. I'm on the ferry going to pick up the people. Crazy.", status.getText());
+
+    asyncHttpClient.close();
   }
 
   public static junit.framework.Test suite() {

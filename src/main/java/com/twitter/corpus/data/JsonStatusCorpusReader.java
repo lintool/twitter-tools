@@ -4,17 +4,21 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 
+import com.google.common.base.Preconditions;
+
 /**
  * Abstraction for a corpus of statuses. A corpus is assumed to consist of a number of blocks, each
  * represented by a gzipped file within a root directory. This object will allow to caller to read
  * through all blocks, in sorted lexicographic order of the files.
  */
-public class StatusCorpusReader implements StatusStream {
+public class JsonStatusCorpusReader implements StatusStream {
   private final File[] files;
   private int nextFile = 0;
-  private StatusBlockReader currentBlock = null;
+  private JsonStatusBlockReader currentBlock = null;
 
-  public StatusCorpusReader(File file) throws IOException {
+  public JsonStatusCorpusReader(File file) throws IOException {
+    Preconditions.checkNotNull(file);
+
     if (!file.isDirectory()) {
       throw new IOException("Expecting " + file + " to be a directory!");
     }
@@ -35,7 +39,7 @@ public class StatusCorpusReader implements StatusStream {
    */
   public Status next() throws IOException {
     if (currentBlock == null) {
-      currentBlock = new StatusBlockReader(files[nextFile]);
+      currentBlock = new JsonStatusBlockReader(files[nextFile]);
       nextFile++;
     }
 
@@ -53,7 +57,7 @@ public class StatusCorpusReader implements StatusStream {
 
       currentBlock.close();
       // Move to next file.
-      currentBlock = new StatusBlockReader(files[nextFile]);
+      currentBlock = new JsonStatusBlockReader(files[nextFile]);
       nextFile++;
     }
   }
