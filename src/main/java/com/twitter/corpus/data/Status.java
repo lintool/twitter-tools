@@ -16,7 +16,7 @@ public class Status {
   private String screenname;
   private String createdAt;
   private String text;
-
+  
   protected Status() {}
   
   public long getId() {

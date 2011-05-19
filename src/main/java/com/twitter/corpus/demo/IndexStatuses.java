@@ -39,7 +39,8 @@ public class IndexStatuses {
     ID("id"),
     SCREEN_NAME("screen_name"),
     CREATED_AT("create_at"),
-    TEXT("text");
+    TEXT("text"), 
+    DAY("day");
 
     public final String name;
 
@@ -91,7 +92,7 @@ public class IndexStatuses {
       stream = new StatusBlockReader(file);
     }
 
-    Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_31);
+    Analyzer analyzer = new TweetAnalyzer(Version.LUCENE_31);
     Similarity similarity = new ConstantNormSimilarity();
     IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_31, analyzer);
     config.setSimilarity(similarity);
@@ -102,12 +103,18 @@ public class IndexStatuses {
     Status status;
     while ((status = stream.next()) != null) {
       cnt++;
+      String created_at = status.getCreatedAt();
       Document doc = new Document();
       doc.add(new Field(StatusField.ID.name, status.getId()+"", Store.YES, Index.NOT_ANALYZED_NO_NORMS));
       doc.add(new Field(StatusField.SCREEN_NAME.name, status.getScreenname(), Store.YES, Index.NOT_ANALYZED_NO_NORMS));
-      doc.add(new Field(StatusField.CREATED_AT.name, status.getCreatedAt(), Store.YES, Index.NO));
+      doc.add(new Field(StatusField.CREATED_AT.name, created_at, Store.YES, Index.NO));
       doc.add(new Field(StatusField.TEXT.name, status.getText(), Store.YES, Index.ANALYZED));
 
+      String[] creat = created_at.split(" ");
+      String creat_day = new StringBuffer().append(creat[1]).append("_").append(creat[2]).toString();
+      doc.add(new Field(StatusField.DAY.name, creat_day, Store.YES, Index.NOT_ANALYZED_NO_NORMS));
+      
+      
       writer.addDocument(doc);
       if (cnt % 10000 == 0) {
         out.println(cnt + " statuses indexed");
