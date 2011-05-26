@@ -22,6 +22,8 @@ The HTML crawler is `com.twitter.corpus.download.AsyncHtmlStatusBlockCrawler`. H
 
 Use the `-data` option to specify the status block (`.dat` file) to read. Use the `-output` option to specify where to write the output (block-compressed SequenceFile).
 
+**Note:** On Windows machines, the classpath specified by `-cp` should be separated by semicolons.
+
 To download the entire corpus, you'll need to fetch all blocks using this crawler. It makes sense to do some lightweight scripting (e.g., shell scripts, Python, Perl, etc.) to accomplish this. We have decided not to include these scripts because 1.) they are easy enough to write, and 2.) you may wish to download the blocks in parallel from multiple machines, in which no general purpose script would be particularly useful.
 
 **Note:** Please be considerate when downloading the corpus. Using a couple of machines is fine. Writing a Hadoop MapReduce job to download the corpus from 500 EC2 instances _is not_. Use common sense.

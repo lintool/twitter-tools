@@ -15,11 +15,9 @@ public class Status {
   private String screenname;
   private String createdAt;
   private String text;
-
+  private int httpStatusCode;
   private JsonObject jsonObject;
   private String jsonString;
-
-  private int httpStatusCode;
 
   protected Status() {}
   
