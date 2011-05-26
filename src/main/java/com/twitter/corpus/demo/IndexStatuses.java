@@ -14,7 +14,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
@@ -46,7 +45,7 @@ public class IndexStatuses {
     ID("id"),
     SCREEN_NAME("screen_name"),
     CREATED_AT("create_at"),
-    TEXT("text"), 
+    TEXT("text"),
     DAY("day");
 
     public final String name;
@@ -81,8 +80,8 @@ public class IndexStatuses {
       System.exit(-1);
     }
 
-    if (!(cmdline.hasOption(INPUT_OPTION) && cmdline.hasOption(INDEX_OPTION) &&
-          (cmdline.hasOption(HTML_MODE) ^ cmdline.hasOption(JSON_MODE)))) {
+    if (!(cmdline.hasOption(INPUT_OPTION) && cmdline.hasOption(INDEX_OPTION) && (cmdline
+        .hasOption(HTML_MODE) ^ cmdline.hasOption(JSON_MODE)))) {
       HelpFormatter formatter = new HelpFormatter();
       formatter.printHelp(IndexStatuses.class.getName(), options);
       System.exit(-1);
@@ -134,18 +133,17 @@ public class IndexStatuses {
       }
 
       cnt++;
-      String created_at = status.getCreatedAt();
+      String createdAt = status.getCreatedAt();
       Document doc = new Document();
-      doc.add(new Field(StatusField.ID.name, status.getId()+"", Store.YES, Index.NOT_ANALYZED_NO_NORMS));
+      doc.add(new Field(StatusField.ID.name, status.getId() + "", Store.YES, Index.NOT_ANALYZED_NO_NORMS));
       doc.add(new Field(StatusField.SCREEN_NAME.name, status.getScreenname(), Store.YES, Index.NOT_ANALYZED_NO_NORMS));
-      doc.add(new Field(StatusField.CREATED_AT.name, created_at, Store.YES, Index.NO));
+      doc.add(new Field(StatusField.CREATED_AT.name, createdAt, Store.YES, Index.NO));
       doc.add(new Field(StatusField.TEXT.name, status.getText(), Store.YES, Index.ANALYZED));
 
-      String[] creat = created_at.split(" ");
-      String creat_day = new StringBuffer().append(creat[1]).append("_").append(creat[2]).toString();
-      doc.add(new Field(StatusField.DAY.name, creat_day, Store.YES, Index.NOT_ANALYZED_NO_NORMS));
-      
-      
+      String[] arr = createdAt.split(" ");
+      String createDay = new StringBuffer().append(arr[1]).append("_").append(arr[2]).toString();
+      doc.add(new Field(StatusField.DAY.name, createDay, Store.YES, Index.NOT_ANALYZED_NO_NORMS));
+
       writer.addDocument(doc);
       if (cnt % 10000 == 0) {
         LOG.info(cnt + " statuses indexed");
@@ -159,6 +157,7 @@ public class IndexStatuses {
 
   public static class ConstantNormSimilarity extends DefaultSimilarity {
     private static final long serialVersionUID = 2737920231537795826L;
+
     @Override
     public float computeNorm(String field, FieldInvertState state) {
       return 1.0f;
