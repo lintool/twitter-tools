@@ -10,7 +10,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
@@ -81,7 +80,7 @@ public class SearchStatuses {
     IndexSearcher searcher = new IndexSearcher(reader);
 
     QueryParser qparser = new QueryParser(Version.LUCENE_31, IndexStatuses.StatusField.TEXT.name,
-        new SimpleAnalyzer(Version.LUCENE_31));
+        IndexStatuses.ANALYZER);
     Query query = qparser.parse(cmdline.getOptionValue(QUERY_OPTION));
     System.out.println("Query: " + query);
 

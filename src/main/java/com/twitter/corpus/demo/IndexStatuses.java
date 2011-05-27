@@ -39,6 +39,8 @@ import com.twitter.corpus.data.StatusStream;
 public class IndexStatuses {
   private static final Logger LOG = Logger.getLogger(IndexStatuses.class);
 
+  public static final Analyzer ANALYZER = new TweetAnalyzer(Version.LUCENE_31);
+
   private IndexStatuses() {}
 
   public static enum StatusField {
@@ -89,6 +91,7 @@ public class IndexStatuses {
 
     File indexLocation = new File(cmdline.getOptionValue(INDEX_OPTION));
 
+    LOG.info("Indexing " + cmdline.getOptionValue(INPUT_OPTION));
     StatusStream stream;
     // Figure out if we're reading from HTML SequenceFiles or JSON.
     if (cmdline.hasOption(HTML_MODE)) {
@@ -118,40 +121,48 @@ public class IndexStatuses {
       }
     }
 
-    Analyzer analyzer = new TweetAnalyzer(Version.LUCENE_31);
+    Analyzer analyzer = ANALYZER;
     Similarity similarity = new ConstantNormSimilarity();
     IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_31, analyzer);
     config.setSimilarity(similarity);
+    config.setOpenMode(IndexWriterConfig.OpenMode.CREATE); // Overwrite existing.
 
     IndexWriter writer = new IndexWriter(FSDirectory.open(indexLocation), config);
 
     int cnt = 0;
     Status status;
-    while ((status = stream.next()) != null) {
-      if (status.getText() == null) {
-        continue;
+    try {
+      while ((status = stream.next()) != null) {
+        if (status.getText() == null) {
+          continue;
+        }
+
+        cnt++;
+        String createdAt = status.getCreatedAt();
+        Document doc = new Document();
+        doc.add(new Field(StatusField.ID.name, status.getId() + "",
+            Store.YES, Index.NOT_ANALYZED_NO_NORMS));
+        doc.add(new Field(StatusField.SCREEN_NAME.name, status.getScreenname(),
+            Store.YES, Index.NOT_ANALYZED_NO_NORMS));
+        doc.add(new Field(StatusField.CREATED_AT.name, createdAt, Store.YES, Index.NO));
+        doc.add(new Field(StatusField.TEXT.name, status.getText(), Store.YES, Index.ANALYZED));
+
+        String[] arr = createdAt.split(" ");
+        String createDay = new StringBuffer().append(arr[1]).append("_").append(arr[2]).toString();
+        doc.add(new Field(StatusField.DAY.name, createDay, Store.YES, Index.NOT_ANALYZED_NO_NORMS));
+
+        writer.addDocument(doc);
+        if (cnt % 10000 == 0) {
+          LOG.info(cnt + " statuses indexed");
+        }
       }
-
-      cnt++;
-      String createdAt = status.getCreatedAt();
-      Document doc = new Document();
-      doc.add(new Field(StatusField.ID.name, status.getId() + "", Store.YES, Index.NOT_ANALYZED_NO_NORMS));
-      doc.add(new Field(StatusField.SCREEN_NAME.name, status.getScreenname(), Store.YES, Index.NOT_ANALYZED_NO_NORMS));
-      doc.add(new Field(StatusField.CREATED_AT.name, createdAt, Store.YES, Index.NO));
-      doc.add(new Field(StatusField.TEXT.name, status.getText(), Store.YES, Index.ANALYZED));
-
-      String[] arr = createdAt.split(" ");
-      String createDay = new StringBuffer().append(arr[1]).append("_").append(arr[2]).toString();
-      doc.add(new Field(StatusField.DAY.name, createDay, Store.YES, Index.NOT_ANALYZED_NO_NORMS));
-
-      writer.addDocument(doc);
-      if (cnt % 10000 == 0) {
-        LOG.info(cnt + " statuses indexed");
-      }
+      LOG.info("Optimizing index...");
+      writer.optimize();
+      writer.close();
+    } finally {
+      stream.close();
     }
-    LOG.info("Optimizing index...");
-    writer.optimize();
-    writer.close();
+
     LOG.info(String.format("Total of %s statuses indexed", cnt));
   }
 
