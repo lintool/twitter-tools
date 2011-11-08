@@ -134,9 +134,12 @@ public class Status {
     String latlng = extractor.extractLatLng(html);
     if (latlng != null) {
       String [] tmp = latlng.split(",", 2);
-      if (tmp.length == 2) {
+      try {
         status.latitude = tmp[0];
         status.longitude = tmp[1];
+      } catch (ArrayIndexOutOfBoundsException e) {
+        status.latitude = null;
+        status.longitude = null;
       }
     }
 
