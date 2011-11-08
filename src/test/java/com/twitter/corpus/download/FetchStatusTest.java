@@ -34,7 +34,7 @@ public class FetchStatusTest {
   }
   
   @Test
-  public void anotherFamous() throws Exception {
+  public void geotaggedTweet() throws Exception {
     String url = AsyncHtmlStatusBlockCrawler.getUrl(132336185812070401L, "bs");
     AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
     AsyncHttpClient.BoundRequestBuilder request = asyncHttpClient.prepareGet(url);

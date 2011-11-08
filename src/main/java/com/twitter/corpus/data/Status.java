@@ -117,8 +117,8 @@ public class Status {
     status.createdAt = extractor.extractTimestamp(html);
     
     if ( status.createdAt != null) {
-      Date tmpdate;
       try {
+        Date tmpdate;
         tmpdate = dateFormat.parse(status.createdAt);
         status.timestamp = tmpdate.getTime()/1000; // division by 1000 delete milliseconds of getTime()
       } catch (ParseException e) {
@@ -134,8 +134,10 @@ public class Status {
     String latlng = extractor.extractLatLng(html);
     if (latlng != null) {
       String [] tmp = latlng.split(",", 2);
-      status.latitude = tmp[0];
-      status.longitude = tmp[1];
+      if (tmp.length == 2) {
+        status.latitude = tmp[0];
+        status.longitude = tmp[1];
+      }
     }
 
     // TODO: Note that http status code 302 indicates a redirect, which indicates a retweet. I.e.,
