@@ -121,7 +121,7 @@ public class Status {
       Date tmpdate;
       try {
         tmpdate = dateFormat.parse(status.createdAt);
-        status.timestamp = tmpdate.getTime();
+        status.timestamp = tmpdate.getTime()/1000; // division by 1000 delete milliseconds of getTime()
       } catch (ParseException e) {
         status.timestamp = 0;
       } 
