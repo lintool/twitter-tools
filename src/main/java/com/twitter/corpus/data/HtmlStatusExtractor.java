@@ -13,6 +13,14 @@ public class HtmlStatusExtractor {
 
   private final Pattern TIMESTAMP_PATTERN =
       Pattern.compile("<span class=\"published timestamp\" data=\"\\{time:'([^']+)'\\}\">");
+  
+  private final Pattern LATLNG_PATTERN =
+      Pattern.compile("\"latlng\":\\[[^\\]]+\\]");
+  
+  private final Pattern PLACEID_PATTERN =
+      Pattern.compile("\"place_id\":\\[[^\\]]+\\]");
+  
+  private final Pattern LOCATION_PATTERN =
 
   public HtmlStatusExtractor() {}
 
@@ -39,5 +47,13 @@ public class HtmlStatusExtractor {
       return null;
     }
     return matcher.group(1);
+  }
+  
+  public long extractReplyof(String html) {
+    return null;
+  }
+  
+  public String extractLocation(String html) {
+    return null;
   }
 }

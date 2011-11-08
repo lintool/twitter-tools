@@ -18,6 +18,11 @@ public class Status {
   private int httpStatusCode;
   private JsonObject jsonObject;
   private String jsonString;
+  private long replyOf;
+  private String location;
+  private String placeId;
+  private double latitude;
+  private double longitude;
 
   protected Status() {}
   
@@ -79,6 +84,8 @@ public class Status {
     status.httpStatusCode = httpStatus;
     status.text = extractor.extractTweet(html);
     status.createdAt = extractor.extractTimestamp(html);
+    status.replyOf = extractor.extractReplyof(html);
+    status.location = extractor.extractLocation(html);
 
     // TODO: Note that http status code 302 indicates a redirect, which indicates a retweet. I.e.,
     // the status redirects to the original retweeted status. Note that this is not currently
