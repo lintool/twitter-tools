@@ -32,7 +32,7 @@ public class BatchSearchStatuses {
   private BatchSearchStatuses() {}
 
   private static final String INDEX_OPTION = "index";
-  private static final String QUERY_OPTION = "query";
+  private static final String QUERY_OPTION = "queries";
   private static final String NUM_HITS_OPTION = "num_hits";
 
   @SuppressWarnings("static-access")
@@ -103,7 +103,7 @@ public class BatchSearchStatuses {
     	for (ScoreDoc scoreDoc : rs.scoreDocs) {
     		Document hit = searcher.doc(scoreDoc.doc);
     		
-    		out.println(String.format("%s Q0 %s %d %6.4f run\n",
+    		out.println(String.format("%s Q0 %s %d %6.4f run",
     				parts[0],
     				hit.getField(IndexStatuses.StatusField.ID.name).stringValue(),
     				i++,
