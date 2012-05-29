@@ -78,7 +78,7 @@ public class Status {
     status.screenname = username;
     status.httpStatusCode = httpStatus;
     status.text = extractor.extractTweet(html);
-    status.createdAt = extractor.extractTimestamp(html);
+    status.createdAt = extractor.extractTimestamp(html, id);
 
     // TODO: Note that http status code 302 indicates a redirect, which indicates a retweet. I.e.,
     // the status redirects to the original retweeted status. Note that this is not currently
