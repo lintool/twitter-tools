@@ -59,7 +59,7 @@ public class AsyncHtmlStatusBlockCrawler {
 
   public static String getUrl(long id, String username) {
     Preconditions.checkNotNull(username);
-    return String.format("http://twitter.com/%s/status/%d", username, id);
+    return String.format("https://twitter.com/%s/status/%d", username, id);
   }
 
   public void fetch() throws IOException {
@@ -173,25 +173,17 @@ public class AsyncHtmlStatusBlockCrawler {
       // Wait before retrying.
       Thread.sleep(1000);
 
-      if (!retries.containsKey(id)) {
-        retries.put(id, 1);
-        LOG.warn("Retrying: " + url + " attempt 1");
-        asyncHttpClient.prepareGet(url).execute(
-            new TweetFetcherHandler(id, username, url, isRedirect));
-        return;
-      }
+      int attempts = retries.containsKey(id) ? retries.get(id) + 1 : 1;
+      retries.put(id, attempts);
 
-      int attempts = retries.get(id);
       if (attempts > MAX_RETRY_ATTEMPTS) {
         LOG.warn("Abandoning: " + url + " after max retry attempts");
         return;
       }
 
-      attempts++;
       LOG.warn("Retrying: " + url + " attempt " + attempts);
       asyncHttpClient.prepareGet(url).execute(
           new TweetFetcherHandler(id, username, url, isRedirect));
-      retries.put(id, attempts);
     }
   }
 
