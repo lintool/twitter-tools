@@ -17,8 +17,6 @@ public class HtmlStatus implements Writable {
   private long timestamp;
   private String html;
 
-  private static final int CHUNK_SIZE = 16 * 1024; // use 16K chunks
-
   public HtmlStatus() {
     this.version = VERSION;
   }
@@ -50,14 +48,13 @@ public class HtmlStatus implements Writable {
     this.httpStatusCode = in.readInt();
     this.timestamp = in.readLong();
     this.html = in.readUTF();
-    // handle new serialized format
-    String newIndicator = "BEGIN " + this.timestamp + " ";
-    if (html.startsWith(newIndicator)) {
-      int numChunks = Integer.parseInt(html.substring(newIndicator.length()));
-      this.html = "";
-      for (int i = 0; i < numChunks; i++) {
-        this.html += in.readUTF();
-      }
+    // handle new header
+    String header = "BEGIN " + this.timestamp + " ";
+    if (html.startsWith(header)) {
+      int size = Integer.parseInt(html.substring(header.length()));
+      byte[] bHtml = new byte[size];
+      in.readFully(bHtml);
+      this.html = new String(bHtml);
     }
   }
 
@@ -68,15 +65,11 @@ public class HtmlStatus implements Writable {
     out.writeByte(version);
     out.writeInt(httpStatusCode);
     out.writeLong(timestamp);
-    // UTF allows blocks of at most 64K, so divide html into chunks while
-    // maintaining backward compatibility using a new header
-    int numChunks = (int)Math.ceil((double)html.length() / (double)CHUNK_SIZE);
-    String header = "BEGIN " + timestamp + " " + numChunks;
+    // UTF header allows blocks of size at most 64K, so create our own header
+    byte[] bHtml = html.getBytes("UTF-8");
+    String header = "BEGIN " + timestamp + " " + bHtml.length;
     out.writeUTF(header);
-    for (int i = 0; i < numChunks - 1; i++) {
-        out.writeUTF(html.substring(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE));
-    }
-    out.writeUTF(html.substring((numChunks - 1) * CHUNK_SIZE));
+    out.write(bHtml);
   }
 
   @Override
