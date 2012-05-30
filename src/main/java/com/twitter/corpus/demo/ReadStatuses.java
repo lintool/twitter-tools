@@ -101,9 +101,12 @@ public class ReadStatuses {
         String text = status.getText();
         if (text != null) {
           text = text.replaceAll("\\n", " ");
+          text = text.replaceAll("\\t", " ");
+          text = text.replaceAll("\0", "");
         }
-        out.println(String.format("%d\t%s\t%d\t%s\t%s", status.getId(), status.getScreenname(),
-            status.getHttpStatusCode(), status.getCreatedAt(), text));
+        out.println(String.format("%d\t%s\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", status.getId(), status.getScreenname(),
+            status.getHttpStatusCode(), status.getCreatedAt(), status.getTimestamp(), status.getReplyOf(), status.getLatitude(), 
+            status.getLongitude(), status.getLocation(), status.getPlaceId(),  text));
       }
       cnt++;
       if ( cnt % 10000 == 0 && cmdline.hasOption(VERBOSE_OPTION)) {
