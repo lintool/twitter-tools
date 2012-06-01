@@ -1,5 +1,6 @@
 package com.twitter.corpus.data;
 
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +13,7 @@ public class HtmlStatusExtractor {
       Pattern.compile("<p[^>]*class=\"[^\"]*js-tweet-text[^\"]*tweet-text[^\"]*\"[^>]*>(([^<]|(<([^/]|/[^p])[^>]*>))*)</p>");
 
   private final Pattern URL_PATTERN =
-      Pattern.compile("<a[^>]*data-expanded-url=\"([^\"]*)\"[^>]*href=\"([^\"]*)\">(([^<]|(<([^/]|/[^a])[^>]*>))*)</a>");
+      Pattern.compile("<a[^>]*(data-expanded-url|href)=\"([^\"]*)\"[^>]*(href|data-expanded-url)=\"([^\"]*)\"[^>]*>(([^<]|(<([^/]|/[^a])[^>]*>))*)</a>");
 
   private final Pattern SCREENNAME_TIMESTAMP_PATTERN = 
       Pattern.compile("<a[^>]*href=\"/([^\"/]*)/status/([0-9]*)\"[^>]*>[^<]*<span[^>]*class=\"[^\"]*timestamp[^\"]*\"[^>]*data-time=\"([0-9]*)\"[^>]*>");
@@ -25,11 +26,15 @@ public class HtmlStatusExtractor {
     if (!matcher.find()) {
       return null;
     }
-    matcher = URL_PATTERN.matcher(matcher.group(1));
+    String tweet = matcher.group(1);
+    matcher = URL_PATTERN.matcher(tweet);
     StringBuffer rawsb = new StringBuffer();
     while (matcher.find()) {
-      String deu = matcher.group(1).trim();
-      String href = matcher.group(2).trim();
+      HashMap<String,String> urls = new HashMap<String,String>();
+      urls.put(matcher.group(1), matcher.group(2));
+      urls.put(matcher.group(3), matcher.group(4));
+      String deu = urls.containsKey("data-expanded-url") ? urls.get("data-expanded-url") : "";
+      String href = urls.containsKey("href") ? urls.get("href") : "";
       if (!deu.equals(""))
         matcher.appendReplacement(rawsb, deu);
       else if (!href.equals(""))
@@ -38,7 +43,7 @@ public class HtmlStatusExtractor {
         matcher.appendReplacement(rawsb, "$0"); // don't replace this URL
     }
     matcher.appendTail(rawsb);
-    String tweet = rawsb.toString();
+    tweet = rawsb.toString();
     tweet = tweet.replaceAll("<(.|\n)*?>", "").replaceAll("[\n\r]", "").replaceAll("[\t]", " ").trim();
     tweet = StringEscapeUtils.unescapeHtml(tweet);
     return tweet;
