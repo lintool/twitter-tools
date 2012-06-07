@@ -36,9 +36,9 @@ public class HtmlStatusExtractor {
       String deu = urls.containsKey("data-expanded-url") ? urls.get("data-expanded-url") : "";
       String href = urls.containsKey("href") ? urls.get("href") : "";
       if (!deu.equals(""))
-        matcher.appendReplacement(rawsb, deu);
+        matcher.appendReplacement(rawsb, deu.replaceAll("\\$", "\\\\\\$"));
       else if (!href.equals(""))
-        matcher.appendReplacement(rawsb, href);
+        matcher.appendReplacement(rawsb, href.replaceAll("\\$", "\\\\\\$"));
       else
         matcher.appendReplacement(rawsb, "$0"); // don't replace this URL
     }
