@@ -1,4 +1,4 @@
-package com.twitter.corpus.download;
+package com.twitter.corpus.data;
 
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -19,7 +19,7 @@ import org.apache.hadoop.io.SequenceFile;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.twitter.corpus.data.HtmlStatus;
+import com.twitter.corpus.download.DumpHtmlStatusCrawl;
 
 import edu.umd.cloud9.io.pair.PairOfLongString;
 
