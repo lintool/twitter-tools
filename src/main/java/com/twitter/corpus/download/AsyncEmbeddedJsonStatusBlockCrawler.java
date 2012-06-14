@@ -185,8 +185,8 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
                             LOG.warn("Abandoning suspended account: " + url);
                         } else {
                             //LOG.warn("Following redirect: " + url);
-                            timer.schedule(new RetryTask(id, username, redirect, numRetries),
-                                    WAIT_BEFORE_RETRY);
+                            asyncHttpClient.prepareGet(url).execute(
+                                    new TweetFetcherHandler(id, username, redirect, numRetries));
                         }
                         return STATE.ABORT;
                 }
