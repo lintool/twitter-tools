@@ -31,6 +31,10 @@ import com.twitter.corpus.demo.ReadStatuses;
 
 import edu.umd.cloud9.io.pair.PairOfLongString;
 
+/**
+ * @deprecated Use AsyncEmbeddedJsonStatusBlockCrawler instead.
+ */
+@Deprecated 
 public class AsyncHtmlStatusBlockCrawler {
     private static final Logger LOG = Logger.getLogger(AsyncHtmlStatusBlockCrawler.class);
     private static final int MAX_RETRY_ATTEMPTS = 3;
