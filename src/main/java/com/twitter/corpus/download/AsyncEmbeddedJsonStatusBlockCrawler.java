@@ -125,7 +125,10 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
 
         // Wait for the last requests to complete.
         LOG.info("Waiting for remaining requests (" + connections.get() + ") to finish!");
-        while (connections.get() > 0) {
+        for (int i = 0; i < 10; i++) {
+            if (connections.get() == 0) {
+                break;
+            }
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {
