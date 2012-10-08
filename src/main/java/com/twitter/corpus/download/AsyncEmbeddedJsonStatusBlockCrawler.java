@@ -47,8 +47,8 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
     private static final Logger LOG = Logger.getLogger(AsyncEmbeddedJsonStatusBlockCrawler.class);
     private static final int TWEET_BLOCK_SIZE = 500;
 
-    private static final String JSON_START = "page(";
-    private static final String JSON_END = "});";
+    private static final String JSON_START = "<script type=\"text/plain\" id=\"init_data\" class=\"json-data\">";
+    private static final String JSON_END = "</script>";
 
     private static final int MAX_CONNECTIONS = 100;
     private static final int CONNECTION_TIMEOUT = 10000;
@@ -241,7 +241,7 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
                         retry();
                         return response;
                     }
-                    String json = html.substring(jsonStart + JSON_START.length(), jsonEnd + 1);
+                    String json = html.substring(jsonStart + JSON_START.length(), jsonEnd);
                     JsonObject page = (JsonObject)parser.parse(json);
                     String status = gson.toJson(page
                             .getAsJsonObject("embedData")
