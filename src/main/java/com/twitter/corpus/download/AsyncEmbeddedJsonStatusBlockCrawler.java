@@ -21,6 +21,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.log4j.Logger;
 
@@ -47,8 +48,8 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
     private static final Logger LOG = Logger.getLogger(AsyncEmbeddedJsonStatusBlockCrawler.class);
     private static final int TWEET_BLOCK_SIZE = 500;
 
-    private static final String JSON_START = "<script type=\"text/plain\" id=\"init_data\" class=\"json-data\">";
-    private static final String JSON_END = "</script>";
+    private static final String JSON_START = "<input type=\"hidden\" id=\"init-data\" class=\"json-data\" value=\"";
+    private static final String JSON_END = "\">";
 
     private static final int MAX_CONNECTIONS = 100;
     private static final int CONNECTION_TIMEOUT = 10000;
@@ -105,18 +106,22 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
             BufferedReader data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             String line;
             while ((line = data.readLine()) != null) {
-                String[] arr = line.split("\t");
-                long id = Long.parseLong(arr[0]);
-                String username = (arr.length > 1) ? arr[1] : "a";
-                String url = getUrl(id, username);
+                try {
+                    String[] arr = line.split("\t");
+                    long id = Long.parseLong(arr[0]);
+                    String username = (arr.length > 1) ? arr[1] : "a";
+                    String url = getUrl(id, username);
 
-                connections.incrementAndGet();
-                crawlURL(url, new TweetFetcherHandler(id, username, url, 0, !this.noFollow));
+                    connections.incrementAndGet();
+                    crawlURL(url, new TweetFetcherHandler(id, username, url, 0, !this.noFollow));
 
-                cnt++;
+                    cnt++;
 
-                if (cnt % TWEET_BLOCK_SIZE == 0) {
-                    LOG.info(cnt + " requests submitted");
+                    if (cnt % TWEET_BLOCK_SIZE == 0) {
+                        LOG.info(cnt + " requests submitted");
+                    }
+                } catch (NumberFormatException e) { // parseLong
+                    continue;
                 }
             }
         } catch (IOException e) {
@@ -237,26 +242,27 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
                     int jsonStart = html.indexOf(JSON_START);
                     int jsonEnd = html.indexOf(JSON_END, jsonStart + JSON_START.length());
                     if (jsonStart < 0 || jsonEnd < 0) {
-                        //LOG.warn("Unable to find embedded JSON: " + url);
+                        LOG.warn("Unable to find embedded JSON: " + url);
                         retry();
                         return response;
                     }
                     String json = html.substring(jsonStart + JSON_START.length(), jsonEnd);
+                    json = StringEscapeUtils.unescapeHtml(json);
                     JsonObject page = (JsonObject)parser.parse(json);
                     String status = gson.toJson(page
                             .getAsJsonObject("embedData")
                             .getAsJsonObject("status"));
                     crawl.put(id, status);
                 } catch (IOException e) {
-                    //LOG.warn("Error (" + e + "): " + url);
+                    LOG.warn("Error (" + e + "): " + url);
                     retry();
                     return response;
                 } catch (JsonSyntaxException e) {
-                    //LOG.warn("Unable to parse embedded JSON: " + url);
+                    LOG.warn("Unable to parse embedded JSON: " + url);
                     retry();
                     return response;
                 } catch (NullPointerException e) {
-                    //LOG.warn("Unexpected format for embedded JSON: " + url);
+                    LOG.warn("Unexpected format for embedded JSON: " + url);
                     retry();
                     return response;
                 }
