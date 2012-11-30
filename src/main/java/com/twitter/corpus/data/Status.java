@@ -53,6 +53,8 @@ public class Status {
     Preconditions.checkNotNull(json);
 
     JsonObject obj = (JsonObject) parser.parse(json);
+    if (obj.get("text") == null)
+	return null;
 
     Status status = new Status();
     status.text = obj.get("text").getAsString();

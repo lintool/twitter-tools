@@ -30,13 +30,19 @@ public class JsonStatusBlockReader implements StatusStream {
    * Returns the next status, or <code>null</code> if no more statuses.
    */
   public Status next() throws IOException {
-    String raw = br.readLine();
+    Status nxt = null;
+    String raw = null;
 
-    // Check to see if we've reached end of file.
-    if ( raw == null) {
-      return null;
+    while (nxt == null) {
+	raw = br.readLine();
+
+	// Check to see if we've reached end of file.
+	if ( raw == null) {
+	    return null;
+	}
+
+	nxt = Status.fromJson(raw);
     }
-
     return Status.fromJson(raw);
   }
 
