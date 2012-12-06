@@ -15,12 +15,12 @@ There are two ways to obtain the actual corpus:
 Fetching a status block by crawling twitter.com (HTML output)
 -------------------------------------------------------------
 
-The HTML crawler is `com.twitter.corpus.download.AsyncHtmlStatusBlockCrawler`. Here's a sample invocation:
+The HTML crawler is `com.twitter.corpus.download.AsyncEmbeddedJsonStatusBlockCrawler`. Here's a sample invocation:
 
-    java -Xmx4g -cp 'lib/*:dist/twitter-corpus-tools-0.0.1.jar' com.twitter.corpus.download.AsyncHtmlStatusBlockCrawler \
-       -data 20110123/20110123-000.dat -output html/20110123-000.html.seq
+    java -Xmx4g -cp 'lib/*:dist/twitter-corpus-tools-0.0.1.jar' com.twitter.corpus.download.AsyncEmbeddedJsonStatusBlockCrawler \
+       -data 20110123/20110123-000.dat -output json/20110123-000.json.gz
 
-Use the `-data` option to specify the status block (`.dat` file) to read. Use the `-output` option to specify where to write the output (block-compressed SequenceFile).
+Use the `-data` option to specify the status block (`.dat` file) to read. Use the `-output` option to specify where to write the output (gzip-compressed JSON file).
 
 **Note:** On Windows machines, the classpath specified by `-cp` should be separated by semicolons.
 
@@ -28,16 +28,7 @@ To download the entire corpus, you'll need to fetch all blocks using this crawle
 
 **Note:** Please be considerate when downloading the corpus. Using a couple of machines is fine. Writing a Hadoop MapReduce job to download the corpus from 500 EC2 instances _is not_. Use common sense.
 
-Despite best efforts handling timeouts and retrying, the crawler may not successfully download all statuses in one go. To address this issue, there is a "repair" program that will fetch statuses that went missing the first time around. Here's a sample invocation:
-
-    java -Xmx4g -cp 'lib/*:dist/twitter-corpus-tools-0.0.1.jar' com.twitter.corpus.download.VerifyHtmlStatusBlockCrawl \
-       -data 20110123/20110123-000.dat -statuses_input html/20110123-000.html.seq \
-       -statuses_repaired html/20110123-000.repaired.html.seq \
-       -output_success log.success -output_failure log.failure
-
-Use the `-data` option to specify the status block (`.dat` file) to read. Use the `-statuses_input` to specify the output of the crawler; `-statuses_repaired` specifies where to put the repaired crawl. Options `-output_success` and `-output_failure` specify log files to hold tweet ids that were successfully and unsuccessfully fetched the first time around, respectively.
-
-The current screen scraper, `com.twitter.corpus.data.HtmlStatusExtractor` is very primitive and pulls out only a few important fields. There are also known issues with retweets, which are indicated via HTTP redirects to the original tweet. Thus, the naive extraction approach pulls out the timestamp of the original tweet, not the retweet. The timestamp of the retweet can be reconstructed by consulting the timestamp of the tweet with the closest tweet id. Undoubtedly, there are other issues. Contributions welcome.
+Despite best efforts handling timeouts and retrying, the crawler may not successfully download all statuses in one go. If you absolutely need all available tweets, you should rerun the crawler one or more times with just the missing tweet ids. I've found that this process has diminishing returns after one or two iterations.
 
 
 Fetching a status block via the Twitter API (JSON output)
