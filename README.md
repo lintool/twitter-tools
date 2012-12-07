@@ -12,8 +12,8 @@ There are two ways to obtain the actual corpus:
 - **Using the Twitter API.** Typically, a client is limited to 150 API calls an hour, so downloading the corpus this way will take a long time! However, some people have a whitelisted API key (which unfortunately is no longer available), which supports 20k API calls an hour. For those with this level of access, this method is preferred. The output of such a crawl is a JSON status block: each status is encoded as a JSON object, one status per line. The entire file is gzipped. 
 - **Crawling twitter.com.** The combination of tweet id and username straightforwardly maps to a URL, which can be retrieved. Think `curl`. On steroids. On the up side: there's no rate limit. On the down side: we're essentially screen-scraping to reconstruct the original tweet, so the available data is not as rich as in the JSON structures. The output of such a crawl is a block-compressed Hadoop SequenceFile, where each key is a (tweet id, username) pair and each value is a complex object holding the raw HTML and other metadata. Note that we're storing the raw HTML and screen-scraping "on the fly", so that changes to the screen-scraper do not require recrawling the URLs. (Side note: `thrift` or `protobuf` fans will surely point out the many issues associated with Hadoop SequenceFiles. Yes, I know. Contributions welcome.)
 
-Fetching a status block by crawling twitter.com (HTML output)
--------------------------------------------------------------
+Fetching a status block by crawling twitter.com (Embedded JSON output)
+----------------------------------------------------------------------
 
 The HTML crawler is `com.twitter.corpus.download.AsyncEmbeddedJsonStatusBlockCrawler`. Here's a sample invocation:
 
@@ -28,11 +28,23 @@ To download the entire corpus, you'll need to fetch all blocks using this crawle
 
 **Note:** Please be considerate when downloading the corpus. Using a couple of machines is fine. Writing a Hadoop MapReduce job to download the corpus from 500 EC2 instances _is not_. Use common sense.
 
-Despite best efforts handling timeouts and retrying, the crawler may not successfully download all statuses in one go. If you absolutely need all available tweets, you should rerun the crawler one or more times with just the missing tweet ids. I've found that this process has diminishing returns after one or two iterations.
+Despite best efforts handling timeouts and retrying, the crawler may not successfully download all statuses in one go. To address this issue, there is a "repair" command-line option that will output a new data file containing only those statuses that went missing the first time around. Here's a sample invocation:
+
+    java -Xmx4g -cp 'lib/*:dist/twitter-corpus-tools-0.0.1.jar' com.twitter.corpus.download.AsyncEmbeddedJsonStatusBlockCrawler \
+       -data 20110123/20110123-000.dat -output json/20110123-000.json.gz -repair repair/20110123-000.dat
+
+And the corresponding repair:
+
+    java -Xmx4g -cp 'lib/*:dist/twitter-corpus-tools-0.0.1.jar' com.twitter.corpus.download.AsyncEmbeddedJsonStatusBlockCrawler \
+       -data repair/20110123-000.dat -output json/20110123-000.repair.json.gz
+
+**Note:** A status will not be marked for repair if the account is protected, if the account has been suspended, or if the tweet has been deleted (404). A download on 12/7/12 of over 3MM tweets reported fewer than 100 statuses needing repair, i.e., nearly every tweet was either accessible, or inaccessible for a known reason.
+
+**Note:** There are known issues with retweets, which cause only the original tweet to appear in the output. In order to preserve the requested tweet id, the crawler therefore injects a 'requested\_id' field into each JSON status with the value of the originally requested (input) tweet id. Statuses where 'requested\_id' differs from 'id' can be considered to be retweets.
 
 
 Fetching a status block via the Twitter API (JSON output)
---------------------------------------------------------
+---------------------------------------------------------
 
 The REST API crawler is `com.twitter.corpus.download.AsyncJsonStatusBlockCrawler`. Here's a sample invocation:
 

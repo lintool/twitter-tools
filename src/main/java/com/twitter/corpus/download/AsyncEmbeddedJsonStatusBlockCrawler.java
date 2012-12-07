@@ -60,7 +60,8 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
     private static final Timer timer = new Timer(true);
 
     private final File file;
-    private final String output;
+    private final File output;
+    private final File repair;
     private final AsyncHttpClient asyncHttpClient;
     private final boolean noFollow;
 
@@ -68,18 +69,40 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
     private final ConcurrentSkipListMap<Long, String> crawl =
         new ConcurrentSkipListMap<Long, String>();
 
+    // key = statud id, value = data line
+    private final ConcurrentSkipListMap<Long, String> crawl_repair =
+        new ConcurrentSkipListMap<Long, String>();
+
     private final AtomicInteger connections = new AtomicInteger(0);
 
     private static final JsonParser parser = new JsonParser();
     private static final Gson gson = new Gson();
 
-    public AsyncEmbeddedJsonStatusBlockCrawler(File file, String output, boolean noFollow) throws IOException {
+    public AsyncEmbeddedJsonStatusBlockCrawler(File file, String output, String repair, boolean noFollow) throws IOException {
         this.file = Preconditions.checkNotNull(file);
-        this.output = Preconditions.checkNotNull(output);
         this.noFollow = noFollow;
 
         if (!file.exists()) {
             throw new IOException(file + " does not exist!");
+        }
+
+        // check existence of output's parent directory
+        this.output = new File(Preconditions.checkNotNull(output));
+        File parent = this.output.getParentFile();
+        if (parent != null && !parent.exists()) {
+            throw new IOException(output + "'s parent directory does not exist!");
+        }
+
+        // check existence of repair's parent directory (or set to null if no
+        // repair file specified)
+        if (repair != null) {
+            this.repair = new File(repair);
+            parent = this.repair.getParentFile();
+            if (parent != null && !parent.exists()) {
+                throw new IOException(repair + "'s parent directory does not exist!");
+            }
+        } else {
+            this.repair = null;
         }
 
         AsyncHttpClientConfig config = new AsyncHttpClientConfig.Builder()
@@ -113,7 +136,7 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
                     String url = getUrl(id, username);
 
                     connections.incrementAndGet();
-                    crawlURL(url, new TweetFetcherHandler(id, username, url, 0, !this.noFollow));
+                    crawlURL(url, new TweetFetcherHandler(id, username, url, 0, !this.noFollow, line));
 
                     cnt++;
 
@@ -153,15 +176,28 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
         Configuration conf = new Configuration();
 
         OutputStreamWriter out =
-            new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(output)));
+            new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(output)), "UTF-8");
         for (Map.Entry<Long, String> entry : crawl.entrySet()) {
             written++;
             out.write(entry.getValue() + "\n");
         }
-        
         out.close();
 
         LOG.info(written + " statuses written.");
+
+        if (this.repair != null) {
+            LOG.info("Writing repair data file...");
+            written = 0;
+            out = new OutputStreamWriter(new FileOutputStream(repair), "UTF-8");
+            for (Map.Entry<Long, String> entry : crawl_repair.entrySet()) {
+                written++;
+                out.write(entry.getValue() + "\n");
+            }
+            out.close();
+
+            LOG.info(written + " statuses need repair.");
+        }
+        
         LOG.info("Done!");
     }
 
@@ -171,15 +207,24 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
         private final String url;
         private final int numRetries;
         private final boolean followRedirects;
+        private final String line;
 
         private int httpStatus = -1;
 
-        public TweetFetcherHandler(long id, String username, String url, int numRetries, boolean followRedirects) {
+        public TweetFetcherHandler(long id, String username, String url, int numRetries, boolean followRedirects, String line) {
             this.id = id;
             this.username = username;
             this.url = url;
             this.numRetries = numRetries;
             this.followRedirects = followRedirects;
+            this.line = line;
+        }
+
+        public long getId() {
+            return id;
+        }
+        public String getLine() {
+            return line;
         }
 
         @Override
@@ -214,7 +259,7 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
                             connections.decrementAndGet();
                         } else if (followRedirects) {
                             //LOG.warn("Following redirect: " + url);
-                            crawlURL(redirect, new TweetFetcherHandler(id, username, redirect, numRetries, followRedirects));
+                            crawlURL(redirect, new TweetFetcherHandler(id, username, redirect, numRetries, followRedirects, line));
                         } else {
                             LOG.warn("Abandoning redirect: " + url);
                             connections.decrementAndGet();
@@ -241,18 +286,26 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
                     String html = response.getResponseBody("UTF-8");
                     int jsonStart = html.indexOf(JSON_START);
                     int jsonEnd = html.indexOf(JSON_END, jsonStart + JSON_START.length());
+
                     if (jsonStart < 0 || jsonEnd < 0) {
                         LOG.warn("Unable to find embedded JSON: " + url);
                         retry();
                         return response;
                     }
+
                     String json = html.substring(jsonStart + JSON_START.length(), jsonEnd);
                     json = StringEscapeUtils.unescapeHtml(json);
                     JsonObject page = (JsonObject)parser.parse(json);
-                    String status = gson.toJson(page
-                            .getAsJsonObject("embedData")
-                            .getAsJsonObject("status"));
-                    crawl.put(id, status);
+
+                    JsonObject status = page.getAsJsonObject("embedData").getAsJsonObject("status");
+
+                    // save the requested id
+                    status.addProperty("requested_id", new Long(id));
+
+                    crawl.put(id, gson.toJson(status));
+                    connections.decrementAndGet();
+
+                    return response;
                 } catch (IOException e) {
                     LOG.warn("Error (" + e + "): " + url);
                     retry();
@@ -266,10 +319,6 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
                     retry();
                     return response;
                 }
-
-                connections.decrementAndGet();
-
-                return response;
             }
 
         @Override
@@ -281,9 +330,11 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
         private void retry() {
             if (this.numRetries >= MAX_RETRY_ATTEMPTS) {
                 LOG.warn("Abandoning after max retry attempts: " + url);
+                crawl_repair.put(id, line);
                 connections.decrementAndGet();
                 return;
             }
+
             //LOG.warn("Retrying (attempt " + (numRetries+1) + "): " + url);
             timer.schedule(new RetryTask(id, username, url, numRetries+1, followRedirects),
                     WAIT_BEFORE_RETRY);
@@ -305,7 +356,7 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
             }
 
             public void run() {
-                crawlURL(url, new TweetFetcherHandler(id, username, url, numRetries, followRedirects));
+                crawlURL(url, new TweetFetcherHandler(id, username, url, numRetries, followRedirects, line));
             }
         }
     }
@@ -318,12 +369,14 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
                 .execute(handler);
         } catch (IOException e) {
             LOG.warn("Abandoning due to error (" + e + "): " + url);
+            crawl_repair.put(handler.getId(), handler.getLine());
             connections.decrementAndGet();
         }
     }
 
     private static final String DATA_OPTION = "data";
     private static final String OUTPUT_OPTION = "output";
+    private static final String REPAIR_OPTION = "repair";
     private static final String NOFOLLOW_OPTION = "noFollow";
 
     @SuppressWarnings("static-access")
@@ -333,6 +386,8 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
                     .withDescription("data file with tweet ids").create(DATA_OPTION));
             options.addOption(OptionBuilder.withArgName("path").hasArg()
                     .withDescription("output file (*.gz)").create(OUTPUT_OPTION));
+            options.addOption(OptionBuilder.withArgName("path").hasArg()
+                    .withDescription("output repair file (can be used later as a data file)").create(REPAIR_OPTION));
             options.addOption(NOFOLLOW_OPTION, NOFOLLOW_OPTION, false, "don't follow 301 redirects");
 
             CommandLine cmdline = null;
@@ -352,7 +407,8 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
 
             String data = cmdline.getOptionValue(DATA_OPTION);
             String output = cmdline.getOptionValue(OUTPUT_OPTION);
+            String repair = cmdline.getOptionValue(REPAIR_OPTION);
             boolean noFollow = cmdline.hasOption(NOFOLLOW_OPTION);
-            new AsyncEmbeddedJsonStatusBlockCrawler(new File(data), output, noFollow).fetch();
+            new AsyncEmbeddedJsonStatusBlockCrawler(new File(data), output, repair, noFollow).fetch();
         }
 }
