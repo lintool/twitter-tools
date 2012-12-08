@@ -38,7 +38,7 @@ And the corresponding repair:
     java -Xmx4g -cp 'lib/*:dist/twitter-corpus-tools-0.0.1.jar' com.twitter.corpus.download.AsyncEmbeddedJsonStatusBlockCrawler \
        -data repair/20110123-000.dat -output json/20110123-000.repair.json.gz
 
-**Note:** A status will not be marked for repair if the account is protected, if the account has been suspended, or if the tweet has been deleted (404). A download on 12/7/12 of over 3MM tweets reported fewer than 100 statuses needing repair, i.e., nearly every tweet was either accessible, or inaccessible for a known reason.
+**Note:** A status will not be marked for repair if the account is protected, if the account has been suspended, or if the tweet has been deleted (404). A download on 12/7 - 12/8/12 of the full Tweets11 corpus obtained 13,658,258 tweets, with only 155 tweets marked as needing repair, i.e., nearly every tweet was either accessible, or inaccessible for a known reason. Of the 155 tweets marked for repair, a subsequent crawl was able to obtain 147.
 
 **Note:** There are known issues with retweets, which cause only the original tweet to appear in the output. In order to preserve the requested tweet id, the crawler therefore injects a 'requested\_id' field into each JSON status with the value of the originally requested (input) tweet id. Statuses where 'requested\_id' differs from 'id' can be considered to be retweets.
 
