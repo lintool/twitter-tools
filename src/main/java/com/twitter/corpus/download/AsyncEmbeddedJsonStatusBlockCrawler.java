@@ -257,6 +257,9 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
                         } else if (redirect.contains("account/suspended")) {
                             LOG.warn("Abandoning suspended account: " + url);
                             connections.decrementAndGet();
+                        } else if (redirect.contains("//status") || redirect.contains("login?redirect_after_login")) {
+                            LOG.warn("Abandoning deleted account: " + url);
+                            connections.decrementAndGet();
                         } else if (followRedirects) {
                             //LOG.warn("Following redirect: " + url);
                             crawlURL(redirect, new TweetFetcherHandler(id, username, redirect, numRetries, followRedirects, line));
