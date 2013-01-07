@@ -48,6 +48,14 @@ public class HtmlStatus implements Writable {
     this.httpStatusCode = in.readInt();
     this.timestamp = in.readLong();
     this.html = in.readUTF();
+    // handle new header
+    String header = "BEGIN " + this.timestamp + " ";
+    if (html.startsWith(header)) {
+      int size = Integer.parseInt(html.substring(header.length()));
+      byte[] bHtml = new byte[size];
+      in.readFully(bHtml);
+      this.html = new String(bHtml);
+    }
   }
 
   /**
@@ -57,7 +65,11 @@ public class HtmlStatus implements Writable {
     out.writeByte(version);
     out.writeInt(httpStatusCode);
     out.writeLong(timestamp);
-    out.writeUTF(html);
+    // UTF header allows blocks of size at most 64K, so create our own header
+    byte[] bHtml = html.getBytes("UTF-8");
+    String header = "BEGIN " + timestamp + " " + bHtml.length;
+    out.writeUTF(header);
+    out.write(bHtml);
   }
 
   @Override

@@ -77,8 +77,10 @@ public class Status {
     status.id = id;
     status.screenname = username;
     status.httpStatusCode = httpStatus;
-    status.text = extractor.extractTweet(html);
-    status.createdAt = extractor.extractTimestamp(html);
+    try {
+        status.text = extractor.extractTweet(html);
+        status.createdAt = extractor.extractTimestamp(html, id);
+    } catch (StackOverflowError e){} // happens when the HTML is corrupt
 
     // TODO: Note that http status code 302 indicates a redirect, which indicates a retweet. I.e.,
     // the status redirects to the original retweeted status. Note that this is not currently

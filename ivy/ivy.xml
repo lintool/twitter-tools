@@ -14,7 +14,7 @@
     </dependency>
 
     <dependency org="commons-cli" name="commons-cli" rev="1.2" />
-    <dependency org="com.ning" name="async-http-client" rev="1.6.2"/>
+    <dependency org="com.ning" name="async-http-client" rev="1.7.5"/>
     <dependency org="com.google.code.gson" name="gson" rev="1.6"/>
     <dependency org="org.apache.hadoop" name="hadoop-core" rev="0.20.2" />
     <dependency org="org.apache.lucene" name="lucene-core" rev="3.1.0" />
