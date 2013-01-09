@@ -7,23 +7,24 @@
   </publications>
 
   <dependencies>
-    <dependency org="edu.umd" name="cloud9" rev="1.2.1">
+    <dependency org="edu.umd" name="cloud9" rev="1.2.1" conf="*->*,!sources,!javadoc">
       <exclude org="spy" module="spy"/>
       <exclude org="spy" module="memcached"/>
       <exclude org="fastutil" module="fastutil"/>
     </dependency>
 
-    <dependency org="org.twitter4j" name="twitter4j-core" rev="3.0.3" />
-    <dependency org="org.twitter4j" name="twitter4j-stream" rev="3.0.3" />
+    <dependency org="org.twitter4j" name="twitter4j-core" rev="3.0.3" conf="*->*,!sources,!javadoc"/>
+    <dependency org="org.twitter4j" name="twitter4j-stream" rev="3.0.3" conf="*->*,!sources,!javadoc"/>
 
-    <dependency org="commons-cli" name="commons-cli" rev="1.2" />
-    <dependency org="com.ning" name="async-http-client" rev="1.7.5"/>
-    <dependency org="com.google.code.gson" name="gson" rev="1.6"/>
-    <dependency org="org.apache.hadoop" name="hadoop-core" rev="0.20.2" />
-    <dependency org="org.apache.lucene" name="lucene-core" rev="3.1.0" />
-    <dependency org="org.apache.lucene" name="lucene-analyzers" rev="3.1.0" />
-    <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1"/>
-    <dependency org="junit" name="junit" rev="4.8.2" />
-    <dependency org="log4j" name="log4j" rev="1.2.16"/>
+    <dependency org="commons-cli" name="commons-cli" rev="1.2" conf="*->*,!sources,!javadoc"/>
+    <dependency org="com.ning" name="async-http-client" rev="1.7.5" conf="*->*,!sources,!javadoc"/>
+    <dependency org="com.google.code.gson" name="gson" rev="1.6" conf="*->*,!sources,!javadoc"/>
+    <dependency org="org.apache.hadoop" name="hadoop-core" rev="0.20.2" conf="*->*,!sources,!javadoc"/>
+    <dependency org="org.apache.lucene" name="lucene-core" rev="3.1.0" conf="*->*,!sources,!javadoc"/>
+    <dependency org="org.apache.lucene" name="lucene-analyzers" rev="3.1.0" conf="*->*,!sources,!javadoc"/>
+    <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1" conf="*->*,!sources,!javadoc"/>
+    <dependency org="junit" name="junit" rev="4.8.2" conf="*->*,!sources,!javadoc"/>
+    <dependency org="log4j" name="log4j" rev="1.2.17" conf="*->*,!sources,!javadoc"/>
+
   </dependencies>
 </ivy-module>
