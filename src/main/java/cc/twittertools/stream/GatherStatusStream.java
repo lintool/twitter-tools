@@ -1,4 +1,4 @@
-package streaming;
+package cc.twittertools.stream;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.DailyRollingFileAppender;
@@ -61,7 +61,6 @@ public final class GatherStatusStream {
 
     // creates a custom logger and log messages
     final Logger logger = Logger.getLogger(GatherStatusStream.class);
-
 
     TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
     RawStreamListener rawListener = new RawStreamListener() {
