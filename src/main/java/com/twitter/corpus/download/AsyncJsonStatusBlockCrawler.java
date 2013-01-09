@@ -70,8 +70,9 @@ public class AsyncJsonStatusBlockCrawler {
     LOG.info("Processing " + file);
 
     int cnt = 0;
+    BufferedReader data = null;
     try {
-      BufferedReader data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+      data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
       String line;
       while ((line = data.readLine()) != null) {
         String[] arr = line.split("\t");
@@ -93,6 +94,8 @@ public class AsyncJsonStatusBlockCrawler {
       }
     } catch (IOException e) {
       e.printStackTrace();
+    } finally {
+      data.close();
     }
 
     // Wait for the last requests to complete.
