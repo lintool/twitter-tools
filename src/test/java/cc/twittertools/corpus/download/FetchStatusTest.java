@@ -9,7 +9,7 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
 import cc.twittertools.corpus.data.Status;
-import cc.twittertools.download.AsyncHtmlStatusBlockCrawler;
+import cc.twittertools.download.AsyncEmbeddedJsonStatusBlockCrawler;
 
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
@@ -17,7 +17,7 @@ import com.ning.http.client.Response;
 public class FetchStatusTest {
   @Test
   public void basicFamous() throws Exception {
-    String url = AsyncHtmlStatusBlockCrawler.getUrl(1121915133L, "jkrums");
+    String url = AsyncEmbeddedJsonStatusBlockCrawler.getUrl(1121915133L, "jkrums");
     AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
     AsyncHttpClient.BoundRequestBuilder request = asyncHttpClient.prepareGet(url);
     Future<Response> f = request.execute();

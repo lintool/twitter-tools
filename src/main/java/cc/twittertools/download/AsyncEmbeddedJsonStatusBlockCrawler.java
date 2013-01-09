@@ -24,8 +24,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
-import cc.twittertools.corpus.demo.ReadStatuses;
-
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -396,7 +394,7 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
 
     if (!cmdline.hasOption(DATA_OPTION) || !cmdline.hasOption(OUTPUT_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(ReadStatuses.class.getName(), options);
+      formatter.printHelp(AsyncEmbeddedJsonStatusBlockCrawler.class.getName(), options);
       System.exit(-1);
     }
 

@@ -16,10 +16,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 
-import cc.twittertools.download.DumpHtmlStatusCrawl;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import edu.umd.cloud9.io.pair.PairOfLongString;
@@ -55,7 +52,7 @@ public class ExtractEmbeddedJsonHtmlStatusBlock {
 
         if (!cmdline.hasOption(INPUT_OPTION) && !cmdline.hasOption(OUTPUT_OPTION)) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp(DumpHtmlStatusCrawl.class.getName(), options);
+            formatter.printHelp(ExtractEmbeddedJsonHtmlStatusBlock.class.getName(), options);
             System.exit(-1);
         }
 
