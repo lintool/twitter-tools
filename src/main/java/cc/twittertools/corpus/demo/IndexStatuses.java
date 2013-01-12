@@ -9,9 +9,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -26,8 +23,6 @@ import org.apache.lucene.search.Similarity;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
-import cc.twittertools.corpus.data.HtmlStatusBlockReader;
-import cc.twittertools.corpus.data.HtmlStatusCorpusReader;
 import cc.twittertools.corpus.data.JsonStatusBlockReader;
 import cc.twittertools.corpus.data.JsonStatusCorpusReader;
 import cc.twittertools.corpus.data.Status;
@@ -60,9 +55,6 @@ public class IndexStatuses {
   private static final String INPUT_OPTION = "input";
   private static final String INDEX_OPTION = "index";
 
-  private static final String HTML_MODE = "html";
-  private static final String JSON_MODE = "json";
-
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
     Options options = new Options();
@@ -70,8 +62,6 @@ public class IndexStatuses {
         .withDescription("input directory or file").create(INPUT_OPTION));
     options.addOption(OptionBuilder.withArgName("path").hasArg()
         .withDescription("index location").create(INDEX_OPTION));
-    options.addOption(HTML_MODE, false, "input is HTML SequenceFile; mutually exclusive with -" + JSON_MODE);
-    options.addOption(JSON_MODE, false, "input is JSON; mutually exclusive with -" + HTML_MODE);
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -82,8 +72,7 @@ public class IndexStatuses {
       System.exit(-1);
     }
 
-    if (!(cmdline.hasOption(INPUT_OPTION) && cmdline.hasOption(INDEX_OPTION) && (cmdline
-        .hasOption(HTML_MODE) ^ cmdline.hasOption(JSON_MODE)))) {
+    if (!(cmdline.hasOption(INPUT_OPTION) && cmdline.hasOption(INDEX_OPTION))) {
       HelpFormatter formatter = new HelpFormatter();
       formatter.printHelp(IndexStatuses.class.getName(), options);
       System.exit(-1);
@@ -93,32 +82,17 @@ public class IndexStatuses {
 
     LOG.info("Indexing " + cmdline.getOptionValue(INPUT_OPTION));
     StatusStream stream;
-    // Figure out if we're reading from HTML SequenceFiles or JSON.
-    if (cmdline.hasOption(HTML_MODE)) {
-      FileSystem fs = FileSystem.get(new Configuration());
-      Path file = new Path(cmdline.getOptionValue(INPUT_OPTION));
-      if (!fs.exists(file)) {
-        System.err.println("Error: " + file + " does not exist!");
-        System.exit(-1);
-      }
 
-      if (fs.getFileStatus(file).isDir()) {
-        stream = new HtmlStatusCorpusReader(file, fs);
-      } else {
-        stream = new HtmlStatusBlockReader(file, fs);
-      }
+    File file = new File(cmdline.getOptionValue(INPUT_OPTION));
+    if (!file.exists()) {
+      System.err.println("Error: " + file + " does not exist!");
+      System.exit(-1);
+    }
+
+    if (file.isDirectory()) {
+      stream = new JsonStatusCorpusReader(file);
     } else {
-      File file = new File(cmdline.getOptionValue(INPUT_OPTION));
-      if (!file.exists()) {
-        System.err.println("Error: " + file + " does not exist!");
-        System.exit(-1);
-      }
-
-      if (file.isDirectory()) {
-        stream = new JsonStatusCorpusReader(file);
-      } else {
-        stream = new JsonStatusBlockReader(file);
-      }
+      stream = new JsonStatusBlockReader(file);
     }
 
     Analyzer analyzer = ANALYZER;

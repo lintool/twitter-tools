@@ -39,11 +39,11 @@ import com.ning.http.client.extra.ThrottleRequestFilter;
 
 public class AsyncEmbeddedJsonStatusBlockCrawler {
   private static final Logger LOG = Logger.getLogger(AsyncEmbeddedJsonStatusBlockCrawler.class);
+
+  public static final String JSON_START = "<input type=\"hidden\" id=\"init-data\" class=\"json-data\" value=\"";
+  public static final String JSON_END = "\">";
+
   private static final int TWEET_BLOCK_SIZE = 500;
-
-  private static final String JSON_START = "<input type=\"hidden\" id=\"init-data\" class=\"json-data\" value=\"";
-  private static final String JSON_END = "\">";
-
   private static final int MAX_CONNECTIONS = 100;
   private static final int CONNECTION_TIMEOUT = 10000;
   private static final int IDLE_CONNECTION_TIMEOUT = 10000;

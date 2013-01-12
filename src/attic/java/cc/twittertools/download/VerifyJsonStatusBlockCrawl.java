@@ -1,4 +1,4 @@
-package cc.twittertools.corpus.data;
+package cc.twittertools.download;
 
 import java.io.BufferedReader;
 import java.io.File;
