@@ -1,4 +1,4 @@
-package cc.twittertools.download;
+package cc.twittertools.corpus.data;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,6 +30,8 @@ import com.google.common.base.Preconditions;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 
+//NOTE: this was originally designed for Twitter API v1.0, which no longer works with API v1.1
+@Deprecated
 public class VerifyJsonStatusBlockCrawl {
   private static final Logger LOG = Logger.getLogger(VerifyJsonStatusBlockCrawl.class);
 
