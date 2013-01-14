@@ -1,4 +1,4 @@
-<project name="twitter-corpus-tools" default="scripts"
+<project name="twitter-tools" default="scripts"
          xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:artifact="antlib:org.apache.maven.artifact.ant" basedir=".">
   <description>Twitter tools for researchers</description>
 
@@ -9,7 +9,7 @@
   <property name="test.dir" location="test" />
   <property name="javadoc.dir" location="docs/api/" />
 
-  <property name="version" value="0.0.1"/>
+  <property name="version" value="1.0.0"/>
 
   <!-- paths used for compilation and run  -->
   <path id="lib.path.id">
@@ -25,6 +25,21 @@
   <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar"/>
   <property name="ivy.settings.file" value="${basedir}/ivy/ivysettings.xml" />
   <property name="ivy.dep.file" value="${basedir}/ivy/ivy.xml" />
+
+  <property name="maven.ant.task.version" value="2.1.2"/>
+  <property name="maven.jar.dir" value="${basedir}/${lib.dir}"/>
+  <property name="maven.jar.file" value="${maven.jar.dir}/maven.jar"/>
+
+  <!-- define Maven coordinates, repository url and artifacts name etc -->
+  <property name="groupId" value="cc.twittertools" />
+  <property name="artifactId" value="twitter-tools" />
+  <property name="version" value="${version}" />
+
+  <property name="maven-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2" />
+  <property name="maven-repository-id" value="sonatype-nexus-staging" />
+  <property name="maven-jar" value="${dist.dir}/${artifactId}-${version}.jar" />
+  <property name="maven-javadoc-jar" value="${dist.dir}/${artifactId}-${version}-javadoc.jar" />
+  <property name="maven-sources-jar" value="${dist.dir}/${artifactId}-${version}-sources.jar" />
 
   <target name="init">
     <tstamp />
@@ -62,6 +77,21 @@
       <ivy:report todir="${build.dir}"/>
   </target>
 
+  <!-- download maven from web site so that it can be used even without any special installation -->
+  <target name="download-maven" depends="init" unless="skip.download">
+    <mkdir dir="${maven.jar.dir}"/>
+    <echo message="installing maven ant tasks..."/>
+    <get src="http://repo1.maven.org/maven2/org/apache/maven/maven-ant-tasks/${maven.ant.task.version}/maven-ant-tasks-${maven.ant.task.version}.jar"
+         dest="${maven.jar.file}" usetimestamp="true"/>
+  </target>
+
+  <target name="install-maven" depends="download-maven" description="--> install ivy">
+    <path id="maven.lib.path">
+      <fileset dir="${maven.jar.dir}" includes="*.jar"/>
+    </path>
+    <taskdef uri="antlib:org.apache.maven.artifact.ant" classpathref="maven.lib.path"/>
+  </target>
+
   <target name="compile" depends="init,resolve" description="compile the source ">
     <javac classpathref="lib.path.id" srcdir="${src.dir}/main/java" destdir="${build.dir}" optimize="on" debug="on">
       <compilerarg value="-Xlint:unchecked" />
@@ -76,12 +106,12 @@
   </target>
 
   <target name="jar" depends="compile" description="generate the distribution">
-    <jar jarfile="${dist.dir}/twitter-corpus-tools-${version}.jar" basedir="${build.dir}" />
+    <jar jarfile="${dist.dir}/twitter-tools-${version}.jar" basedir="${build.dir}" />
   </target>
 
   <target name="dist" depends="jar,javadoc" description="generate the distribution">
-    <jar jarfile="${dist.dir}/twitter-corpus-tools-${version}-sources.jar" basedir="${src.dir}" />
-    <jar jarfile="${dist.dir}/twitter-corpus-tools-${version}-javadoc.jar" basedir="${javadoc.dir}" />
+    <jar jarfile="${dist.dir}/twitter-tools-${version}-sources.jar" basedir="${src.dir}" />
+    <jar jarfile="${dist.dir}/twitter-tools-${version}-javadoc.jar" basedir="${javadoc.dir}" />
   </target>
 
   <target name="clean" description="clean up">
@@ -142,6 +172,51 @@
     <echo file="./etc/run.${suffix}" message="${param_prefix}1 ${param_prefix}2 ${param_prefix}3 ${param_prefix}4 ${param_prefix}5 ${param_prefix}6 ${param_prefix}7 ${param_prefix}8 ${param_prefix}9${line.separator}" append="true" />
 
      <chmod dir="./etc/" perm="ugo+rx" includes="**/*.sh"/>
+  </target>
+
+  <target name="gen-pom" depends="install-ivy">
+    <ivy:makepom ivyfile="ivy/ivy.xml" pomfile="twittertools.pom" />
+  </target>
+
+  <target name="publish-local" depends="jar" description="publish jar/source to maven repo mounted at ~/.m2/repository">
+    <ivy:publish resolver="local-m2-publish" forcedeliver="true" overwrite="true" publishivy="false">
+      <artifacts pattern="${dist.dir}/[artifact]-[revision].[ext]"/>
+      <artifacts pattern="pom.xml"/>
+    </ivy:publish>
+  </target>
+
+  <target name="deploy" depends="dist,install-maven" description="deploy to Nexus">
+    <!-- sign and deploy the main artifact -->
+    <artifact:mvn>
+      <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+      <arg value="-Durl=${maven-repository-url}" />
+      <arg value="-DrepositoryId=${maven-repository-id}" />
+      <arg value="-DpomFile=pom.xml" />
+      <arg value="-Dfile=${maven-jar}" />
+      <arg value="-Pgpg" />
+    </artifact:mvn>
+
+    <!-- sign and deploy the sources artifact -->
+    <artifact:mvn>
+      <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+      <arg value="-Durl=${maven-repository-url}" />
+      <arg value="-DrepositoryId=${maven-repository-id}" />
+      <arg value="-DpomFile=pom.xml" />
+      <arg value="-Dfile=${maven-sources-jar}" />
+      <arg value="-Dclassifier=sources" />
+      <arg value="-Pgpg" />
+    </artifact:mvn>
+
+    <!-- sign and deploy the javadoc artifact -->
+    <artifact:mvn>
+      <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
+      <arg value="-Durl=${maven-repository-url}" />
+      <arg value="-DrepositoryId=${maven-repository-id}" />
+      <arg value="-DpomFile=pom.xml" />
+      <arg value="-Dfile=${maven-javadoc-jar}" />
+      <arg value="-Dclassifier=javadoc" />
+      <arg value="-Pgpg" />
+    </artifact:mvn>
   </target>
 
 </project>
