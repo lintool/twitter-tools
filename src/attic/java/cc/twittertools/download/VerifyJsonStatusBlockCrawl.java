@@ -3,11 +3,15 @@ package cc.twittertools.download;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -16,77 +20,70 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.SequenceFile;
 import org.apache.log4j.Logger;
 
-import cc.twittertools.corpus.data.HtmlStatus;
+import cc.twittertools.corpus.data.JsonStatusBlockReader;
+import cc.twittertools.corpus.data.Status;
+import cc.twittertools.corpus.data.StatusStream;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 
-import edu.umd.cloud9.io.pair.PairOfLongString;
-
-public class VerifyHtmlStatusBlockCrawl {
-  private static final Logger LOG = Logger.getLogger(VerifyHtmlStatusBlockCrawl.class);
+//NOTE: this was originally designed for Twitter API v1.0, which no longer works with API v1.1
+@Deprecated
+public class VerifyJsonStatusBlockCrawl {
+  private static final Logger LOG = Logger.getLogger(VerifyJsonStatusBlockCrawl.class);
 
   private final File data;
-  private final Path statuses;
+  private final File statuses;
   private final AsyncHttpClient client = new AsyncHttpClient();
-  private final FileSystem fs;
 
   private File outputSuccess = null;
   private File outputFailure = null;
-  private Path repairedOutput = null;
+  private File repairedOutput = null;
 
-  public VerifyHtmlStatusBlockCrawl(File data, Path statuses, FileSystem fs) throws IOException {
-    this.data = Preconditions.checkNotNull(data);
+  public VerifyJsonStatusBlockCrawl(File data, File statuses) {
     this.statuses = Preconditions.checkNotNull(statuses);
-    this.fs = Preconditions.checkNotNull(fs);
+    this.data = Preconditions.checkNotNull(data);
 
-    if (!fs.exists(statuses)) {
-      throw new RuntimeException(statuses + " does not exist!");
-    }
-
-    if (fs.getFileStatus(statuses).isDir()) {
+    if (!statuses.exists()) {
       throw new RuntimeException(statuses + " does not exist!");
     }
   }
 
-  public VerifyHtmlStatusBlockCrawl withOutputSuccess(File file) {
+  public VerifyJsonStatusBlockCrawl withOutputSuccess(File file) {
     this.outputSuccess = Preconditions.checkNotNull(file);
     return this;
   }
 
-  public VerifyHtmlStatusBlockCrawl withOutputFailure(File file) {
+  public VerifyJsonStatusBlockCrawl withOutputFailure(File file) {
     this.outputFailure = Preconditions.checkNotNull(file);
     return this;
   }
 
-  public VerifyHtmlStatusBlockCrawl withRepairedOutput(Path path) {
-    this.repairedOutput = Preconditions.checkNotNull(path);
+  public VerifyJsonStatusBlockCrawl withRepairedOutput(File file) {
+    this.repairedOutput = Preconditions.checkNotNull(file);
     return this;
   }
 
   public boolean verify() throws IOException {
     LOG.info(String.format("Reading statuses read from %s.", statuses));
 
-    Map<PairOfLongString, HtmlStatus> crawl = Maps.newTreeMap();
+    StatusStream stream;
+    if (statuses.isDirectory()) {
+      throw new RuntimeException(statuses + " cannot be a directory!");
+    }
+    stream = new JsonStatusBlockReader(statuses);
 
-    SequenceFile.Reader reader = new SequenceFile.Reader(fs, statuses, fs.getConf());
-    PairOfLongString key = new PairOfLongString();
-    HtmlStatus value = new HtmlStatus();
+    Map<Long, String> ids = new HashMap<Long, String>();
 
     int cnt = 0;
-    while (reader.next(key, value)) {
-      crawl.put(key.clone(), value.clone());
+    Status status;
+    while ((status = stream.next()) != null) {
+      ids.put(status.getId(), status.getJsonString());
       cnt++;
     }
-    reader.close();
     LOG.info(String.format("Total of %d statuses read.", cnt));
 
     BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(data)));
@@ -104,14 +101,14 @@ public class VerifyHtmlStatusBlockCrawl {
     int successCnt = 0;
     int failureCnt = 0;
     int fetchedCnt = 0;
+    int notAvailableCnt = 0;
     String line;
     while ((line = in.readLine()) != null) {
       String[] arr = line.split("\\t");
       long id = Long.parseLong(arr[0]);
-      String username = arr[1];
       totalCnt++;
 
-      if (crawl.containsKey(new PairOfLongString(id, username))) {
+      if (ids.containsKey(id)) {
         if (successOut != null) {
           successOut.write(line + "\n");
         }
@@ -119,23 +116,41 @@ public class VerifyHtmlStatusBlockCrawl {
       } else {
         // Check to see if we should actually bother repairing.
         if (repairedOutput != null) {
+          Response response = null;
+          while (true) {
+            try {
+              response = client.prepareGet(
+                  AsyncJsonStatusBlockCrawler.getUrl(
+                      AsyncJsonStatusBlockCrawler.DEFAULT_URL_PREFIX, id, arr[1]))
+                  .execute().get();
 
-          Response response = fetchUrl(AsyncHtmlStatusBlockCrawler.getUrl(id, username));
-          if (response.getStatusCode() == 302) {
-            String redirect = response.getHeader("Location");
-            response = fetchUrl(redirect);
+              if (response.getStatusCode() < 500) {
+                break;
+              }
+            } catch (InterruptedException e) {
+              // Do nothing, just retry.
+            } catch (ExecutionException e) {
+              // Do nothing, just retry.
+            }
 
-            crawl.put(new PairOfLongString(id, username),
-                new HtmlStatus(302, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
-          } else {
-            // Status 200 = okay
-            // Status 4XX = delete, forbid, etc. add a tombstone.
-            crawl.put(new PairOfLongString(id, username),
-                new HtmlStatus(200, System.currentTimeMillis(), response.getResponseBody("UTF-8")));
+            try {
+              Thread.sleep(1000);
+            } catch (Exception e) {
+            }
+            LOG.warn("Error: retrying.");
           }
-          fetchedCnt++;
-        }
 
+          String s = response.getResponseBody();
+          if (isTweetNoLongerAvailable(s)) {
+            LOG.info(String.format("Missing status %d: no longer available.", id));
+            notAvailableCnt++;
+          } else {
+            LOG.info(String.format("Missing status %d: successfully fetched.", id));
+            ids.put(id, response.getResponseBody());
+            fetchedCnt++;
+          }
+        }
+      
         if (failureOut != null) {
           failureOut.write(line + "\n");
         }
@@ -143,7 +158,14 @@ public class VerifyHtmlStatusBlockCrawl {
       }
     }
 
+    LOG.info(String.format("Total of %d statuses in %s.", cnt, statuses));
+    LOG.info(String.format("Total of %d entries in %s.", totalCnt, data));
+    LOG.info(String.format("%d statuses no longer available.", notAvailableCnt));
     LOG.info(String.format("%d missing statuses fetched.", fetchedCnt));
+
+    if (cnt + notAvailableCnt + fetchedCnt == totalCnt) {
+      LOG.info("SUCCESS! All statuses accounted for.");
+    }
 
     if (outputSuccess != null) {
       LOG.info(String.format("Total of %d status id written to %s.", successCnt, outputSuccess));
@@ -160,15 +182,12 @@ public class VerifyHtmlStatusBlockCrawl {
     if (repairedOutput != null) {
       LOG.info("Writing tweets...");
       int written = 0;
-      SequenceFile.Writer repaired = SequenceFile.createWriter(fs, fs.getConf(), repairedOutput,
-          PairOfLongString.class, HtmlStatus.class, SequenceFile.CompressionType.BLOCK);
-
-      for (Map.Entry<PairOfLongString, HtmlStatus> entry : crawl.entrySet()) {
+      OutputStreamWriter out = new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(repairedOutput)));
+      for (Map.Entry<Long, String> entry : ids.entrySet()) {
         written++;
-        repaired.append(entry.getKey(), entry.getValue());
+        out.write(entry.getValue() + "\n");
       }
-      repaired.close();
-
+      out.close();
       LOG.info(written + " statuses written.");
       LOG.info("Done!");
     }
@@ -176,31 +195,9 @@ public class VerifyHtmlStatusBlockCrawl {
     return true;
   }
 
-  private Response fetchUrl(String url) {
-    Response response = null;
-    while (true) {
-      try {
-        response = client.prepareGet(url).execute().get();
-
-        if (response.getStatusCode() < 500) {
-          break;
-        }
-      } catch (InterruptedException e) {
-        // Do nothing, just retry.
-      } catch (ExecutionException e) {
-        // Do nothing, just retry.
-      } catch (IOException e) {
-        // Do nothing, just retry.
-      }
-
-      try {
-        Thread.sleep(1000);
-      } catch (Exception e) {
-      }
-      LOG.warn("Error: retrying.");
-    }
-
-    return response;
+  public static boolean isTweetNoLongerAvailable(String s) {
+    return s.contains("Sorry, you are not authorized to see this status.") ||
+        s.contains("No status found with that ID.") || s.equals("");
   }
 
   private static final String STATUSES_OPTION = "statuses_input";
@@ -213,10 +210,10 @@ public class VerifyHtmlStatusBlockCrawl {
   public static void main(String[] args) throws Exception {
     Options options = new Options();
     options.addOption(OptionBuilder.withArgName("path").hasArg()
-        .withDescription("inputd HTML statuses")
+        .withDescription("input JSON statuses")
         .create(STATUSES_OPTION));
     options.addOption(OptionBuilder.withArgName("path").hasArg()
-        .withDescription("repaired HTML statuses")
+        .withDescription("repaired JSON statuses")
         .create(STATUSES_REPAIRED_OPTION));
     options.addOption(OptionBuilder.withArgName("path").hasArg()
         .withDescription("data file with tweet ids").create(DATA_OPTION));
@@ -236,14 +233,12 @@ public class VerifyHtmlStatusBlockCrawl {
 
     if (!cmdline.hasOption(STATUSES_OPTION) || !cmdline.hasOption(DATA_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(VerifyHtmlStatusBlockCrawl.class.getName(), options);
+      formatter.printHelp(VerifyJsonStatusBlockCrawl.class.getName(), options);
       System.exit(-1);
     }
 
-    FileSystem fs = FileSystem.get(new Configuration());
-    VerifyHtmlStatusBlockCrawl v = new VerifyHtmlStatusBlockCrawl(new File(cmdline
-        .getOptionValue(DATA_OPTION)),
-        new Path(cmdline.getOptionValue(STATUSES_OPTION)), fs);
+    VerifyJsonStatusBlockCrawl v = new VerifyJsonStatusBlockCrawl(new File(cmdline.getOptionValue(DATA_OPTION)),
+        new File(cmdline.getOptionValue(STATUSES_OPTION)));
 
     if (cmdline.hasOption(OUTPUT_SUCCESS_OPTION)) {
       v.withOutputSuccess(new File(cmdline.getOptionValue(OUTPUT_SUCCESS_OPTION)));
@@ -254,7 +249,7 @@ public class VerifyHtmlStatusBlockCrawl {
     }
 
     if (cmdline.hasOption(STATUSES_REPAIRED_OPTION)) {
-      v.withRepairedOutput(new Path(cmdline.getOptionValue(STATUSES_REPAIRED_OPTION)));
+      v.withRepairedOutput(new File(cmdline.getOptionValue(STATUSES_REPAIRED_OPTION)));
     }
 
     v.verify();

@@ -8,14 +8,12 @@ import com.google.gson.JsonParser;
  * Object representing a status.
  */
 public class Status {
-  private static final HtmlStatusExtractor extractor = new HtmlStatusExtractor();
   private static final JsonParser parser = new JsonParser();
 
   private long id;
   private String screenname;
   private String createdAt;
   private String text;
-  private int httpStatusCode;
   private JsonObject jsonObject;
   private String jsonString;
 
@@ -35,10 +33,6 @@ public class Status {
 
   public String getScreenname() {
     return screenname;
-  }
-
-  public int getHttpStatusCode() {
-    return httpStatusCode;
   }
 
   public JsonObject getJsonObject() {
@@ -64,27 +58,6 @@ public class Status {
 
     status.jsonObject = obj;
     status.jsonString = json;
-
-    return status;
-  }
-
-  public static Status fromHtml(long id, String username, int httpStatus, String html) {
-    Preconditions.checkNotNull(html);
-    Preconditions.checkNotNull(username);
-
-    Status status = new Status();
-
-    status.id = id;
-    status.screenname = username;
-    status.httpStatusCode = httpStatus;
-    try {
-        status.text = extractor.extractTweet(html);
-        status.createdAt = extractor.extractTimestamp(html, id);
-    } catch (StackOverflowError e){} // happens when the HTML is corrupt
-
-    // TODO: Note that http status code 302 indicates a redirect, which indicates a retweet. I.e.,
-    // the status redirects to the original retweeted status. Note that this is not currently
-    // handled.
 
     return status;
   }

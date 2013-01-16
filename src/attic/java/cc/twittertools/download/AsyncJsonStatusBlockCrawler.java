@@ -28,6 +28,8 @@ import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 
+// NOTE: this was originally designed for Twitter API v1.0, which no longer works with API v1.1
+@Deprecated
 public class AsyncJsonStatusBlockCrawler {
   private static final Logger LOG = Logger.getLogger(AsyncJsonStatusBlockCrawler.class);
   private static final int MAX_RETRY_ATTEMPTS = 3;
