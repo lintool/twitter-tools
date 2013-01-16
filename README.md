@@ -1,6 +1,8 @@
 Twitter Tools
 =============
 
+** version 1.0.0 **
+
 These tools associated with the tweets corpus prepared for the [TREC Microblog Track](https://sites.google.com/site/microblogtrack/). The mailing list is [ trec-microblog@googlegroups.com](http://groups.google.com/group/trec-microblog).
 
 The corpus is distributed as directories, each of which contains approximately 100 `.dat` files, each of which contains a list of (tweet id, username, MD5 checksum). Each of these files is referred to as a status block (i.e., block of tweets).
