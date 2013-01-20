@@ -1,10 +1,11 @@
 package cc.twittertools.stream;
 
 import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.apache.log4j.rolling.RollingFileAppender;
+import org.apache.log4j.rolling.TimeBasedRollingPolicy;
 import org.apache.log4j.varia.LevelRangeFilter;
 
 import twitter4j.RawStreamListener;
@@ -15,8 +16,8 @@ import twitter4j.TwitterStreamFactory;
 public final class GatherStatusStream {
   private static int cnt = 0;
 
-  private static final String MINUTE_ROLL = "'.'yyyy-MM-dd-HH-mm";
-  private static final String HOUR_ROLL = "'.'yyyy-MM-dd-HH";
+  private static final String MINUTE_ROLL = ".%d{yyyy-MM-dd-HH-mm}.gz";
+  private static final String HOUR_ROLL = ".%d{yyyy-MM-dd-HH}.gz";
 
   public static void main(String[] args) throws TwitterException {
     PatternLayout layoutStandard = new PatternLayout();
@@ -32,18 +33,24 @@ public final class GatherStatusStream {
     filter.setAcceptOnMatch(true);
     filter.activateOptions();
 
-    DailyRollingFileAppender statusesAppender = new DailyRollingFileAppender();
-    statusesAppender.setFile("statuses.log");
-    statusesAppender.setDatePattern(HOUR_ROLL);
-    statusesAppender.setLayout(layoutSimple);
+    TimeBasedRollingPolicy statusesRollingPolicy = new TimeBasedRollingPolicy();
+    statusesRollingPolicy.setFileNamePattern("statuses.log" + HOUR_ROLL);
+    statusesRollingPolicy.activateOptions();
+
+    RollingFileAppender statusesAppender = new RollingFileAppender();
+    statusesAppender.setRollingPolicy(statusesRollingPolicy);
     statusesAppender.addFilter(filter);
+    statusesAppender.setLayout(layoutSimple);
     statusesAppender.activateOptions();
 
-    DailyRollingFileAppender warningsAppender = new DailyRollingFileAppender();
-    warningsAppender.setFile("warnings.log");
-    warningsAppender.setDatePattern(HOUR_ROLL);
-    warningsAppender.setLayout(layoutStandard);
+    TimeBasedRollingPolicy warningsRollingPolicy = new TimeBasedRollingPolicy();
+    warningsRollingPolicy.setFileNamePattern("warnings.log" + HOUR_ROLL);
+    warningsRollingPolicy.activateOptions();
+
+    RollingFileAppender warningsAppender = new RollingFileAppender();
+    warningsAppender.setRollingPolicy(statusesRollingPolicy);
     warningsAppender.setThreshold(Level.WARN);
+    warningsAppender.setLayout(layoutStandard);
     warningsAppender.activateOptions();
 
     ConsoleAppender consoleAppender = new ConsoleAppender();
