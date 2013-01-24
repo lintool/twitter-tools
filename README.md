@@ -11,6 +11,38 @@ Once you've cloned the repository, you should be able to type `ant` to build the
 
 The corpus downloader works by twitter.com. The combination of tweet id and username straightforwardly maps to a URL, which can be retrieved. Think `curl`. On steroids.
 
+Sampling the public stream
+--------------------------
+
+Unlike in previous years, participants in the TREC 2013 microblog track will *not* be able to crawl a copy of the offical corpus. Participants will instead access the corpus through a REST API (details available elsewhere).
+
+Should you wish to gather a parallel sample of tweets from the [Twitter public stream](https://dev.twitter.com/docs/streaming-apis/streams/public) from the same time period as the official corpus, you may do so using the `cc.twittertools.stream.GatherStatusStream` tool.
+
+**IMPORTANT** Crawling your own copy of the tweets is NOT NEEDED for participation in the TREC 2013 microblog track. However, it might be helpful.
+
+Accessing the Twitter public stream with the `GatherStatusStream` tool requires creating a developer account on Twitter and obtaining OAuth credentials to access Twitter's API. After creating an account on the Twitter developer site, you can obtain these credentials by [creating an "application"](https://dev.twitter.com/apps/new).
+
+In order to run `GatherStatusStream`, you must save your Twitter API OAuth credentials in a file named `twitter4j.properties` in your current working directory. The file should contain the following (replace \*'s with your information):
+
+    oauth.consumerKey=**********
+    oauth.consumerSecret=**********
+    oauth.accessToken=**********
+    oauth.accessTokenSecret=**********
+
+Once you have created the `twitter4j.properties` file, you can begin sampling from the public stream using the following invocation:
+
+    etc/run.sh cc.twittertools.stream.GatherStatusStream
+
+The tool will download JSON statuses continuously until it is stopped. Statuses will be saved in the current working directory and compressed hourly.
+
+**Notes**
+
+* For the official corpus to be used in the TREC 2013 microblog evaluation, crawling the public stream sample will commence on 2013/02/01 00:00:00 UTC and continue for the entire month of February and March, ending 2013/03/31 23:59:59 UTC.
+
+* Not all JSON messages returned by the API correspond to tweets. In particular, some messages correspond to deleted tweets. See the [Twitter Streaming API page](https://dev.twitter.com/docs/streaming-apis/messages#Status_deletion_notices_delete) for details.
+
+* The compressed file size of each hourly status block varies. In a 3-day sample from Jan 21-23, 2013, the average hourly block size was ~75MB.
+
 Fetching a status block
 -----------------------
 
