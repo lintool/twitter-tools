@@ -13,6 +13,7 @@
 	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-api-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-net-1.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/core-3.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/geronimo-jms_1.1_spec-1.0.jar"/>
@@ -38,8 +39,11 @@
 	<classpathentry kind="lib" path="lib/netty-3.4.4.Final.jar"/>
 	<classpathentry kind="lib" path="lib/oro-2.0.8.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-2.5-6.1.14.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.6.2.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.2.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/twitter4j-core-3.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/twitter4j-stream-3.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/xmlenc-0.52.jar"/>
+	<classpathentry kind="lib" path="lib/apache-log4j-extras-1.1.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
