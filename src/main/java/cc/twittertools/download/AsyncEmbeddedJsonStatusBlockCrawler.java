@@ -408,10 +408,8 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
     DirectoryManager dm = new DirectoryManager(cmdline.getOptionValue(DATA_OPTION), cmdline.getOptionValue(OUTPUT_OPTION));
     dm.createDocumentList();
     String currentFile = dm.getNextDoc();
-    while(currentFile != null) {
-      //String outputFile = output + currentFile.substring(currentFile.lastIndexOf("/"));
+    while (currentFile != null) {
       String outputFile = currentFile.replace(data, output);
-      //new AsyncEmbeddedJsonStatusBlockCrawler(new File(data), output, repair, noFollow).fetch();
       new AsyncEmbeddedJsonStatusBlockCrawler(new File(currentFile), outputFile, repair, noFollow).fetch();
     }
   }
