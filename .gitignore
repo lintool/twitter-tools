@@ -4,6 +4,5 @@ lib/
 ivy/ivy.jar
 docs/api
 test/*
-.classpath
-.project
+etc/run.sh
 *~
