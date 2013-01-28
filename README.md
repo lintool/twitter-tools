@@ -5,11 +5,13 @@ Twitter Tools
 
 These tools associated with the tweets corpus prepared for the [TREC Microblog Track](https://sites.google.com/site/microblogtrack/). The mailing list is [ trec-microblog@googlegroups.com](http://groups.google.com/group/trec-microblog).
 
-The corpus is distributed as directories, each of which contains approximately 100 `.dat` files, each of which contains a list of (tweet id, username, MD5 checksum). Each of these files is referred to as a status block (i.e., block of tweets).
+The Tweets2011 corpus, used in the TREC 2011 and 2012 microblog tracks, is distributed as directories, each of which contains approximately 100 `.dat` files, each of which contains a list of (tweet id, username, MD5 checksum). Each of these files is referred to as a status block (i.e., block of tweets).  The status block downloader works by fetching the tweets indicated in the `.dat` files from twitter.com. The combination of tweet id and username straightforwardly maps to a URL, which can be retrieved. Think `curl`. On steroids.
+
+If you want to use this tool to download Tweets2011, or another static tweet collection distributed similarly, see the section below titled 'Fetching a status block'.
+
+For TREC 2013, the microblog track corpus is a new Twitter public stream sample.  These tools will also enable you to do this sampling yourself, in real time, if you want to.  You can also use this tool to just sample the Twitter public stream for your own research, but remember, Twitter does not allow you to share the actual tweets.
 
 Once you've cloned the repository, you should be able to type `ant` to build the tools (assuming you have Ant installed). Ant will automatically create a script `etc/run.sh` that will be useful later.
-
-The corpus downloader works by twitter.com. The combination of tweet id and username straightforwardly maps to a URL, which can be retrieved. Think `curl`. On steroids.
 
 Sampling the public stream
 --------------------------
@@ -101,6 +103,8 @@ The second column is the hour (in UTC), the third column is the number of JSON m
 
 Fetching a status block
 -----------------------
+
+**Note:** The AsyncEmbeddedJsonStatusBlockCrawler is currently broken because Twitter changed their HTML page formatting again to remove the embedded JSON.  The AsyncJsonStatusBlockCrawler (in src/attic), which scrapes the data from the HTML page, needs to be revived and updated.
 
 The HTML crawler is `cc.twittertools.download.AsyncEmbeddedJsonStatusBlockCrawler`. Here's a sample invocation:
 
