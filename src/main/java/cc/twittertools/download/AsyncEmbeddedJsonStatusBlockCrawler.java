@@ -24,6 +24,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
+import cc.twittertools.corpus.data.Status;
+
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -279,22 +281,15 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
 
       // extract embedded JSON
       try {
-        String html = response.getResponseBody("UTF-8");
-        int jsonStart = html.indexOf(JSON_START);
-        int jsonEnd = html.indexOf(JSON_END, jsonStart + JSON_START.length());
+        String json = response.getResponseBody("UTF-8");
 
-        if (jsonStart < 0 || jsonEnd < 0) {
+        JsonObject status = (JsonObject) JSON_PARSER.parse(json);
+
+        if (!status.isJsonObject()) {
           LOG.warn("Unable to find embedded JSON: " + url);
           retry();
           return response;
         }
-
-        String json = html.substring(jsonStart + JSON_START.length(), jsonEnd);
-        json = StringEscapeUtils.unescapeHtml(json);
-        JsonObject page = (JsonObject) JSON_PARSER.parse(json);
-
-        JsonObject status = page.getAsJsonObject("embedData").getAsJsonObject("status");
-
         // save the requested id
         status.addProperty("requested_id", new Long(id));
 
