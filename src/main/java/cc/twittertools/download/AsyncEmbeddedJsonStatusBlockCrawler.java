@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,7 +39,7 @@ import com.ning.http.client.HttpResponseHeaders;
 import com.ning.http.client.HttpResponseStatus;
 import com.ning.http.client.Response;
 import com.ning.http.client.extra.ThrottleRequestFilter;
-import cc.twittertools.download.DirectoryManager;
+import cc.twittertools.download.DirectoryBrowser;
 
 public class AsyncEmbeddedJsonStatusBlockCrawler {
   private static final Logger LOG = Logger.getLogger(AsyncEmbeddedJsonStatusBlockCrawler.class);
@@ -400,10 +401,9 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
     boolean noFollow = cmdline.hasOption(NOFOLLOW_OPTION);
     
     // loops through all corpus files
-    DirectoryManager dm = new DirectoryManager(cmdline.getOptionValue(DATA_OPTION), cmdline.getOptionValue(OUTPUT_OPTION));
-    dm.createDocumentList();
-    String currentFile = dm.getNextDoc();
-    while (currentFile != null) {
+    DirectoryBrowser directory = new DirectoryBrowser(cmdline.getOptionValue(DATA_OPTION), cmdline.getOptionValue(OUTPUT_OPTION));
+
+    for (String currentFile : directory) {
       String outputFile = currentFile.replace(data, output);
       new AsyncEmbeddedJsonStatusBlockCrawler(new File(currentFile), outputFile, repair, noFollow).fetch();
     }
