@@ -107,7 +107,7 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
 
   public static String getUrl(long id, String username) {
     Preconditions.checkNotNull(username);
-    return String.format("http://twitter.com/%s/status/%d", username, id);
+    return String.format("http://api.twitter.com/1/statuses/oembed.json?id=%d&&omit_script=true", id);
   }
 
   public void fetch() throws IOException {
