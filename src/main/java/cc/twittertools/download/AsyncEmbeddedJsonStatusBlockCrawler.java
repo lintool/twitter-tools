@@ -38,6 +38,7 @@ import com.ning.http.client.HttpResponseHeaders;
 import com.ning.http.client.HttpResponseStatus;
 import com.ning.http.client.Response;
 import com.ning.http.client.extra.ThrottleRequestFilter;
+import cc.twittertools.download.DirectoryManager;
 
 public class AsyncEmbeddedJsonStatusBlockCrawler {
   private static final Logger LOG = Logger.getLogger(AsyncEmbeddedJsonStatusBlockCrawler.class);
@@ -397,6 +398,14 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
     String output = cmdline.getOptionValue(OUTPUT_OPTION);
     String repair = cmdline.getOptionValue(REPAIR_OPTION);
     boolean noFollow = cmdline.hasOption(NOFOLLOW_OPTION);
-    new AsyncEmbeddedJsonStatusBlockCrawler(new File(data), output, repair, noFollow).fetch();
+    
+    // loops through all corpus files
+    DirectoryManager dm = new DirectoryManager(cmdline.getOptionValue(DATA_OPTION), cmdline.getOptionValue(OUTPUT_OPTION));
+    dm.createDocumentList();
+    String currentFile = dm.getNextDoc();
+    while (currentFile != null) {
+      String outputFile = currentFile.replace(data, output);
+      new AsyncEmbeddedJsonStatusBlockCrawler(new File(currentFile), outputFile, repair, noFollow).fetch();
+    }
   }
 }
