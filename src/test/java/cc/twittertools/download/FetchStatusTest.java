@@ -11,13 +11,10 @@ import org.junit.Test;
 import cc.twittertools.corpus.data.Status;
 import cc.twittertools.download.AsyncEmbeddedJsonStatusBlockCrawler;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 
 public class FetchStatusTest {
-  private static final JsonParser JSON_PARSER = new JsonParser();
 
   @Test
   public void basicFamous() throws Exception {
@@ -29,11 +26,9 @@ public class FetchStatusTest {
 
     // Make sure status is OK.
     assertEquals(200, response.getStatusCode());
-    String json = response.getResponseBody("UTF-8");
 
-    JsonObject statusJson = (JsonObject) JSON_PARSER.parse(json);
-
-    Status status = Status.fromJson(statusJson.toString());
+    String html = response.getResponseBody("UTF-8");
+    Status status = Status.fromHtml(html);
     assertEquals(1121915133L, status.getId());
     assertEquals("jkrums", status.getScreenname());
     assertEquals("http://twitpic.com/135xa - There's a plane in the Hudson. I'm on the ferry going to pick up the people. Crazy.", status.getText());

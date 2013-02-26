@@ -83,6 +83,32 @@ public class Status {
 
     return status;
   }
+  
+  /**
+   * Brittle implementation to get twitter data from webpage instead of api
+   * @param html
+   * @return
+   */
+  public static Status fromHtml(String html) {
+    Preconditions.checkNotNull(html);
+    // use some jsoup magic to parse html and fetch require elements
+    org.jsoup.nodes.Document document = Jsoup.parse(html);
+    Status status = new Status();
+    
+    Element dateElement = document.select("div.client-and-actions span.metadata").last();
+    status.createdAt = dateElement.text();
+    
+    Element textElement = document.select("p.js-tweet-text").first();
+    status.text = textElement.text();
+    
+    Element dataElement = document.select("div.permalink-tweet").first();
+    
+    status.id = Long.parseLong(dataElement.attr("data-tweet-id"));
+
+    status.screenname = dataElement.attr("data-screen-name");
+
+    return status;
+  }
 
   private static String parseUrlGetLastElementInPath(String string) {
     String[] split = string.split("/");
