@@ -104,8 +104,6 @@ The second column is the hour (in UTC), the third column is the number of JSON m
 Fetching a status block
 -----------------------
 
-**Note:** The AsyncEmbeddedJsonStatusBlockCrawler is currently broken because Twitter changed their HTML page formatting again to remove the embedded JSON.  The AsyncJsonStatusBlockCrawler (in src/attic), which scrapes the data from the HTML page, needs to be revived and updated.
-
 The HTML crawler is `cc.twittertools.download.AsyncEmbeddedJsonStatusBlockCrawler`. Here's a sample invocation:
 
     etc/run.sh cc.twittertools.download.AsyncEmbeddedJsonStatusBlockCrawler \

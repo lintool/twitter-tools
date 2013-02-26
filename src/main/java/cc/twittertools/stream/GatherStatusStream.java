@@ -72,7 +72,6 @@ public final class GatherStatusStream {
     TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
     RawStreamListener rawListener = new RawStreamListener() {
 
-      @Override
       public void onMessage(String rawString) {
         cnt++;
         logger.info(rawString);
@@ -81,7 +80,6 @@ public final class GatherStatusStream {
         }
       }
 
-      @Override
       public void onException(Exception ex) {
         logger.warn(ex);
       }

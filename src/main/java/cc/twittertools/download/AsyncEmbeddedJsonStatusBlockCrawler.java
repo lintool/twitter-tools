@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,11 +22,12 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
@@ -36,6 +38,9 @@ import com.ning.http.client.HttpResponseHeaders;
 import com.ning.http.client.HttpResponseStatus;
 import com.ning.http.client.Response;
 import com.ning.http.client.extra.ThrottleRequestFilter;
+
+import cc.twittertools.corpus.data.Status;
+import cc.twittertools.download.DirectoryBrowser;
 
 public class AsyncEmbeddedJsonStatusBlockCrawler {
   private static final Logger LOG = Logger.getLogger(AsyncEmbeddedJsonStatusBlockCrawler.class);
@@ -107,7 +112,7 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
 
   public static String getUrl(long id, String username) {
     Preconditions.checkNotNull(username);
-    return String.format("http://twitter.com/%s/status/%d", username, id);
+    return String.format("https://twitter.com/%s/status/%d", username, id);
   }
 
   public void fetch() throws IOException {
@@ -279,26 +284,21 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
 
       // extract embedded JSON
       try {
-        String html = response.getResponseBody("UTF-8");
-        int jsonStart = html.indexOf(JSON_START);
-        int jsonEnd = html.indexOf(JSON_END, jsonStart + JSON_START.length());
 
-        if (jsonStart < 0 || jsonEnd < 0) {
-          LOG.warn("Unable to find embedded JSON: " + url);
+        String html = response.getResponseBody("UTF-8");
+        Status status = Status.fromHtml(html);
+        if (StringUtils.isNotBlank(status.getText()) && StringUtils.isNotBlank(status.getScreenname())) {
+          LOG.warn("Unable to parse text from this, possible change in format.. " + url);
           retry();
           return response;
         }
-
-        String json = html.substring(jsonStart + JSON_START.length(), jsonEnd);
-        json = StringEscapeUtils.unescapeHtml(json);
-        JsonObject page = (JsonObject) JSON_PARSER.parse(json);
-
-        JsonObject status = page.getAsJsonObject("embedData").getAsJsonObject("status");
-
+        
+        JsonObject statusJson = status.getJsonObject();
+        
         // save the requested id
-        status.addProperty("requested_id", new Long(id));
+        statusJson.addProperty("requested_id", new Long(id));
 
-        crawl.put(id, GSON.toJson(status));
+        crawl.put(id, GSON.toJson(statusJson));
         connections.decrementAndGet();
 
         return response;
@@ -356,9 +356,12 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
   }
 
   private void crawlURL(String url, TweetFetcherHandler handler) {
+    
     try {
+      String authZHeader = buildHeader();
       asyncHttpClient.prepareGet(url).addHeader("Accept-Charset", "utf-8")
           .addHeader("Accept-Language", "en-US").execute(handler);
+          
     } catch (IOException e) {
       LOG.warn("Abandoning due to error (" + e + "): " + url);
       crawl_repair.put(handler.getId(), handler.getLine());
@@ -366,10 +369,18 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
     }
   }
 
+  private String buildHeader() {
+    long dateTime = currentDateTime.getTime();
+    return String.format("OAuth oauth_consumer_key=\"%s\", oauth_nonce=\"%s%d\", oauth_signature=\"%s\", oauth_signature_method=\"%s\", oauth_timestamp=\"%d\", oauth_token=\"%s\", oauth_version=\"1.0\"",
+        "mODntTBvqFWEtnlsV6THQ","36a7c4104da73", dateTime, "fGPT9StUyBwOnLbJvRT3ZrRZRrg%3D","HMAC-SHA1", dateTime,"18447686-FixB8106ipARDQi1BZ9tJ8Yx17WH7r6n29bHzPMYi");
+  }
+
   private static final String DATA_OPTION = "data";
   private static final String OUTPUT_OPTION = "output";
   private static final String REPAIR_OPTION = "repair";
   private static final String NOFOLLOW_OPTION = "noFollow";
+
+  private Date currentDateTime = new Date();
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
@@ -402,6 +413,15 @@ public class AsyncEmbeddedJsonStatusBlockCrawler {
     String output = cmdline.getOptionValue(OUTPUT_OPTION);
     String repair = cmdline.getOptionValue(REPAIR_OPTION);
     boolean noFollow = cmdline.hasOption(NOFOLLOW_OPTION);
+    
+//    // loops through all corpus files
+//    DirectoryBrowser directory = new DirectoryBrowser(cmdline.getOptionValue(DATA_OPTION), cmdline.getOptionValue(OUTPUT_OPTION));
+//
+//    for (String currentFile : directory) {
+//      String outputFile = currentFile.replace(data, output);
+//      new AsyncEmbeddedJsonStatusBlockCrawler(new File(currentFile), outputFile, repair, noFollow).fetch();
+//    }
     new AsyncEmbeddedJsonStatusBlockCrawler(new File(data), output, repair, noFollow).fetch();
+
   }
 }
