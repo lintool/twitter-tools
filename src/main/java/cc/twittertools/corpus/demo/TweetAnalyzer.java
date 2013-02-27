@@ -2,10 +2,12 @@ package cc.twittertools.corpus.demo;
 
 import java.io.Reader;
 
-import org.apache.lucene.analysis.ReusableAnalyzerBase;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.Tokenizer;
+
 import org.apache.lucene.util.Version;
 
-public class TweetAnalyzer extends ReusableAnalyzerBase {
+public class TweetAnalyzer extends Analyzer {
   private Version matchVersion;
 
   /**
@@ -18,5 +20,6 @@ public class TweetAnalyzer extends ReusableAnalyzerBase {
   @Override
   protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
     return new TokenStreamComponents(new LowerCaseHashtagMentionPreservingTokenizer(matchVersion, reader));
+    //return new TokenStreamComponents(new Tokenizer(reader));
   }
 }
