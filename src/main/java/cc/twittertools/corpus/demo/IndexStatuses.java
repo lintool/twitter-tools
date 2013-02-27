@@ -18,10 +18,13 @@ import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.FieldInvertState;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.search.DefaultSimilarity;
-import org.apache.lucene.search.Similarity;
+import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.apache.solr.common.params.SolrParams;
+import org.apache.solr.common.util.NamedList;
+import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
 import cc.twittertools.corpus.data.JsonStatusBlockReader;
 import cc.twittertools.corpus.data.JsonStatusCorpusReader;
@@ -34,7 +37,7 @@ import cc.twittertools.corpus.data.StatusStream;
 public class IndexStatuses {
   private static final Logger LOG = Logger.getLogger(IndexStatuses.class);
 
-  public static final Analyzer ANALYZER = new TweetAnalyzer(Version.LUCENE_31);
+  public static final Analyzer ANALYZER = new TweetAnalyzer(Version.LUCENE_41);
 
   private IndexStatuses() {}
 
@@ -95,9 +98,19 @@ public class IndexStatuses {
       stream = new JsonStatusBlockReader(file);
     }
 
+    NamedList paramNamedList = new NamedList();
+    paramNamedList.add("mu", 2500.0);
+    
+    SolrParams params = SolrParams.toSolrParams(paramNamedList);
+    LMDirichletSimilarityFactory factory = new LMDirichletSimilarityFactory();
+    factory.init(params);
+    Similarity similarity = factory.getSimilarity();
+   
+
     Analyzer analyzer = ANALYZER;
-    Similarity similarity = new ConstantNormSimilarity();
-    IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_31, analyzer);
+    
+
+    IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_41, analyzer);
     config.setSimilarity(similarity);
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE); // Overwrite existing.
 
@@ -130,8 +143,13 @@ public class IndexStatuses {
           LOG.info(cnt + " statuses indexed");
         }
       }
-      LOG.info("Optimizing index...");
-      writer.optimize();
+      
+      
+      LOG.info("(as of Lucene 4.1, Not Optimizing index...");
+      
+      // deprecated in lucene 4?
+      //writer.optimize();
+      
       writer.close();
     } finally {
       stream.close();
@@ -140,10 +158,9 @@ public class IndexStatuses {
     LOG.info(String.format("Total of %s statuses indexed", cnt));
   }
 
-  public static class ConstantNormSimilarity extends DefaultSimilarity {
+  public static class ConstantNormSimilarity extends LMDirichletSimilarity {
     private static final long serialVersionUID = 2737920231537795826L;
 
-    @Override
     public float computeNorm(String field, FieldInvertState state) {
       return 1.0f;
     }
