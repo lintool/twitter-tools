@@ -1,4 +1,4 @@
-package cc.twittertools.corpus.demo;
+package cc.twittertools.search.indexing;
 
 import java.io.IOException;
 import java.io.Reader;

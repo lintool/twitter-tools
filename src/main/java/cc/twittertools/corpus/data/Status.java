@@ -1,6 +1,5 @@
 package cc.twittertools.corpus.data;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -44,7 +43,6 @@ public class Status {
   }
 
   public static Status fromJson(String json) {
-    Preconditions.checkNotNull(json);
 
     JsonObject obj = (JsonObject) parser.parse(json);
     if (obj.get("text") == null)
@@ -62,5 +60,27 @@ public class Status {
     status.jsonString = json;
 
     return status;
+  }
+  
+  public static Status fromTSV(String tsv) {
+	  String[] columns = tsv.split("\t");
+	  
+	  if(columns.length < 4) {
+		  System.err.println("error parsing: " + tsv);
+		  System.exit(-1);
+	  }
+	  
+	  Status status = new Status();
+	  status.id = Long.parseLong(columns[0]);
+	  status.screenname = columns[1];
+	  status.createdAt = columns[2];
+	  
+	  StringBuilder b = new StringBuilder();
+	  for(int i=3; i<columns.length; i++) {
+		  b.append(columns[i] + " ");
+	  }
+	  status.text = b.toString().trim();
+	  
+	  return status;
   }
 }
