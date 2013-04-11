@@ -25,6 +25,7 @@
     <dependency org="junit" name="junit" rev="4.8.2" conf="*->*,!sources,!javadoc"/>
     <dependency org="log4j" name="log4j" rev="1.2.17" conf="*->*,!sources,!javadoc"/>
     <dependency org="log4j" name="apache-log4j-extras" rev="1.1" conf="*->*,!sources,!javadoc"/>
+    <dependency org="org.apache.thrift" name="libthrift" rev="0.9.0" conf="*->*,!sources,!javadoc"/>
 
     <!-- workaround for https://jira.codehaus.org/browse/JETTY-1493 -->
     <dependency org="org.eclipse.jetty.orbit" name="javax.servlet" rev="3.0.0.v201112011016">

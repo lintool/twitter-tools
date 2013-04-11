@@ -99,9 +99,13 @@
     <javac classpathref="lib.path.id" srcdir="${src.dir}/test/java" destdir="${build.dir}" optimize="on" debug="on">
       <compilerarg value="-Xlint:unchecked" />
     </javac>
+    <javac classpathref="lib.path.id" srcdir="${src.dir}/gen/java" destdir="${build.dir}" optimize="on" debug="on">
+      <compilerarg value="-Xlint:unchecked" />
+    </javac>
     <copy todir="${build.dir}">
       <fileset dir="${src.dir}/main/java" excludes="**/*.java" />
       <fileset dir="${src.dir}/test/java" excludes="**/*.java" />
+      <fileset dir="${src.dir}/gen/java" excludes="**/*.java" />
     </copy>
   </target>
 

@@ -41,7 +41,7 @@ public class IndexStatuses {
 	public static enum StatusField {
 		ID("id"),
 		SCREEN_NAME("screen_name"),
-		CREATED_AT("create_at"),
+		CREATED_AT("created_at"),
 		TEXT("text"),
 		DAY("day");
 
