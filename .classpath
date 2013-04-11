@@ -8,10 +8,8 @@
 	<classpathentry kind="lib" path="lib/ant-1.6.5.jar"/>
 	<classpathentry kind="lib" path="lib/async-http-client-1.7.5.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-el-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-api-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-net-1.4.1.jar"/>
@@ -33,8 +31,6 @@
 	<classpathentry kind="lib" path="lib/junit-4.8.2.jar"/>
 	<classpathentry kind="lib" path="lib/kfs-0.3.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-analyzers-3.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-core-3.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/mail-1.4.3.jar"/>
 	<classpathentry kind="lib" path="lib/netty-3.4.4.Final.jar"/>
 	<classpathentry kind="lib" path="lib/oro-2.0.8.jar"/>
@@ -45,5 +41,48 @@
 	<classpathentry kind="lib" path="lib/twitter4j-stream-3.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/xmlenc-0.52.jar"/>
 	<classpathentry kind="lib" path="lib/apache-log4j-extras-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.7.jar"/>
+	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="lib/httpclient-4.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/httpcore-4.1.4.jar"/>
+	<classpathentry kind="lib" path="lib/httpmime-4.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta-regexp-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/javax.servlet-3.0.0.v201112011016.jar"/>
+	<classpathentry kind="lib" path="lib/jcl-over-slf4j-1.6.4.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-continuation-8.1.8.v20121106.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-http-8.1.8.v20121106.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-io-8.1.8.v20121106.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-security-8.1.8.v20121106.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-server-8.1.8.v20121106.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-servlet-8.1.8.v20121106.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-util-8.1.8.v20121106.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-webapp-8.1.8.v20121106.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-xml-8.1.8.v20121106.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-common-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-kuromoji-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-morfologik-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-phonetic-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-grouping-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-highlighter-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-memory-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-misc-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-queries-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-queryparser-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-sandbox-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-spatial-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-suggest-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/morfologik-fsa-1.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/morfologik-polish-1.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/morfologik-stemming-1.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/servlet-api-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-jdk14-1.6.4.jar"/>
+	<classpathentry kind="lib" path="lib/solr-core-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/solr-solrj-4.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/spatial4j-0.3.jar"/>
+	<classpathentry kind="lib" path="lib/wstx-asl-3.2.7.jar"/>
+	<classpathentry kind="lib" path="lib/zookeeper-3.4.5.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

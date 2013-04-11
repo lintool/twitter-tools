@@ -67,7 +67,7 @@ public class Status {
 	  
 	  if(columns.length < 4) {
 		  System.err.println("error parsing: " + tsv);
-		  System.exit(-1);
+		  return null;
 	  }
 	  
 	  Status status = new Status();
