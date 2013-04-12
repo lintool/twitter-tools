@@ -7,7 +7,7 @@ import com.google.gson.JsonParser;
  * Object representing a status.
  */
 public class Status {
-  private static final JsonParser parser = new JsonParser();
+  private static final JsonParser JSON_PARSER = new JsonParser();
 
   private long id;
   private String screenname;
@@ -43,18 +43,18 @@ public class Status {
   }
 
   public static Status fromJson(String json) {
+    JsonObject obj = null;
+    try {
+      obj = (JsonObject) JSON_PARSER.parse(json);
+    } catch (Exception e) {
+      e.printStackTrace();
+      // Catch any malformed JSON.
+      return null;
+    }
 
-      JsonObject obj = null;
-      try {
- obj = (JsonObject) parser.parse(json);
-      } catch (Exception e) {
-          e.printStackTrace();
-	  // Catch any malformed JSON.
-	  return null;
-      }
-
-    if (obj.get("text") == null)
-	return null;
+    if (obj.get("text") == null) {
+      return null;
+    }
 
     Status status = new Status();
     status.text = obj.get("text").getAsString();
@@ -71,24 +71,24 @@ public class Status {
   }
   
   public static Status fromTSV(String tsv) {
-	  String[] columns = tsv.split("\t");
-	  
-	  if(columns.length < 4) {
-		  System.err.println("error parsing: " + tsv);
-		  return null;
-	  }
-	  
-	  Status status = new Status();
-	  status.id = Long.parseLong(columns[0]);
-	  status.screenname = columns[1];
-	  status.createdAt = columns[2];
-	  
-	  StringBuilder b = new StringBuilder();
-	  for(int i=3; i<columns.length; i++) {
-		  b.append(columns[i] + " ");
-	  }
-	  status.text = b.toString().trim();
-	  
-	  return status;
+    String[] columns = tsv.split("\t");
+
+    if (columns.length < 4) {
+      System.err.println("error parsing: " + tsv);
+      return null;
+    }
+
+    Status status = new Status();
+    status.id = Long.parseLong(columns[0]);
+    status.screenname = columns[1];
+    status.createdAt = columns[2];
+
+    StringBuilder b = new StringBuilder();
+    for (int i = 3; i < columns.length; i++) {
+      b.append(columns[i] + " ");
+    }
+    status.text = b.toString().trim();
+
+    return status;
   }
 }
