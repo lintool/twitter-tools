@@ -1,5 +1,6 @@
 package cc.twittertools.search.retrieval;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -50,6 +51,11 @@ public class RunQueryThrift {
     }
 
     String queryFile = cmdline.getOptionValue(QUERIES_OPTION);
+    if (!new File(queryFile).exists()) {
+      System.err.println("Error: " + queryFile + " doesn't exist!");
+      System.exit(-1);
+    }
+
     IndriQueryParams queryParams = new IndriQueryParams();
     queryParams.ParseXMLQueryFile(queryFile);
 

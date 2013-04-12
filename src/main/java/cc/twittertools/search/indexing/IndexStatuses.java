@@ -1,9 +1,16 @@
 package cc.twittertools.search.indexing;
 
-
 import java.io.File;
 
-
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -18,183 +25,132 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
-
 import cc.twittertools.corpus.data.JsonStatusCorpusReader;
 import cc.twittertools.corpus.data.Status;
 import cc.twittertools.corpus.data.StatusStream;
 import cc.twittertools.corpus.data.TSVStatusCorpusReader;
-import cc.twittertools.search.configuration.IndriIndexingParams;
-
-
 
 /**
  * Reference implementation for indexing statuses.
  */
 public class IndexStatuses {
+  private static final Logger LOG = Logger.getLogger(IndexStatuses.class);
 
+  public static final Analyzer ANALYZER = new TweetAnalyzer(Version.LUCENE_41);
+  public static String corpusFormat = null;
 
-	public static final Analyzer ANALYZER = new TweetAnalyzer(Version.LUCENE_41);
-	public static String corpusFormat = null;
-	
-	private IndexStatuses() {}
+  private IndexStatuses() {
+  }
 
-	public static enum StatusField {
-		ID("id"),
-		SCREEN_NAME("screen_name"),
-		CREATED_AT("created_at"),
-		TEXT("text"),
-		DAY("day");
+  public static enum StatusField {
+    ID("id"),
+    SCREEN_NAME("screen_name"),
+    CREATED_AT("created_at"),
+    TEXT("text"),
+    DAY("day");
 
-		public final String name;
-
-		StatusField(String s) {
-			name = s;
-		}
-	};
-
-
-	  
-  enum CorpusFormat {
-    TSV("tsv"),
-    JSON("json"),
-    TRECTEXT("trecText");
-    
     public final String name;
 
-    CorpusFormat(String s) {
+    StatusField(String s) {
       name = s;
     }
   };
 
+  private static final String HELP_OPTION = "h";
+  private static final String COLLECTION_OPTION = "collection";
+  private static final String INDEX_OPTION = "index";
+  private static final String JSON_OPTION = "json";
+  private static final String TSV_OPTION = "tsv";
 
-	public static void main(String[] args) throws Exception {
+  @SuppressWarnings("static-access")
+  public static void main(String[] args) throws Exception {
+    Options options = new Options();
 
+    options.addOption(new Option(HELP_OPTION, "show help"));
+    options.addOption(new Option(JSON_OPTION, "input in JSON"));
+    options.addOption(new Option(TSV_OPTION, "input in TSV"));
+    options.addOption(OptionBuilder.withArgName("dir").hasArg()
+        .withDescription("source collection directory").create(COLLECTION_OPTION));
+    options.addOption(OptionBuilder.withArgName("dir").hasArg()
+        .withDescription("index location").create(INDEX_OPTION));
 
-	    
-		String pathToCorpusDir = null;
-		String pathToIndex = null;
+    CommandLine cmdline = null;
+    CommandLineParser parser = new GnuParser();
+    try {
+      cmdline = parser.parse(options, args);
+    } catch (ParseException exp) {
+      System.err.println("Error parsing command line: " + exp.getMessage());
+      System.exit(-1);
+    }
 
-		
-		
-		
-		try {
-		  IndriIndexingParams params = new IndriIndexingParams();
-      params.ParseXMLQueryFile(args[0]);
-      
-      pathToIndex = params.getIndexName();
-      System.out.println("Building Index: " + pathToIndex);
-      if(pathToIndex == null) {
-        System.err.println("IndexEnvironment: null value for index name!");
-        throw new IllegalArgumentException();     
-      }
-      pathToCorpusDir = params.getPathToCorpus();
-      System.out.println("Corpus: " + pathToCorpusDir);
-      if(pathToCorpusDir == null) {
-        System.err.println("IndexEnvironment: null value for corpus path!");
-        throw new IllegalArgumentException();     
-      }
-      corpusFormat = params.getFormat();
-      System.out.println("Corpus format: " + corpusFormat);
-      if(corpusFormat == null) {
-        System.err.println("IndexEnvironment: null value for corpus path!");
-        throw new IllegalArgumentException();     
-      }
-      boolean knownFormat = false;
-      for(CorpusFormat format : CorpusFormat.values()) {
-        if(corpusFormat.equalsIgnoreCase(format.name)) {
-          knownFormat = true;
-          break;
+    if (cmdline.hasOption(HELP_OPTION) || !cmdline.hasOption(COLLECTION_OPTION)
+        || !cmdline.hasOption(INDEX_OPTION)) {
+      HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp(IndexStatuses.class.getName(), options);
+      System.exit(-1);
+    }
+
+    String collectionPath = cmdline.getOptionValue(COLLECTION_OPTION);
+    String indexPath = cmdline.getOptionValue(INDEX_OPTION);
+
+    long startTime = System.currentTimeMillis();
+
+    StatusStream stream;
+
+    File file = new File(collectionPath);
+    if (!file.exists()) {
+      System.err.println("Error: " + file + " does not exist!");
+      System.exit(-1);
+    }
+
+    if (cmdline.hasOption(TSV_OPTION)) {
+      stream = new TSVStatusCorpusReader(file);
+    } else {
+      stream = new JsonStatusCorpusReader(file);
+    }
+
+    Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_41);
+
+    Directory dir = FSDirectory.open(new File(indexPath));
+    IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_41, analyzer);
+    config.setOpenMode(OpenMode.CREATE);
+
+    LOG.info("collection: " + collectionPath);
+    LOG.info("index: " + indexPath);
+    
+    IndexWriter writer = new IndexWriter(dir, config);
+    int cnt = 0;
+    Status status;
+    try {
+      while ((status = stream.next()) != null) {
+        if (status.getText() == null) {
+          continue;
+        }
+
+        cnt++;
+        Document doc = new Document();
+        doc.add(new LongField("id", status.getId(), Field.Store.YES));
+        doc.add(new TextField("screen_name", status.getScreenname(), Store.YES));
+        doc.add(new TextField("created_at", status.getCreatedAt(), Store.YES));
+        doc.add(new TextField("text", status.getText(), Store.YES));
+
+        writer.addDocument(doc);
+        if (cnt % 100000 == 0) {
+          LOG.info(cnt + " statuses indexed");
         }
       }
-      if(! knownFormat ) {
-        System.err.println("IndexEnvironment: no recognized corpus format supplied: <tsv, json, trecText>.");
-        throw new IllegalArgumentException(); 
-      }
-		} catch (Exception e) {
-		  IndexStatuses.help();
-		  System.exit(-1);
-		}
-		
 
-
-		StatusStream stream;
-
-
-    
-		File file = new File(pathToCorpusDir);
-		if (!file.exists()) {
-			System.err.println("Error: " + file + " does not exist!");
-			System.exit(-1);
-		}
-
-
-		
-		if(corpusFormat.equalsIgnoreCase("tsv")) {
-		  stream = new TSVStatusCorpusReader(file);
-		} else {
-	    stream = new JsonStatusCorpusReader(file);
-		}
-
-		
-
-		Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_41);
-
-		Directory dir = FSDirectory.open(new File(pathToIndex));
-		IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_41, analyzer);
-		iwc.setOpenMode(OpenMode.CREATE);
-		
-		IndexWriter writer = new IndexWriter(dir, iwc);
-
-		int cnt = 0;
-		Status status;
-		try {
-			while ((status = stream.next()) != null) {
-				if (status.getText() == null) {
-					continue;
-				}
-
-				cnt++;
-				Document doc = new Document();
-				doc.add(new LongField("id", status.getId(), Field.Store.YES));
-				doc.add(new TextField("screen_name", status.getScreenname(), Store.YES));
-				doc.add(new TextField("created_at",  status.getCreatedAt(), Store.YES));
-				doc.add(new TextField("text",        status.getText(), Store.YES));
-
-				
-				writer.addDocument(doc);
-				if (cnt % 10000 == 0) {
-					System.out.println(cnt + " statuses indexed");
-				}
-			}
-
-
-
-			writer.close();
-		} finally {
-			stream.close();
-		}
-
-		System.out.println(String.format("Total of %s statuses indexed", cnt));
-	}
-
-	
-	public static void help() {
-	  System.err.println("expected arguments: /path/to/config/file");
-	  System.err.println();
-	  System.err.println("where config file is of the structure:");
-	  System.err.println();
-	  System.err.println("<parameters>");
-    System.err.println("<index>/path/to/index/to/build</index>");
-    System.err.println("<corpus>/path/to/corpus/to/index</corpus>");
-    System.err.println("<corpusFormat>[tsv, json, trecText]</corpusFormat>");
-    System.err.println("</parameters>");
-    System.err.println();
-    System.err.println("It is assumed that the corpus path points to a directory full of gzipped files.");
-    System.err.println("The corpusFormat element specifies how the files in the corpus are formatted.");
-
-
-
-	}
-
-
+      LOG.info(String.format("Total of %s statuses added", cnt));
+      LOG.info("Merging segments...");
+      writer.forceMerge(1);
+      LOG.info("Done!");
+      LOG.info("Total elapsed time: " + (System.currentTimeMillis() - startTime) + "ms");
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      writer.close();
+      dir.close();
+      stream.close();
+    }
+  }
 }
