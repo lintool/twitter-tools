@@ -44,7 +44,15 @@ public class Status {
 
   public static Status fromJson(String json) {
 
-    JsonObject obj = (JsonObject) parser.parse(json);
+      JsonObject obj = null;
+      try {
+ obj = (JsonObject) parser.parse(json);
+      } catch (Exception e) {
+          e.printStackTrace();
+	  // Catch any malformed JSON.
+	  return null;
+      }
+
     if (obj.get("text") == null)
 	return null;
 
