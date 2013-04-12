@@ -10,15 +10,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
 
 import cc.twittertools.search.configuration.IndriQueryParams;
 import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
-import cc.twittertools.thrift.gen.TrecSearch;
 
 public class RunQueryThrift {
   private static final String HELP_OPTION = "h";
@@ -58,12 +53,8 @@ public class RunQueryThrift {
     IndriQueryParams queryParams = new IndriQueryParams();
     queryParams.ParseXMLQueryFile(queryFile);
 
-    TTransport transport = new TSocket(cmdline.getOptionValue(HOST_OPTION),
+    TrecSearchThriftClient client = new TrecSearchThriftClient(cmdline.getOptionValue(HOST_OPTION),
         Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)));
-    transport.open();
-
-    TProtocol protocol = new TBinaryProtocol(transport);
-    TrecSearch.Client client = new TrecSearch.Client(protocol);
 
     Queries queries = queryParams.getQueries();
     Query query;
@@ -82,6 +73,6 @@ public class RunQueryThrift {
       
     }
 
-    transport.close();
+    client.close();
   }
 }

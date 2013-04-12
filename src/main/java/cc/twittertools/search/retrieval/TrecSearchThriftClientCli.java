@@ -10,14 +10,9 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
 
 import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
-import cc.twittertools.thrift.gen.TrecSearch;
 
 public class TrecSearchThriftClientCli {
   // Defaults: if user doesn't specify an actual query, run MB01 as a demo.
@@ -83,12 +78,8 @@ public class TrecSearchThriftClientCli {
     int num_results = cmdline.hasOption(NUM_RESULTS_OPTION) ?
         Integer.parseInt(cmdline.getOptionValue(NUM_RESULTS_OPTION)) : DEFAULT_NUM_RESULTS;
 
-    TTransport transport = new TSocket(cmdline.getOptionValue(HOST_OPTION),
+    TrecSearchThriftClient client = new TrecSearchThriftClient(cmdline.getOptionValue(HOST_OPTION),
         Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)));
-    transport.open();
-
-    TProtocol protocol = new TBinaryProtocol(transport);
-    TrecSearch.Client client = new TrecSearch.Client(protocol);
 
     System.err.println("qid: " + qid);
     System.err.println("q: " + query);
@@ -107,6 +98,6 @@ public class TrecSearchThriftClientCli {
       i++;
     }
 
-    transport.close();
+    client.close();
   }
 }

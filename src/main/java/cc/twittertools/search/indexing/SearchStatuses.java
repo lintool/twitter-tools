@@ -24,9 +24,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.Similarity;
-import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Version;
 import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
@@ -113,7 +111,7 @@ public class SearchStatuses {
       searcher.setSimilarity(simBM25);
 
     } else if(similarity.equalsIgnoreCase("LM")) {
-      NamedList paramNamedList = new NamedList();
+      NamedList<Double> paramNamedList = new NamedList<Double>();
       paramNamedList.add("mu", 2500.0);
       SolrParams params = SolrParams.toSolrParams(paramNamedList);
       LMDirichletSimilarityFactory factory = new LMDirichletSimilarityFactory();
@@ -130,7 +128,7 @@ public class SearchStatuses {
 
 
 
-    QueryParser p = new QueryParser(Version.LUCENE_40, IndexStatuses.StatusField.TEXT.name, IndexStatuses.ANALYZER);
+    QueryParser p = new QueryParser(Version.LUCENE_41, IndexStatuses.StatusField.TEXT.name, IndexStatuses.ANALYZER);
     Query query = p.parse(cmdline.getOptionValue(QUERY_OPTION));
 
     Term t = new Term(IndexStatuses.StatusField.TEXT.name, queryText);

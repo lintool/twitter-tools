@@ -3,23 +3,20 @@ package cc.twittertools.search.indexing;
 import java.io.Reader;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.Tokenizer;
-
 import org.apache.lucene.util.Version;
 
-public class TweetAnalyzer extends Analyzer {
-  private Version matchVersion;
+import com.google.common.base.Preconditions;
 
-  /**
-   * Creates a new {@link TweetAnalyzer}.
-   */
+public class TweetAnalyzer extends Analyzer {
+  private final Version matchVersion;
+
   public TweetAnalyzer(Version matchVersion) {
-    this.matchVersion = matchVersion;
+    this.matchVersion = Preconditions.checkNotNull(matchVersion);
   }
 
   @Override
   protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
-    return new TokenStreamComponents(new LowerCaseHashtagMentionPreservingTokenizer(matchVersion, reader));
-    //return new TokenStreamComponents(new Tokenizer(reader));
+    return new TokenStreamComponents(
+        new LowerCaseHashtagMentionPreservingTokenizer(matchVersion, reader));
   }
 }
