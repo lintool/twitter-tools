@@ -1,6 +1,6 @@
 namespace java cc.twittertools.thrift.gen
 
-struct TrecSearchResult {
+struct TResult {
   1: i64 id,
   2: double rsv,
   3: string screen_name,
@@ -8,9 +8,9 @@ struct TrecSearchResult {
   5: string text
 }
 
-struct TrecSearchQuery {
+struct TQuery {
   1: string text,
-  2: i64 max_uid,
+  2: i64 max_id,
   3: i32 num_results
 }
  
@@ -19,6 +19,6 @@ exception TrecSearchException {
 }
  
 service TrecSearch {
-  list<TrecSearchResult> search(1: TrecSearchQuery query)
+  list<TResult> search(1: TQuery query)
     throws (1: TrecSearchException error)
 }

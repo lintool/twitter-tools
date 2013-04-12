@@ -34,14 +34,14 @@ public class JsonStatusBlockReader implements StatusStream {
     String raw = null;
 
     while (nxt == null) {
-	raw = br.readLine();
+      raw = br.readLine();
 
-	// Check to see if we've reached end of file.
-	if ( raw == null) {
-	    return null;
-	}
+      // Check to see if we've reached end of file.
+      if (raw == null) {
+        return null;
+      }
 
-	nxt = Status.fromJson(raw);
+      nxt = Status.fromJson(raw);
     }
     return Status.fromJson(raw);
   }

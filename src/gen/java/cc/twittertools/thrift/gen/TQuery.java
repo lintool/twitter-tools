@@ -30,27 +30,27 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery, TrecSearchQuery._Fields>, java.io.Serializable, Cloneable {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TrecSearchQuery");
+public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, java.io.Serializable, Cloneable {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TQuery");
 
   private static final org.apache.thrift.protocol.TField TEXT_FIELD_DESC = new org.apache.thrift.protocol.TField("text", org.apache.thrift.protocol.TType.STRING, (short)1);
-  private static final org.apache.thrift.protocol.TField MAX_UID_FIELD_DESC = new org.apache.thrift.protocol.TField("max_uid", org.apache.thrift.protocol.TType.I64, (short)2);
+  private static final org.apache.thrift.protocol.TField MAX_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("max_id", org.apache.thrift.protocol.TType.I64, (short)2);
   private static final org.apache.thrift.protocol.TField NUM_RESULTS_FIELD_DESC = new org.apache.thrift.protocol.TField("num_results", org.apache.thrift.protocol.TType.I32, (short)3);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
-    schemes.put(StandardScheme.class, new TrecSearchQueryStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new TrecSearchQueryTupleSchemeFactory());
+    schemes.put(StandardScheme.class, new TQueryStandardSchemeFactory());
+    schemes.put(TupleScheme.class, new TQueryTupleSchemeFactory());
   }
 
   public String text; // required
-  public long max_uid; // required
+  public long max_id; // required
   public int num_results; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
     TEXT((short)1, "text"),
-    MAX_UID((short)2, "max_uid"),
+    MAX_ID((short)2, "max_id"),
     NUM_RESULTS((short)3, "num_results");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
@@ -68,8 +68,8 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
       switch(fieldId) {
         case 1: // TEXT
           return TEXT;
-        case 2: // MAX_UID
-          return MAX_UID;
+        case 2: // MAX_ID
+          return MAX_ID;
         case 3: // NUM_RESULTS
           return NUM_RESULTS;
         default:
@@ -112,7 +112,7 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
   }
 
   // isset id assignments
-  private static final int __MAX_UID_ISSET_ID = 0;
+  private static final int __MAX_ID_ISSET_ID = 0;
   private static final int __NUM_RESULTS_ISSET_ID = 1;
   private byte __isset_bitfield = 0;
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
@@ -120,26 +120,26 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
     tmpMap.put(_Fields.TEXT, new org.apache.thrift.meta_data.FieldMetaData("text", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-    tmpMap.put(_Fields.MAX_UID, new org.apache.thrift.meta_data.FieldMetaData("max_uid", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+    tmpMap.put(_Fields.MAX_ID, new org.apache.thrift.meta_data.FieldMetaData("max_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
     tmpMap.put(_Fields.NUM_RESULTS, new org.apache.thrift.meta_data.FieldMetaData("num_results", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TrecSearchQuery.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TQuery.class, metaDataMap);
   }
 
-  public TrecSearchQuery() {
+  public TQuery() {
   }
 
-  public TrecSearchQuery(
+  public TQuery(
     String text,
-    long max_uid,
+    long max_id,
     int num_results)
   {
     this();
     this.text = text;
-    this.max_uid = max_uid;
-    setMax_uidIsSet(true);
+    this.max_id = max_id;
+    setMax_idIsSet(true);
     this.num_results = num_results;
     setNum_resultsIsSet(true);
   }
@@ -147,24 +147,24 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public TrecSearchQuery(TrecSearchQuery other) {
+  public TQuery(TQuery other) {
     __isset_bitfield = other.__isset_bitfield;
     if (other.isSetText()) {
       this.text = other.text;
     }
-    this.max_uid = other.max_uid;
+    this.max_id = other.max_id;
     this.num_results = other.num_results;
   }
 
-  public TrecSearchQuery deepCopy() {
-    return new TrecSearchQuery(this);
+  public TQuery deepCopy() {
+    return new TQuery(this);
   }
 
   @Override
   public void clear() {
     this.text = null;
-    setMax_uidIsSet(false);
-    this.max_uid = 0;
+    setMax_idIsSet(false);
+    this.max_id = 0;
     setNum_resultsIsSet(false);
     this.num_results = 0;
   }
@@ -173,7 +173,7 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
     return this.text;
   }
 
-  public TrecSearchQuery setText(String text) {
+  public TQuery setText(String text) {
     this.text = text;
     return this;
   }
@@ -193,34 +193,34 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
     }
   }
 
-  public long getMax_uid() {
-    return this.max_uid;
+  public long getMax_id() {
+    return this.max_id;
   }
 
-  public TrecSearchQuery setMax_uid(long max_uid) {
-    this.max_uid = max_uid;
-    setMax_uidIsSet(true);
+  public TQuery setMax_id(long max_id) {
+    this.max_id = max_id;
+    setMax_idIsSet(true);
     return this;
   }
 
-  public void unsetMax_uid() {
-    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __MAX_UID_ISSET_ID);
+  public void unsetMax_id() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __MAX_ID_ISSET_ID);
   }
 
-  /** Returns true if field max_uid is set (has been assigned a value) and false otherwise */
-  public boolean isSetMax_uid() {
-    return EncodingUtils.testBit(__isset_bitfield, __MAX_UID_ISSET_ID);
+  /** Returns true if field max_id is set (has been assigned a value) and false otherwise */
+  public boolean isSetMax_id() {
+    return EncodingUtils.testBit(__isset_bitfield, __MAX_ID_ISSET_ID);
   }
 
-  public void setMax_uidIsSet(boolean value) {
-    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __MAX_UID_ISSET_ID, value);
+  public void setMax_idIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __MAX_ID_ISSET_ID, value);
   }
 
   public int getNum_results() {
     return this.num_results;
   }
 
-  public TrecSearchQuery setNum_results(int num_results) {
+  public TQuery setNum_results(int num_results) {
     this.num_results = num_results;
     setNum_resultsIsSet(true);
     return this;
@@ -249,11 +249,11 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
       }
       break;
 
-    case MAX_UID:
+    case MAX_ID:
       if (value == null) {
-        unsetMax_uid();
+        unsetMax_id();
       } else {
-        setMax_uid((Long)value);
+        setMax_id((Long)value);
       }
       break;
 
@@ -273,8 +273,8 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
     case TEXT:
       return getText();
 
-    case MAX_UID:
-      return Long.valueOf(getMax_uid());
+    case MAX_ID:
+      return Long.valueOf(getMax_id());
 
     case NUM_RESULTS:
       return Integer.valueOf(getNum_results());
@@ -292,8 +292,8 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
     switch (field) {
     case TEXT:
       return isSetText();
-    case MAX_UID:
-      return isSetMax_uid();
+    case MAX_ID:
+      return isSetMax_id();
     case NUM_RESULTS:
       return isSetNum_results();
     }
@@ -304,12 +304,12 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof TrecSearchQuery)
-      return this.equals((TrecSearchQuery)that);
+    if (that instanceof TQuery)
+      return this.equals((TQuery)that);
     return false;
   }
 
-  public boolean equals(TrecSearchQuery that) {
+  public boolean equals(TQuery that) {
     if (that == null)
       return false;
 
@@ -322,12 +322,12 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
         return false;
     }
 
-    boolean this_present_max_uid = true;
-    boolean that_present_max_uid = true;
-    if (this_present_max_uid || that_present_max_uid) {
-      if (!(this_present_max_uid && that_present_max_uid))
+    boolean this_present_max_id = true;
+    boolean that_present_max_id = true;
+    if (this_present_max_id || that_present_max_id) {
+      if (!(this_present_max_id && that_present_max_id))
         return false;
-      if (this.max_uid != that.max_uid)
+      if (this.max_id != that.max_id)
         return false;
     }
 
@@ -348,13 +348,13 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
     return 0;
   }
 
-  public int compareTo(TrecSearchQuery other) {
+  public int compareTo(TQuery other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
-    TrecSearchQuery typedOther = (TrecSearchQuery)other;
+    TQuery typedOther = (TQuery)other;
 
     lastComparison = Boolean.valueOf(isSetText()).compareTo(typedOther.isSetText());
     if (lastComparison != 0) {
@@ -366,12 +366,12 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
         return lastComparison;
       }
     }
-    lastComparison = Boolean.valueOf(isSetMax_uid()).compareTo(typedOther.isSetMax_uid());
+    lastComparison = Boolean.valueOf(isSetMax_id()).compareTo(typedOther.isSetMax_id());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    if (isSetMax_uid()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.max_uid, typedOther.max_uid);
+    if (isSetMax_id()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.max_id, typedOther.max_id);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -403,7 +403,7 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("TrecSearchQuery(");
+    StringBuilder sb = new StringBuilder("TQuery(");
     boolean first = true;
 
     sb.append("text:");
@@ -414,8 +414,8 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
     }
     first = false;
     if (!first) sb.append(", ");
-    sb.append("max_uid:");
-    sb.append(this.max_uid);
+    sb.append("max_id:");
+    sb.append(this.max_id);
     first = false;
     if (!first) sb.append(", ");
     sb.append("num_results:");
@@ -448,15 +448,15 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
     }
   }
 
-  private static class TrecSearchQueryStandardSchemeFactory implements SchemeFactory {
-    public TrecSearchQueryStandardScheme getScheme() {
-      return new TrecSearchQueryStandardScheme();
+  private static class TQueryStandardSchemeFactory implements SchemeFactory {
+    public TQueryStandardScheme getScheme() {
+      return new TQueryStandardScheme();
     }
   }
 
-  private static class TrecSearchQueryStandardScheme extends StandardScheme<TrecSearchQuery> {
+  private static class TQueryStandardScheme extends StandardScheme<TQuery> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, TrecSearchQuery struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, TQuery struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -474,10 +474,10 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 2: // MAX_UID
+          case 2: // MAX_ID
             if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-              struct.max_uid = iprot.readI64();
-              struct.setMax_uidIsSet(true);
+              struct.max_id = iprot.readI64();
+              struct.setMax_idIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
@@ -501,7 +501,7 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, TrecSearchQuery struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, TQuery struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
@@ -510,8 +510,8 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
         oprot.writeString(struct.text);
         oprot.writeFieldEnd();
       }
-      oprot.writeFieldBegin(MAX_UID_FIELD_DESC);
-      oprot.writeI64(struct.max_uid);
+      oprot.writeFieldBegin(MAX_ID_FIELD_DESC);
+      oprot.writeI64(struct.max_id);
       oprot.writeFieldEnd();
       oprot.writeFieldBegin(NUM_RESULTS_FIELD_DESC);
       oprot.writeI32(struct.num_results);
@@ -522,22 +522,22 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
 
   }
 
-  private static class TrecSearchQueryTupleSchemeFactory implements SchemeFactory {
-    public TrecSearchQueryTupleScheme getScheme() {
-      return new TrecSearchQueryTupleScheme();
+  private static class TQueryTupleSchemeFactory implements SchemeFactory {
+    public TQueryTupleScheme getScheme() {
+      return new TQueryTupleScheme();
     }
   }
 
-  private static class TrecSearchQueryTupleScheme extends TupleScheme<TrecSearchQuery> {
+  private static class TQueryTupleScheme extends TupleScheme<TQuery> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, TrecSearchQuery struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, TQuery struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
       BitSet optionals = new BitSet();
       if (struct.isSetText()) {
         optionals.set(0);
       }
-      if (struct.isSetMax_uid()) {
+      if (struct.isSetMax_id()) {
         optionals.set(1);
       }
       if (struct.isSetNum_results()) {
@@ -547,8 +547,8 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
       if (struct.isSetText()) {
         oprot.writeString(struct.text);
       }
-      if (struct.isSetMax_uid()) {
-        oprot.writeI64(struct.max_uid);
+      if (struct.isSetMax_id()) {
+        oprot.writeI64(struct.max_id);
       }
       if (struct.isSetNum_results()) {
         oprot.writeI32(struct.num_results);
@@ -556,7 +556,7 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, TrecSearchQuery struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, TQuery struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
       BitSet incoming = iprot.readBitSet(3);
       if (incoming.get(0)) {
@@ -564,8 +564,8 @@ public class TrecSearchQuery implements org.apache.thrift.TBase<TrecSearchQuery,
         struct.setTextIsSet(true);
       }
       if (incoming.get(1)) {
-        struct.max_uid = iprot.readI64();
-        struct.setMax_uidIsSet(true);
+        struct.max_id = iprot.readI64();
+        struct.setMax_idIsSet(true);
       }
       if (incoming.get(2)) {
         struct.num_results = iprot.readI32();

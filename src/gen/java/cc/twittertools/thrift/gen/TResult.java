@@ -30,8 +30,8 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResult, TrecSearchResult._Fields>, java.io.Serializable, Cloneable {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TrecSearchResult");
+public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields>, java.io.Serializable, Cloneable {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TResult");
 
   private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)1);
   private static final org.apache.thrift.protocol.TField RSV_FIELD_DESC = new org.apache.thrift.protocol.TField("rsv", org.apache.thrift.protocol.TType.DOUBLE, (short)2);
@@ -41,8 +41,8 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
-    schemes.put(StandardScheme.class, new TrecSearchResultStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new TrecSearchResultTupleSchemeFactory());
+    schemes.put(StandardScheme.class, new TResultStandardSchemeFactory());
+    schemes.put(TupleScheme.class, new TResultTupleSchemeFactory());
   }
 
   public long id; // required
@@ -139,13 +139,13 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
     tmpMap.put(_Fields.TEXT, new org.apache.thrift.meta_data.FieldMetaData("text", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TrecSearchResult.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TResult.class, metaDataMap);
   }
 
-  public TrecSearchResult() {
+  public TResult() {
   }
 
-  public TrecSearchResult(
+  public TResult(
     long id,
     double rsv,
     String screen_name,
@@ -165,7 +165,7 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public TrecSearchResult(TrecSearchResult other) {
+  public TResult(TResult other) {
     __isset_bitfield = other.__isset_bitfield;
     this.id = other.id;
     this.rsv = other.rsv;
@@ -180,8 +180,8 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
     }
   }
 
-  public TrecSearchResult deepCopy() {
-    return new TrecSearchResult(this);
+  public TResult deepCopy() {
+    return new TResult(this);
   }
 
   @Override
@@ -199,7 +199,7 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
     return this.id;
   }
 
-  public TrecSearchResult setId(long id) {
+  public TResult setId(long id) {
     this.id = id;
     setIdIsSet(true);
     return this;
@@ -222,7 +222,7 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
     return this.rsv;
   }
 
-  public TrecSearchResult setRsv(double rsv) {
+  public TResult setRsv(double rsv) {
     this.rsv = rsv;
     setRsvIsSet(true);
     return this;
@@ -245,7 +245,7 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
     return this.screen_name;
   }
 
-  public TrecSearchResult setScreen_name(String screen_name) {
+  public TResult setScreen_name(String screen_name) {
     this.screen_name = screen_name;
     return this;
   }
@@ -269,7 +269,7 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
     return this.created_at;
   }
 
-  public TrecSearchResult setCreated_at(String created_at) {
+  public TResult setCreated_at(String created_at) {
     this.created_at = created_at;
     return this;
   }
@@ -293,7 +293,7 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
     return this.text;
   }
 
-  public TrecSearchResult setText(String text) {
+  public TResult setText(String text) {
     this.text = text;
     return this;
   }
@@ -404,12 +404,12 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof TrecSearchResult)
-      return this.equals((TrecSearchResult)that);
+    if (that instanceof TResult)
+      return this.equals((TResult)that);
     return false;
   }
 
-  public boolean equals(TrecSearchResult that) {
+  public boolean equals(TResult that) {
     if (that == null)
       return false;
 
@@ -466,13 +466,13 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
     return 0;
   }
 
-  public int compareTo(TrecSearchResult other) {
+  public int compareTo(TResult other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
-    TrecSearchResult typedOther = (TrecSearchResult)other;
+    TResult typedOther = (TResult)other;
 
     lastComparison = Boolean.valueOf(isSetId()).compareTo(typedOther.isSetId());
     if (lastComparison != 0) {
@@ -541,7 +541,7 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("TrecSearchResult(");
+    StringBuilder sb = new StringBuilder("TResult(");
     boolean first = true;
 
     sb.append("id:");
@@ -602,15 +602,15 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
     }
   }
 
-  private static class TrecSearchResultStandardSchemeFactory implements SchemeFactory {
-    public TrecSearchResultStandardScheme getScheme() {
-      return new TrecSearchResultStandardScheme();
+  private static class TResultStandardSchemeFactory implements SchemeFactory {
+    public TResultStandardScheme getScheme() {
+      return new TResultStandardScheme();
     }
   }
 
-  private static class TrecSearchResultStandardScheme extends StandardScheme<TrecSearchResult> {
+  private static class TResultStandardScheme extends StandardScheme<TResult> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, TrecSearchResult struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, TResult struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -671,7 +671,7 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, TrecSearchResult struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, TResult struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
@@ -702,16 +702,16 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
 
   }
 
-  private static class TrecSearchResultTupleSchemeFactory implements SchemeFactory {
-    public TrecSearchResultTupleScheme getScheme() {
-      return new TrecSearchResultTupleScheme();
+  private static class TResultTupleSchemeFactory implements SchemeFactory {
+    public TResultTupleScheme getScheme() {
+      return new TResultTupleScheme();
     }
   }
 
-  private static class TrecSearchResultTupleScheme extends TupleScheme<TrecSearchResult> {
+  private static class TResultTupleScheme extends TupleScheme<TResult> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, TrecSearchResult struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, TResult struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
       BitSet optionals = new BitSet();
       if (struct.isSetId()) {
@@ -748,7 +748,7 @@ public class TrecSearchResult implements org.apache.thrift.TBase<TrecSearchResul
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, TrecSearchResult struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, TResult struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
       BitSet incoming = iprot.readBitSet(5);
       if (incoming.get(0)) {

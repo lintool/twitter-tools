@@ -34,13 +34,13 @@ public class TrecSearch {
 
   public interface Iface {
 
-    public List<TrecSearchResult> search(TrecSearchQuery query) throws TrecSearchException, org.apache.thrift.TException;
+    public List<TResult> search(TQuery query) throws TrecSearchException, org.apache.thrift.TException;
 
   }
 
   public interface AsyncIface {
 
-    public void search(TrecSearchQuery query, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.search_call> resultHandler) throws org.apache.thrift.TException;
+    public void search(TQuery query, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.search_call> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -64,20 +64,20 @@ public class TrecSearch {
       super(iprot, oprot);
     }
 
-    public List<TrecSearchResult> search(TrecSearchQuery query) throws TrecSearchException, org.apache.thrift.TException
+    public List<TResult> search(TQuery query) throws TrecSearchException, org.apache.thrift.TException
     {
       send_search(query);
       return recv_search();
     }
 
-    public void send_search(TrecSearchQuery query) throws org.apache.thrift.TException
+    public void send_search(TQuery query) throws org.apache.thrift.TException
     {
       search_args args = new search_args();
       args.setQuery(query);
       sendBase("search", args);
     }
 
-    public List<TrecSearchResult> recv_search() throws TrecSearchException, org.apache.thrift.TException
+    public List<TResult> recv_search() throws TrecSearchException, org.apache.thrift.TException
     {
       search_result result = new search_result();
       receiveBase(result, "search");
@@ -108,7 +108,7 @@ public class TrecSearch {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void search(TrecSearchQuery query, org.apache.thrift.async.AsyncMethodCallback<search_call> resultHandler) throws org.apache.thrift.TException {
+    public void search(TQuery query, org.apache.thrift.async.AsyncMethodCallback<search_call> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       search_call method_call = new search_call(query, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
@@ -116,8 +116,8 @@ public class TrecSearch {
     }
 
     public static class search_call extends org.apache.thrift.async.TAsyncMethodCall {
-      private TrecSearchQuery query;
-      public search_call(TrecSearchQuery query, org.apache.thrift.async.AsyncMethodCallback<search_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private TQuery query;
+      public search_call(TQuery query, org.apache.thrift.async.AsyncMethodCallback<search_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.query = query;
       }
@@ -130,7 +130,7 @@ public class TrecSearch {
         prot.writeMessageEnd();
       }
 
-      public List<TrecSearchResult> getResult() throws TrecSearchException, org.apache.thrift.TException {
+      public List<TResult> getResult() throws TrecSearchException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
@@ -194,7 +194,7 @@ public class TrecSearch {
       schemes.put(TupleScheme.class, new search_argsTupleSchemeFactory());
     }
 
-    public TrecSearchQuery query; // required
+    public TQuery query; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -259,7 +259,7 @@ public class TrecSearch {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.QUERY, new org.apache.thrift.meta_data.FieldMetaData("query", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TrecSearchQuery.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TQuery.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(search_args.class, metaDataMap);
     }
@@ -268,7 +268,7 @@ public class TrecSearch {
     }
 
     public search_args(
-      TrecSearchQuery query)
+      TQuery query)
     {
       this();
       this.query = query;
@@ -279,7 +279,7 @@ public class TrecSearch {
      */
     public search_args(search_args other) {
       if (other.isSetQuery()) {
-        this.query = new TrecSearchQuery(other.query);
+        this.query = new TQuery(other.query);
       }
     }
 
@@ -292,11 +292,11 @@ public class TrecSearch {
       this.query = null;
     }
 
-    public TrecSearchQuery getQuery() {
+    public TQuery getQuery() {
       return this.query;
     }
 
-    public search_args setQuery(TrecSearchQuery query) {
+    public search_args setQuery(TQuery query) {
       this.query = query;
       return this;
     }
@@ -322,7 +322,7 @@ public class TrecSearch {
         if (value == null) {
           unsetQuery();
         } else {
-          setQuery((TrecSearchQuery)value);
+          setQuery((TQuery)value);
         }
         break;
 
@@ -474,7 +474,7 @@ public class TrecSearch {
           switch (schemeField.id) {
             case 1: // QUERY
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.query = new TrecSearchQuery();
+                struct.query = new TQuery();
                 struct.query.read(iprot);
                 struct.setQueryIsSet(true);
               } else { 
@@ -533,7 +533,7 @@ public class TrecSearch {
         TTupleProtocol iprot = (TTupleProtocol) prot;
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.query = new TrecSearchQuery();
+          struct.query = new TQuery();
           struct.query.read(iprot);
           struct.setQueryIsSet(true);
         }
@@ -554,7 +554,7 @@ public class TrecSearch {
       schemes.put(TupleScheme.class, new search_resultTupleSchemeFactory());
     }
 
-    public List<TrecSearchResult> success; // required
+    public List<TResult> success; // required
     public TrecSearchException error; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -624,7 +624,7 @@ public class TrecSearch {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
-              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TrecSearchResult.class))));
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TResult.class))));
       tmpMap.put(_Fields.ERROR, new org.apache.thrift.meta_data.FieldMetaData("error", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
@@ -635,7 +635,7 @@ public class TrecSearch {
     }
 
     public search_result(
-      List<TrecSearchResult> success,
+      List<TResult> success,
       TrecSearchException error)
     {
       this();
@@ -648,9 +648,9 @@ public class TrecSearch {
      */
     public search_result(search_result other) {
       if (other.isSetSuccess()) {
-        List<TrecSearchResult> __this__success = new ArrayList<TrecSearchResult>();
-        for (TrecSearchResult other_element : other.success) {
-          __this__success.add(new TrecSearchResult(other_element));
+        List<TResult> __this__success = new ArrayList<TResult>();
+        for (TResult other_element : other.success) {
+          __this__success.add(new TResult(other_element));
         }
         this.success = __this__success;
       }
@@ -673,22 +673,22 @@ public class TrecSearch {
       return (this.success == null) ? 0 : this.success.size();
     }
 
-    public java.util.Iterator<TrecSearchResult> getSuccessIterator() {
+    public java.util.Iterator<TResult> getSuccessIterator() {
       return (this.success == null) ? null : this.success.iterator();
     }
 
-    public void addToSuccess(TrecSearchResult elem) {
+    public void addToSuccess(TResult elem) {
       if (this.success == null) {
-        this.success = new ArrayList<TrecSearchResult>();
+        this.success = new ArrayList<TResult>();
       }
       this.success.add(elem);
     }
 
-    public List<TrecSearchResult> getSuccess() {
+    public List<TResult> getSuccess() {
       return this.success;
     }
 
-    public search_result setSuccess(List<TrecSearchResult> success) {
+    public search_result setSuccess(List<TResult> success) {
       this.success = success;
       return this;
     }
@@ -738,7 +738,7 @@ public class TrecSearch {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((List<TrecSearchResult>)value);
+          setSuccess((List<TResult>)value);
         }
         break;
 
@@ -929,11 +929,11 @@ public class TrecSearch {
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
                   org.apache.thrift.protocol.TList _list0 = iprot.readListBegin();
-                  struct.success = new ArrayList<TrecSearchResult>(_list0.size);
+                  struct.success = new ArrayList<TResult>(_list0.size);
                   for (int _i1 = 0; _i1 < _list0.size; ++_i1)
                   {
-                    TrecSearchResult _elem2; // required
-                    _elem2 = new TrecSearchResult();
+                    TResult _elem2; // required
+                    _elem2 = new TResult();
                     _elem2.read(iprot);
                     struct.success.add(_elem2);
                   }
@@ -972,7 +972,7 @@ public class TrecSearch {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (TrecSearchResult _iter3 : struct.success)
+            for (TResult _iter3 : struct.success)
             {
               _iter3.write(oprot);
             }
@@ -1013,7 +1013,7 @@ public class TrecSearch {
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (TrecSearchResult _iter4 : struct.success)
+            for (TResult _iter4 : struct.success)
             {
               _iter4.write(oprot);
             }
@@ -1031,11 +1031,11 @@ public class TrecSearch {
         if (incoming.get(0)) {
           {
             org.apache.thrift.protocol.TList _list5 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.success = new ArrayList<TrecSearchResult>(_list5.size);
+            struct.success = new ArrayList<TResult>(_list5.size);
             for (int _i6 = 0; _i6 < _list5.size; ++_i6)
             {
-              TrecSearchResult _elem7; // required
-              _elem7 = new TrecSearchResult();
+              TResult _elem7; // required
+              _elem7 = new TResult();
               _elem7.read(iprot);
               struct.success.add(_elem7);
             }

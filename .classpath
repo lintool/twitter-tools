@@ -78,7 +78,6 @@
 	<classpathentry kind="lib" path="lib/morfologik-fsa-1.5.5.jar"/>
 	<classpathentry kind="lib" path="lib/morfologik-polish-1.5.5.jar"/>
 	<classpathentry kind="lib" path="lib/morfologik-stemming-1.5.5.jar"/>
-	<classpathentry kind="lib" path="lib/servlet-api-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-jdk14-1.6.4.jar"/>
 	<classpathentry kind="lib" path="lib/solr-core-4.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/solr-solrj-4.1.0.jar"/>
