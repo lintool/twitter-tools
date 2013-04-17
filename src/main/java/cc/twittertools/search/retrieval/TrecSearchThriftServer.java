@@ -64,7 +64,7 @@ public class TrecSearchThriftServer {
       System.exit(-1);
     }
 
-    TServerSocket serverSocket = new TServerSocket(port, 100000);
+    TServerSocket serverSocket = new TServerSocket(port);
     TrecSearch.Processor<TrecSearch.Iface> searchProcessor =
         new TrecSearch.Processor<TrecSearch.Iface>(new TrecSearchHandler(index));
     
