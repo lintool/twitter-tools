@@ -34,6 +34,7 @@ public class TrecSearchThriftLoadGenerator {
     private final TrecSearchThriftClient client;
     private final ConcurrentLinkedQueue<String> queue;
     private final AtomicInteger errorCounter;
+    private final AtomicInteger latencyCounter;
 
     public WorkerThread(TrecSearchThriftLoadGenerator generator, String host, int port) throws Exception {
       Preconditions.checkNotNull(host);
@@ -42,6 +43,7 @@ public class TrecSearchThriftLoadGenerator {
 
       this.queue = generator.getQueue(); 
       this.errorCounter = generator.getErrorCounter();
+      this.latencyCounter = generator.getLatencyCounter();
       this.client = new TrecSearchThriftClient(host, port);
     }
 
@@ -62,8 +64,10 @@ public class TrecSearchThriftLoadGenerator {
           @SuppressWarnings("unused")
           List<TResult> results = client.search(q);
           // Don't do anything with the result.
-          LOG.info(String.format("%s: %4dms for query \"%s\"", Thread.currentThread().getName(),
-              (System.currentTimeMillis() - startTime), queryString));
+          int t = (int) (System.currentTimeMillis() - startTime);
+          LOG.info(String.format("%s: %4dms for query \"%s\"",
+              Thread.currentThread().getName(), t, queryString));
+          latencyCounter.addAndGet(t);
         } catch (TException e) {
           errorCounter.incrementAndGet();
           LOG.info(String.format("%s: error recorded for query \"%s\"",
@@ -82,6 +86,7 @@ public class TrecSearchThriftLoadGenerator {
   private final ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>();
   private final ExecutorService executor = Executors.newFixedThreadPool(maxThreads);
   private final AtomicInteger errorCounter = new AtomicInteger();
+  private final AtomicInteger latencyCounter = new AtomicInteger();
   private final int queueSize;
 
   public TrecSearchThriftLoadGenerator(File queryFile, int limit) throws Exception {
@@ -118,6 +123,10 @@ public class TrecSearchThriftLoadGenerator {
     return errorCounter;
   }
 
+  public AtomicInteger getLatencyCounter() {
+    return latencyCounter;
+  }
+
   public void run(String host, int port) throws Exception {
     long startTime = System.currentTimeMillis();
     for (int i = 0; i < threadCount; i++) {
@@ -132,6 +141,7 @@ public class TrecSearchThriftLoadGenerator {
     LOG.info("Total time: " + totalTime + " ms");
     LOG.info("Number of queries: " + queueSize);
     LOG.info(String.format("Throughput: %.2f qps", 1000.0/(totalTime/queueSize)));
+    LOG.info(String.format("Latency: %d ms", latencyCounter.intValue()/queueSize));
     LOG.info("Errors: " + errorCounter.get());
   }
 
