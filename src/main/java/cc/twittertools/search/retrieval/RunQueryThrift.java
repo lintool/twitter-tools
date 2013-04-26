@@ -13,7 +13,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import cc.twittertools.search.configuration.IndriQueryParams;
-import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
 
 public class RunQueryThrift {
@@ -21,6 +20,8 @@ public class RunQueryThrift {
   private static final String HOST_OPTION = "host";
   private static final String PORT_OPTION = "port";
   private static final String QUERIES_OPTION = "queries";
+  private static final String GROUP_OPTION = "group";
+  private static final String TOKEN_OPTION = "token";
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
@@ -33,6 +34,10 @@ public class RunQueryThrift {
         .withDescription("port").create(PORT_OPTION));
     options.addOption(OptionBuilder.withArgName("file").hasArg()
         .withDescription("XML file containing queries").create(QUERIES_OPTION));
+    options.addOption(OptionBuilder.withArgName("string").hasArg()
+        .withDescription("group id").create(GROUP_OPTION));
+    options.addOption(OptionBuilder.withArgName("string").hasArg()
+        .withDescription("access token").create(TOKEN_OPTION));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -59,18 +64,17 @@ public class RunQueryThrift {
     IndriQueryParams queryParams = new IndriQueryParams();
     queryParams.ParseXMLQueryFile(queryFile);
 
+    String group = cmdline.hasOption(GROUP_OPTION) ? cmdline.getOptionValue(GROUP_OPTION) : null;
+    String token = cmdline.hasOption(TOKEN_OPTION) ? cmdline.getOptionValue(TOKEN_OPTION) : null;
+
     TrecSearchThriftClient client = new TrecSearchThriftClient(cmdline.getOptionValue(HOST_OPTION),
-        Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)));
+        Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)), group, token);
 
     Queries queries = queryParams.getQueries();
     Query query;
     while((query = queries.getNextQuery()) != null) {
-      TQuery q = new TQuery();
-      q.text = query.getQueryString();
-      q.max_id = Long.parseLong(query.getMetadataField("lastrel"));
-      q.num_results = 1000;
-
-      List<TResult> results = client.search(q);
+      List<TResult> results = client.search(query.getQueryString(),
+          Long.parseLong(query.getMetadataField("lastrel")), 10000);
       int i = 1;
       for (TResult result : results) {
         System.out.println(query.getQueryName() + " Q0 " + result.id + " " + i + " " + result.rsv + " lucy");

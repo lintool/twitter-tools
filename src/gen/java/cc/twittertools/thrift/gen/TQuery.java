@@ -33,9 +33,11 @@ import org.slf4j.LoggerFactory;
 public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, java.io.Serializable, Cloneable {
   private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("TQuery");
 
-  private static final org.apache.thrift.protocol.TField TEXT_FIELD_DESC = new org.apache.thrift.protocol.TField("text", org.apache.thrift.protocol.TType.STRING, (short)1);
-  private static final org.apache.thrift.protocol.TField MAX_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("max_id", org.apache.thrift.protocol.TType.I64, (short)2);
-  private static final org.apache.thrift.protocol.TField NUM_RESULTS_FIELD_DESC = new org.apache.thrift.protocol.TField("num_results", org.apache.thrift.protocol.TType.I32, (short)3);
+  private static final org.apache.thrift.protocol.TField GROUP_FIELD_DESC = new org.apache.thrift.protocol.TField("group", org.apache.thrift.protocol.TType.STRING, (short)1);
+  private static final org.apache.thrift.protocol.TField TOKEN_FIELD_DESC = new org.apache.thrift.protocol.TField("token", org.apache.thrift.protocol.TType.STRING, (short)2);
+  private static final org.apache.thrift.protocol.TField TEXT_FIELD_DESC = new org.apache.thrift.protocol.TField("text", org.apache.thrift.protocol.TType.STRING, (short)3);
+  private static final org.apache.thrift.protocol.TField MAX_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("max_id", org.apache.thrift.protocol.TType.I64, (short)4);
+  private static final org.apache.thrift.protocol.TField NUM_RESULTS_FIELD_DESC = new org.apache.thrift.protocol.TField("num_results", org.apache.thrift.protocol.TType.I32, (short)5);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -43,15 +45,19 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     schemes.put(TupleScheme.class, new TQueryTupleSchemeFactory());
   }
 
+  public String group; // required
+  public String token; // required
   public String text; // required
   public long max_id; // required
   public int num_results; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-    TEXT((short)1, "text"),
-    MAX_ID((short)2, "max_id"),
-    NUM_RESULTS((short)3, "num_results");
+    GROUP((short)1, "group"),
+    TOKEN((short)2, "token"),
+    TEXT((short)3, "text"),
+    MAX_ID((short)4, "max_id"),
+    NUM_RESULTS((short)5, "num_results");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -66,11 +72,15 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
      */
     public static _Fields findByThriftId(int fieldId) {
       switch(fieldId) {
-        case 1: // TEXT
+        case 1: // GROUP
+          return GROUP;
+        case 2: // TOKEN
+          return TOKEN;
+        case 3: // TEXT
           return TEXT;
-        case 2: // MAX_ID
+        case 4: // MAX_ID
           return MAX_ID;
-        case 3: // NUM_RESULTS
+        case 5: // NUM_RESULTS
           return NUM_RESULTS;
         default:
           return null;
@@ -118,6 +128,10 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+    tmpMap.put(_Fields.GROUP, new org.apache.thrift.meta_data.FieldMetaData("group", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+    tmpMap.put(_Fields.TOKEN, new org.apache.thrift.meta_data.FieldMetaData("token", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     tmpMap.put(_Fields.TEXT, new org.apache.thrift.meta_data.FieldMetaData("text", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     tmpMap.put(_Fields.MAX_ID, new org.apache.thrift.meta_data.FieldMetaData("max_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
@@ -132,11 +146,15 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
   }
 
   public TQuery(
+    String group,
+    String token,
     String text,
     long max_id,
     int num_results)
   {
     this();
+    this.group = group;
+    this.token = token;
     this.text = text;
     this.max_id = max_id;
     setMax_idIsSet(true);
@@ -149,6 +167,12 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
    */
   public TQuery(TQuery other) {
     __isset_bitfield = other.__isset_bitfield;
+    if (other.isSetGroup()) {
+      this.group = other.group;
+    }
+    if (other.isSetToken()) {
+      this.token = other.token;
+    }
     if (other.isSetText()) {
       this.text = other.text;
     }
@@ -162,11 +186,61 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
 
   @Override
   public void clear() {
+    this.group = null;
+    this.token = null;
     this.text = null;
     setMax_idIsSet(false);
     this.max_id = 0;
     setNum_resultsIsSet(false);
     this.num_results = 0;
+  }
+
+  public String getGroup() {
+    return this.group;
+  }
+
+  public TQuery setGroup(String group) {
+    this.group = group;
+    return this;
+  }
+
+  public void unsetGroup() {
+    this.group = null;
+  }
+
+  /** Returns true if field group is set (has been assigned a value) and false otherwise */
+  public boolean isSetGroup() {
+    return this.group != null;
+  }
+
+  public void setGroupIsSet(boolean value) {
+    if (!value) {
+      this.group = null;
+    }
+  }
+
+  public String getToken() {
+    return this.token;
+  }
+
+  public TQuery setToken(String token) {
+    this.token = token;
+    return this;
+  }
+
+  public void unsetToken() {
+    this.token = null;
+  }
+
+  /** Returns true if field token is set (has been assigned a value) and false otherwise */
+  public boolean isSetToken() {
+    return this.token != null;
+  }
+
+  public void setTokenIsSet(boolean value) {
+    if (!value) {
+      this.token = null;
+    }
   }
 
   public String getText() {
@@ -241,6 +315,22 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
 
   public void setFieldValue(_Fields field, Object value) {
     switch (field) {
+    case GROUP:
+      if (value == null) {
+        unsetGroup();
+      } else {
+        setGroup((String)value);
+      }
+      break;
+
+    case TOKEN:
+      if (value == null) {
+        unsetToken();
+      } else {
+        setToken((String)value);
+      }
+      break;
+
     case TEXT:
       if (value == null) {
         unsetText();
@@ -270,6 +360,12 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
 
   public Object getFieldValue(_Fields field) {
     switch (field) {
+    case GROUP:
+      return getGroup();
+
+    case TOKEN:
+      return getToken();
+
     case TEXT:
       return getText();
 
@@ -290,6 +386,10 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     }
 
     switch (field) {
+    case GROUP:
+      return isSetGroup();
+    case TOKEN:
+      return isSetToken();
     case TEXT:
       return isSetText();
     case MAX_ID:
@@ -312,6 +412,24 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
   public boolean equals(TQuery that) {
     if (that == null)
       return false;
+
+    boolean this_present_group = true && this.isSetGroup();
+    boolean that_present_group = true && that.isSetGroup();
+    if (this_present_group || that_present_group) {
+      if (!(this_present_group && that_present_group))
+        return false;
+      if (!this.group.equals(that.group))
+        return false;
+    }
+
+    boolean this_present_token = true && this.isSetToken();
+    boolean that_present_token = true && that.isSetToken();
+    if (this_present_token || that_present_token) {
+      if (!(this_present_token && that_present_token))
+        return false;
+      if (!this.token.equals(that.token))
+        return false;
+    }
 
     boolean this_present_text = true && this.isSetText();
     boolean that_present_text = true && that.isSetText();
@@ -356,6 +474,26 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     int lastComparison = 0;
     TQuery typedOther = (TQuery)other;
 
+    lastComparison = Boolean.valueOf(isSetGroup()).compareTo(typedOther.isSetGroup());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetGroup()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.group, typedOther.group);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetToken()).compareTo(typedOther.isSetToken());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetToken()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.token, typedOther.token);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
     lastComparison = Boolean.valueOf(isSetText()).compareTo(typedOther.isSetText());
     if (lastComparison != 0) {
       return lastComparison;
@@ -406,6 +544,22 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     StringBuilder sb = new StringBuilder("TQuery(");
     boolean first = true;
 
+    sb.append("group:");
+    if (this.group == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.group);
+    }
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("token:");
+    if (this.token == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.token);
+    }
+    first = false;
+    if (!first) sb.append(", ");
     sb.append("text:");
     if (this.text == null) {
       sb.append("null");
@@ -466,7 +620,23 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
           break;
         }
         switch (schemeField.id) {
-          case 1: // TEXT
+          case 1: // GROUP
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+              struct.group = iprot.readString();
+              struct.setGroupIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 2: // TOKEN
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+              struct.token = iprot.readString();
+              struct.setTokenIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 3: // TEXT
             if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
               struct.text = iprot.readString();
               struct.setTextIsSet(true);
@@ -474,7 +644,7 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 2: // MAX_ID
+          case 4: // MAX_ID
             if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
               struct.max_id = iprot.readI64();
               struct.setMax_idIsSet(true);
@@ -482,7 +652,7 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 3: // NUM_RESULTS
+          case 5: // NUM_RESULTS
             if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
               struct.num_results = iprot.readI32();
               struct.setNum_resultsIsSet(true);
@@ -505,6 +675,16 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
+      if (struct.group != null) {
+        oprot.writeFieldBegin(GROUP_FIELD_DESC);
+        oprot.writeString(struct.group);
+        oprot.writeFieldEnd();
+      }
+      if (struct.token != null) {
+        oprot.writeFieldBegin(TOKEN_FIELD_DESC);
+        oprot.writeString(struct.token);
+        oprot.writeFieldEnd();
+      }
       if (struct.text != null) {
         oprot.writeFieldBegin(TEXT_FIELD_DESC);
         oprot.writeString(struct.text);
@@ -534,16 +714,28 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     public void write(org.apache.thrift.protocol.TProtocol prot, TQuery struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
       BitSet optionals = new BitSet();
-      if (struct.isSetText()) {
+      if (struct.isSetGroup()) {
         optionals.set(0);
       }
-      if (struct.isSetMax_id()) {
+      if (struct.isSetToken()) {
         optionals.set(1);
       }
-      if (struct.isSetNum_results()) {
+      if (struct.isSetText()) {
         optionals.set(2);
       }
-      oprot.writeBitSet(optionals, 3);
+      if (struct.isSetMax_id()) {
+        optionals.set(3);
+      }
+      if (struct.isSetNum_results()) {
+        optionals.set(4);
+      }
+      oprot.writeBitSet(optionals, 5);
+      if (struct.isSetGroup()) {
+        oprot.writeString(struct.group);
+      }
+      if (struct.isSetToken()) {
+        oprot.writeString(struct.token);
+      }
       if (struct.isSetText()) {
         oprot.writeString(struct.text);
       }
@@ -558,16 +750,24 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     @Override
     public void read(org.apache.thrift.protocol.TProtocol prot, TQuery struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
-      BitSet incoming = iprot.readBitSet(3);
+      BitSet incoming = iprot.readBitSet(5);
       if (incoming.get(0)) {
+        struct.group = iprot.readString();
+        struct.setGroupIsSet(true);
+      }
+      if (incoming.get(1)) {
+        struct.token = iprot.readString();
+        struct.setTokenIsSet(true);
+      }
+      if (incoming.get(2)) {
         struct.text = iprot.readString();
         struct.setTextIsSet(true);
       }
-      if (incoming.get(1)) {
+      if (incoming.get(3)) {
         struct.max_id = iprot.readI64();
         struct.setMax_idIsSet(true);
       }
-      if (incoming.get(2)) {
+      if (incoming.get(4)) {
         struct.num_results = iprot.readI32();
         struct.setNum_resultsIsSet(true);
       }

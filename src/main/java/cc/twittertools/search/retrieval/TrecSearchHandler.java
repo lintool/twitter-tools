@@ -3,6 +3,9 @@ package cc.twittertools.search.retrieval;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -42,10 +45,15 @@ public class TrecSearchHandler implements TrecSearch.Iface {
       new QueryParser(Version.LUCENE_41, DocField.TEXT.name, ANALYZER);
 
   private final IndexSearcher searcher;
+  private final Map<String, String> credentials;
 
-  public TrecSearchHandler(File indexPath) throws IOException {
+  public TrecSearchHandler(File indexPath, @Nullable Map<String, String> credentials)
+      throws IOException {
     Preconditions.checkNotNull(indexPath);
     Preconditions.checkArgument(indexPath.exists());
+
+    // Can be null, in which case we don't check for credentials.
+    this.credentials = credentials;
 
     IndexReader reader = DirectoryReader.open(FSDirectory.open(indexPath));
     searcher = new IndexSearcher(reader);
@@ -61,6 +69,13 @@ public class TrecSearchHandler implements TrecSearch.Iface {
 
   public List<TResult> search(TQuery query) throws TrecSearchException {
     Preconditions.checkNotNull(query);
+
+    // Verify credentials.
+    if (credentials != null && (!credentials.containsKey(query.group) ||
+        !credentials.get(query.group).equals(query.token))) {
+      LOG.info(String.format("Access denied for (%s, %s)", query.group, query.token));
+      throw new TrecSearchException("Invalid credentials: access denied.");
+    }
 
     List<TResult> results = Lists.newArrayList();
     long startTime = System.currentTimeMillis();

@@ -9,9 +9,11 @@ struct TResult {
 }
 
 struct TQuery {
-  1: string text,
-  2: i64 max_id,
-  3: i32 num_results
+  1: string group,
+  2: string token,
+  3: string text,
+  4: i64 max_id,
+  5: i32 num_results
 }
  
 exception TrecSearchException {

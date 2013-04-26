@@ -1,6 +1,7 @@
 package cc.twittertools.search.retrieval;
 
 import java.io.File;
+import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -17,6 +18,10 @@ import org.apache.thrift.transport.TServerSocket;
 
 import cc.twittertools.thrift.gen.TrecSearch;
 
+import com.google.common.base.Charsets;
+import com.google.common.collect.Maps;
+import com.google.common.io.Files;
+
 public class TrecSearchThriftServer {
   private static final int DEFAULT_PORT = 9090;
   private static final int DEFAULT_MAX_THREADS = 8;
@@ -25,6 +30,7 @@ public class TrecSearchThriftServer {
   private static final String INDEX_OPTION = "index";
   private static final String PORT_OPTION = "port";
   private static final String MAX_THREADS_OPTION = "max_threads";
+  private static final String CREDENTIALS_OPTION = "credentials";
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
@@ -37,6 +43,8 @@ public class TrecSearchThriftServer {
         .withDescription("index location").create(INDEX_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
         .withDescription("max number of threads in thread pool").create(MAX_THREADS_OPTION));
+    options.addOption(OptionBuilder.withArgName("file").hasArg()
+        .withDescription("file containing access tokens").create(CREDENTIALS_OPTION));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -59,6 +67,26 @@ public class TrecSearchThriftServer {
         Integer.parseInt(cmdline.getOptionValue(MAX_THREADS_OPTION)) : DEFAULT_MAX_THREADS;
     File index = new File(cmdline.getOptionValue(INDEX_OPTION));
 
+    Map<String, String> credentials = null;
+    if (cmdline.hasOption(CREDENTIALS_OPTION)) {
+      credentials = Maps.newHashMap();
+      File cfile = new File(cmdline.getOptionValue(CREDENTIALS_OPTION));
+      if (!cfile.exists()) {
+        System.err.println("Error: " + cfile + " does not exist!");
+        System.exit(-1);
+      }
+      for (String s : Files.readLines(cfile, Charsets.UTF_8)) {
+        try {
+          String[] arr = s.split(":");
+          credentials.put(arr[0], arr[1]);
+        } catch (Exception e){
+          // Catch any exceptions from parsing file contain access tokens
+          System.err.println("Error reading access tokens from " + cfile + "!");
+          System.exit(-1);
+        }
+      }
+    }
+
     if (!index.exists()) {
       System.err.println("Error: " + index + " does not exist!");
       System.exit(-1);
@@ -66,7 +94,7 @@ public class TrecSearchThriftServer {
 
     TServerSocket serverSocket = new TServerSocket(port);
     TrecSearch.Processor<TrecSearch.Iface> searchProcessor =
-        new TrecSearch.Processor<TrecSearch.Iface>(new TrecSearchHandler(index));
+        new TrecSearch.Processor<TrecSearch.Iface>(new TrecSearchHandler(index, credentials));
     
     TThreadPoolServer.Args serverArgs = new TThreadPoolServer.Args(serverSocket);
     serverArgs.maxWorkerThreads(maxThreads);

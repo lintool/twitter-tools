@@ -20,7 +20,6 @@ import org.apache.thrift.TException;
 
 import cc.twittertools.search.retrieval.TrecSearchThriftClient;
 import cc.twittertools.search.retrieval.TrecSearchThriftServer;
-import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
 
 import com.google.common.base.Charsets;
@@ -36,7 +35,8 @@ public class TrecSearchThriftLoadGenerator {
     private final AtomicInteger errorCounter;
     private final AtomicInteger latencyCounter;
 
-    public WorkerThread(TrecSearchThriftLoadGenerator generator, String host, int port) throws Exception {
+    public WorkerThread(TrecSearchThriftLoadGenerator generator, String host, int port,
+        String group, String token) throws Exception {
       Preconditions.checkNotNull(host);
       Preconditions.checkArgument(port > 0);
       Preconditions.checkNotNull(generator);
@@ -44,7 +44,7 @@ public class TrecSearchThriftLoadGenerator {
       this.queue = generator.getQueue(); 
       this.errorCounter = generator.getErrorCounter();
       this.latencyCounter = generator.getLatencyCounter();
-      this.client = new TrecSearchThriftClient(host, port);
+      this.client = new TrecSearchThriftClient(host, port, group, token);
     }
 
     @Override
@@ -55,14 +55,10 @@ public class TrecSearchThriftLoadGenerator {
       String queryString = null;
       while ((queryString = queue.poll()) != null) {
         startTime = System.currentTimeMillis();
-        TQuery q = new TQuery();
-        q.text = queryString;
-        q.max_id = Long.MAX_VALUE;
-        q.num_results = 1000;
 
         try {
           @SuppressWarnings("unused")
-          List<TResult> results = client.search(q);
+          List<TResult> results = client.search(queryString, Long.MAX_VALUE, 1000);
           // Don't do anything with the result.
           int t = (int) (System.currentTimeMillis() - startTime);
           LOG.info(String.format("%s: %4dms for query \"%s\"",
@@ -89,6 +85,9 @@ public class TrecSearchThriftLoadGenerator {
   private final AtomicInteger latencyCounter = new AtomicInteger();
   private final int queueSize;
 
+  private String group = null;
+  private String token = null;
+
   public TrecSearchThriftLoadGenerator(File queryFile, int limit) throws Exception {
     Preconditions.checkNotNull(queryFile);
     Preconditions.checkArgument(queryFile.exists());
@@ -105,6 +104,13 @@ public class TrecSearchThriftLoadGenerator {
     }
 
     queueSize = queue.size();
+  }
+
+  public TrecSearchThriftLoadGenerator withCredentials(String group, String token) {
+    this.group = group;
+    this.token = token;
+
+    return this;
   }
 
   public TrecSearchThriftLoadGenerator withThreads(int n) {
@@ -130,7 +136,7 @@ public class TrecSearchThriftLoadGenerator {
   public void run(String host, int port) throws Exception {
     long startTime = System.currentTimeMillis();
     for (int i = 0; i < threadCount; i++) {
-      Runnable worker = new WorkerThread(this, host, port);
+      Runnable worker = new WorkerThread(this, host, port, group, token);
       executor.execute(worker);
     }
     executor.shutdown();
@@ -153,6 +159,8 @@ public class TrecSearchThriftLoadGenerator {
   private static final String PORT_OPTION = "port";
   private static final String THREADS_OPTION = "threads";
   private static final String LIMIT_OPTION = "limit";
+  private static final String GROUP_OPTION = "group";
+  private static final String TOKEN_OPTION = "token";
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
@@ -167,6 +175,10 @@ public class TrecSearchThriftLoadGenerator {
         .withDescription("threads").create(THREADS_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
         .withDescription("number of queries to process").create(LIMIT_OPTION));
+    options.addOption(OptionBuilder.withArgName("string").hasArg()
+        .withDescription("group id").create(GROUP_OPTION));
+    options.addOption(OptionBuilder.withArgName("string").hasArg()
+        .withDescription("access token").create(TOKEN_OPTION));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -191,9 +203,13 @@ public class TrecSearchThriftLoadGenerator {
     int limit = cmdline.hasOption(LIMIT_OPTION) ?
         Integer.parseInt(cmdline.getOptionValue(LIMIT_OPTION)) : Integer.MAX_VALUE;
 
+    String group = cmdline.hasOption(GROUP_OPTION) ? cmdline.getOptionValue(GROUP_OPTION) : null;
+    String token = cmdline.hasOption(TOKEN_OPTION) ? cmdline.getOptionValue(TOKEN_OPTION) : null;
+
     String queryFile = "data/queries.trec2005efficiency.txt";
     new TrecSearchThriftLoadGenerator(new File(queryFile), limit)
         .withThreads(numThreads)
+        .withCredentials(group, token)
         .run(host, port);
   }
 }

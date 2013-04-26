@@ -11,7 +11,6 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
 
 public class TrecSearchThriftClientCli {
@@ -30,6 +29,8 @@ public class TrecSearchThriftClientCli {
   private static final String RUNTAG_OPTION = "runtag";
   private static final String MAX_ID_OPTION = "max_id";
   private static final String NUM_RESULTS_OPTION = "num_results";
+  private static final String GROUP_OPTION = "group";
+  private static final String TOKEN_OPTION = "token";
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
@@ -50,6 +51,10 @@ public class TrecSearchThriftClientCli {
         .withDescription("maxid").create(MAX_ID_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
         .withDescription("number of results").create(NUM_RESULTS_OPTION));
+    options.addOption(OptionBuilder.withArgName("string").hasArg()
+        .withDescription("group id").create(GROUP_OPTION));
+    options.addOption(OptionBuilder.withArgName("string").hasArg()
+        .withDescription("access token").create(TOKEN_OPTION));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -73,25 +78,22 @@ public class TrecSearchThriftClientCli {
         cmdline.getOptionValue(QUERY_OPTION) : DEFAULT_Q;
     String runid = cmdline.hasOption(RUNTAG_OPTION) ?
         cmdline.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
-    long max_id = cmdline.hasOption(MAX_ID_OPTION) ?
+    long maxId = cmdline.hasOption(MAX_ID_OPTION) ?
         Long.parseLong(cmdline.getOptionValue(MAX_ID_OPTION)) : DEFAULT_MAX_ID;
-    int num_results = cmdline.hasOption(NUM_RESULTS_OPTION) ?
+    int numResults = cmdline.hasOption(NUM_RESULTS_OPTION) ?
         Integer.parseInt(cmdline.getOptionValue(NUM_RESULTS_OPTION)) : DEFAULT_NUM_RESULTS;
 
+    String group = cmdline.hasOption(GROUP_OPTION) ? cmdline.getOptionValue(GROUP_OPTION) : null;
+    String token = cmdline.hasOption(TOKEN_OPTION) ? cmdline.getOptionValue(TOKEN_OPTION) : null;
     TrecSearchThriftClient client = new TrecSearchThriftClient(cmdline.getOptionValue(HOST_OPTION),
-        Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)));
+        Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)), group, token);
 
     System.err.println("qid: " + qid);
     System.err.println("q: " + query);
-    System.err.println("max_id: " + max_id);
-    System.err.println("num_results: " + num_results);
+    System.err.println("max_id: " + maxId);
+    System.err.println("num_results: " + numResults);
     
-    TQuery q = new TQuery();
-    q.text = query;
-    q.max_id = max_id;
-    q.num_results = num_results;
-
-    List<TResult> results = client.search(q);
+    List<TResult> results = client.search(query, maxId, numResults);
     int i = 1;
     for (TResult result : results) {
       System.out.println(qid + " Q0 " + result.id + " " + i + " " + result.rsv + " " + runid);
