@@ -16,6 +16,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
@@ -130,9 +131,15 @@ public class IndexStatuses {
         cnt++;
         Document doc = new Document();
         doc.add(new LongField("id", status.getId(), Field.Store.YES));
+        doc.add(new LongField("epoch", status.getEpoch(), Field.Store.NO));
         doc.add(new TextField("screen_name", status.getScreenname(), Store.YES));
         doc.add(new TextField("created_at", status.getCreatedAt(), Store.YES));
         doc.add(new TextField("text", status.getText(), Store.YES));
+
+        doc.add(new TextField("lang", status.getLang(), Store.NO));
+        doc.add(new IntField("followersCount", status.getFollowersCount(), Store.NO));
+        doc.add(new IntField("friendsCount", status.getFriendsCount(), Store.NO));
+        doc.add(new IntField("statusesCount", status.getStatusesCount(), Store.NO));
 
         writer.addDocument(doc);
         if (cnt % 100000 == 0) {
