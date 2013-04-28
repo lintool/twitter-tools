@@ -86,5 +86,6 @@
 	<classpathentry kind="lib" path="lib/zookeeper-3.4.5.jar"/>
 	<classpathentry kind="lib" path="lib/libthrift-0.9.0.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="lib/twitter-text-1.6.1.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
