@@ -135,7 +135,8 @@ public class IndexStatuses {
         doc.add(new TextField("screen_name", status.getScreenname(), Store.YES));
         doc.add(new TextField("created_at", status.getCreatedAt(), Store.YES));
         doc.add(new TextField("text", status.getText(), Store.YES));
-
+        doc.add(new LongField("inReplyToUserId", status.getInReplyToUserId(), Field.Store.NO));
+        doc.add(new LongField("inReplyToStatusId", status.getInReplyToStatusId(), Field.Store.NO));
         doc.add(new TextField("lang", status.getLang(), Store.NO));
         doc.add(new IntField("followersCount", status.getFollowersCount(), Store.NO));
         doc.add(new IntField("friendsCount", status.getFriendsCount(), Store.NO));
