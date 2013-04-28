@@ -97,7 +97,7 @@ public class Status {
       status.epoch = -1L;
     }
     
-    status.lang = obj.get("lang").getAsString();
+    status.lang = obj.get("user").getAsJsonObject().get("lang").getAsString();
     status.followersCount = obj.get("user").getAsJsonObject().get("followers_count").getAsInt();
     status.friendsCount = obj.get("user").getAsJsonObject().get("friends_count").getAsInt();
     status.statusesCount = obj.get("user").getAsJsonObject().get("statuses_count").getAsInt();
