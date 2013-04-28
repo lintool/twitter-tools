@@ -20,12 +20,14 @@ public class Status {
   private JsonObject jsonObject;
   private String jsonString;
   private String lang;
+  private long inReplyToStatusId;
+  private long inReplyToUserId;
   private int followersCount;
   private int friendsCount;
   private int statusesCount;
-  
+
   protected Status() {}
-  
+
   public long getId() {
     return id;
   }
@@ -42,11 +44,11 @@ public class Status {
   public long getEpoch() {
     return epoch;
   }
-  
+
   public String getText() {
     return text;
   }
-  
+
   public JsonObject getJsonObject() {
     return jsonObject;
   }
@@ -58,17 +60,25 @@ public class Status {
   public String getLang() {
     return lang;
   }
-  
+
   public int getFollowersCount() {
     return followersCount;
   }
-  
+
   public int getFriendsCount() {
     return friendsCount;
   }
-  
+
   public int getStatusesCount() {
     return statusesCount;
+  }
+  
+  public long getInReplyToStatusId() {
+    return inReplyToStatusId;
+  }
+
+  public long getInReplyToUserId() {
+    return inReplyToUserId;
   }
   
   public static Status fromJson(String json) {
@@ -96,19 +106,37 @@ public class Status {
     } catch (ParseException e) {
       status.epoch = -1L;
     }
+
+    try {
+      status.inReplyToStatusId = obj.get("in_reply_to_status_id").getAsLong();
+    } catch (Exception e) {
+      status.inReplyToStatusId = -1L;
+    }
     
-    status.lang = obj.get("user").getAsJsonObject().get("lang").getAsString();
+    try {
+      status.inReplyToUserId = obj.get("in_reply_to_user_id").getAsLong();
+    } catch (Exception e) {
+      status.inReplyToUserId = -1L;
+    }
+    
+    //status.lang = obj.get("user").getAsJsonObject().get("lang").getAsString();
+    try {
+      status.lang = obj.get("lang").getAsString();
+    } catch (Exception e) {
+      status.lang = "unknown";
+    }
+    
     status.followersCount = obj.get("user").getAsJsonObject().get("followers_count").getAsInt();
     status.friendsCount = obj.get("user").getAsJsonObject().get("friends_count").getAsInt();
     status.statusesCount = obj.get("user").getAsJsonObject().get("statuses_count").getAsInt();
-    
-    
+
+
     status.jsonObject = obj;
     status.jsonString = json;
 
     return status;
   }
-  
+
   public static Status fromTSV(String tsv) {
     String[] columns = tsv.split("\t");
 
