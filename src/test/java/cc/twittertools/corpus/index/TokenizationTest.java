@@ -84,7 +84,6 @@ public class TokenizationTest {
   }
 
   public String parseKeywords(Analyzer analyzer, String keywords) {
-    System.out.println(keywords);
     StringBuilder sb = new StringBuilder();
     try {
       TokenStream tokenStream = analyzer.tokenStream(null, new StringReader(keywords));
@@ -103,8 +102,6 @@ public class TokenizationTest {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    System.out.println(sb.toString());
-    System.out.println();
     return sb.toString();
   }
 
