@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.IntField;
@@ -118,7 +119,7 @@ public class IndexStatuses {
 
     LOG.info("collection: " + collectionPath);
     LOG.info("index: " + indexPath);
-    
+
     IndexWriter writer = new IndexWriter(dir, config);
     int cnt = 0;
     Status status;
@@ -135,12 +136,29 @@ public class IndexStatuses {
         doc.add(new TextField("screen_name", status.getScreenname(), Store.YES));
         doc.add(new TextField("created_at", status.getCreatedAt(), Store.YES));
         doc.add(new TextField("text", status.getText(), Store.YES));
-        doc.add(new LongField("inReplyToUserId", status.getInReplyToUserId(), Field.Store.NO));
-        doc.add(new LongField("inReplyToStatusId", status.getInReplyToStatusId(), Field.Store.NO));
-        doc.add(new TextField("lang", status.getLang(), Store.NO));
-        doc.add(new IntField("followersCount", status.getFollowersCount(), Store.NO));
-        doc.add(new IntField("friendsCount", status.getFriendsCount(), Store.NO));
-        doc.add(new IntField("statusesCount", status.getStatusesCount(), Store.NO));
+
+        // following tests for presence or absence of fields are going to slow down indexing a lot.
+        
+        long inReplyToStatusId = status.getInReplyToStatusId();
+        if(inReplyToStatusId > 0) {
+          doc.add(new LongField("inReplyToStatusId", inReplyToStatusId, Field.Store.YES));
+          doc.add(new LongField("inReplyToUserId", status.getInReplyToUserId(), Field.Store.YES));
+        }
+        
+        String lang = status.getLang();
+        if(! lang.equals("unknown")) {
+          doc.add(new TextField("lang", status.getLang(), Store.YES));
+        }
+        
+        double lattitude = status.getLattitude();
+        if(! Double.isInfinite(lattitude)) {
+          doc.add(new DoubleField("lattitude", lattitude, Field.Store.YES));
+          doc.add(new DoubleField("longitude", status.getLongitude(), Field.Store.YES));          
+        }
+        
+        doc.add(new IntField("followersCount", status.getFollowersCount(), Store.YES));
+        doc.add(new IntField("friendsCount", status.getFriendsCount(), Store.YES));
+        doc.add(new IntField("statusesCount", status.getStatusesCount(), Store.YES));
 
         writer.addDocument(doc);
         if (cnt % 100000 == 0) {

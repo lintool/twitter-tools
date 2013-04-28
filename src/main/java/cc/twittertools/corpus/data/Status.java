@@ -25,7 +25,9 @@ public class Status {
   private int followersCount;
   private int friendsCount;
   private int statusesCount;
-
+  private double lattitude;
+  private double longitude;
+  
   protected Status() {}
 
   public long getId() {
@@ -81,6 +83,14 @@ public class Status {
     return inReplyToUserId;
   }
   
+  public double getLattitude() {
+    return lattitude;
+  }
+  
+  public double getLongitude() {
+    return longitude;
+  }
+  
   public static Status fromJson(String json) {
     JsonObject obj = null;
     try {
@@ -119,7 +129,15 @@ public class Status {
       status.inReplyToUserId = -1L;
     }
     
-    //status.lang = obj.get("user").getAsJsonObject().get("lang").getAsString();
+    try {
+      status.lattitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(0).getAsDouble();
+      status.longitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(1).getAsDouble();
+      
+    } catch (Exception e) {
+      status.lattitude = Double.NEGATIVE_INFINITY;
+      status.longitude = Double.NEGATIVE_INFINITY;
+    }
+
     try {
       status.lang = obj.get("lang").getAsString();
     } catch (Exception e) {
