@@ -12,6 +12,11 @@ import com.twitter.Regex;
 
 public class LowerCaseEntityPreservingFilter extends TokenFilter {
 
+  private static final int INVALID_ENTITY = 0;
+  private static final int VALID_HASHTAG = 1;
+  private static final int VALID_MENTION = 2;
+  private static final int VALID_URL = 3;
+
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
   private final KeywordAttribute keywordAttr = addAttribute(KeywordAttribute.class);
   private char[] tailBuffer = null;
@@ -36,18 +41,19 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
       tailBuffer = null;
     }
 
-    // Deal with any entities
-    if (isEntity(termAtt.toString())) {
-      if (Regex.VALID_URL.matcher(termAtt.toString()).matches()) {
-        keywordAttr.setKeyword(true);
-        return true; // Don't touch URLs
-      }
+    int entityType = isEntity(termAtt.toString());
+    if (entityType == VALID_URL) {
+      keywordAttr.setKeyword(true);
+      return true;
 
-      // Convert the entity to lowercase
-      for (int i = 0; i < termAtt.length(); i++) {
-        buffer[i] = Character.toLowerCase(buffer[i]);
-      }
+    }
 
+    // Lowercase the token
+    for (int i = 0; i < termAtt.length(); i++) {
+      buffer[i] = Character.toLowerCase(buffer[i]);
+    }
+
+    if (entityType != INVALID_ENTITY) {
       // At this stage, if it's a valid entity and doesn't have any
       // proceeding characters, then we can stop processing
       if (isEntityDelimiter(0)) {
@@ -58,7 +64,6 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
       // Cases where there are characters before the entity sign.
       // Split them off and process them separately
       for (int i = 0; i < termAtt.length(); i++) {
-        buffer[i] = Character.toLowerCase(buffer[i]);
         if (isEntityDelimiter(i)) {
           tailBuffer = Arrays.copyOfRange(buffer, i, termAtt.length());
           termAtt.setLength(i);
@@ -67,11 +72,6 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
       }
 
     } else {
-
-      // It's not a URL, lowercase it
-      for (int i = 0; i < termAtt.length(); i++) {
-        buffer[i] = Character.toLowerCase(buffer[i]);
-      }
 
       // Check for non-whitespace, non-entity (@, #, _) delimiters in the
       // term
@@ -84,10 +84,10 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
           break;
         }
       }
-      
+
       // TODO: Preserve Email Addresses
 
-      if (isEntity(termAtt.toString())) {
+      if (isEntity(termAtt.toString()) != INVALID_ENTITY) {
         // This was an entity with some trailing text - we've removed
         // the tail, all that remains is the entity
         keywordAttr.setKeyword(true);
@@ -129,10 +129,15 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
   /**
    * Check if the given string is a valid entity (mention, hashtag or URL)
    */
-  public boolean isEntity(String term) {
-    return Regex.VALID_URL.matcher(term).matches()
-        || Regex.VALID_MENTION_OR_LIST.matcher(term).matches()
-        || Regex.VALID_HASHTAG.matcher(term).matches();
+  public int isEntity(String term) {
+    if (Regex.VALID_URL.matcher(term).matches())
+      return VALID_URL;
+    else if (Regex.VALID_MENTION_OR_LIST.matcher(term).matches())
+      return VALID_MENTION;
+    else if (Regex.VALID_HASHTAG.matcher(term).matches())
+      return VALID_HASHTAG;
+    else
+      return INVALID_ENTITY;
   }
 
   /**

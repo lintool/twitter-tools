@@ -76,7 +76,7 @@ public class TokenizationTest {
     assertEquals(
         "|@valid|test|valid|#hashtags|rt|@meniton|the|last|@mention|is|#valid|and|so|is|thi|@valid|howev|thi|is|invalid|",
         test10);
-
+    
   }
 
   public static junit.framework.Test suite() {
@@ -84,6 +84,7 @@ public class TokenizationTest {
   }
 
   public String parseKeywords(Analyzer analyzer, String keywords) {
+    System.out.println(keywords);
     StringBuilder sb = new StringBuilder();
     try {
       TokenStream tokenStream = analyzer.tokenStream(null, new StringReader(keywords));
@@ -102,6 +103,8 @@ public class TokenizationTest {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+    System.out.println(sb.toString());
+    System.out.println();
     return sb.toString();
   }
 
