@@ -156,6 +156,12 @@ public class IndexStatuses {
           doc.add(new DoubleField("longitude", status.getLongitude(), Field.Store.YES));          
         }
         
+        long retweetStatusId = status.getRetweetedStatusId();
+        if(retweetStatusId > 0) {
+          doc.add(new LongField("retweetStatusId", retweetStatusId, Field.Store.YES));
+          doc.add(new LongField("retweetUserId", status.getRetweetedUserId(), Field.Store.YES));
+        }
+        
         doc.add(new IntField("followersCount", status.getFollowersCount(), Store.YES));
         doc.add(new IntField("friendsCount", status.getFriendsCount(), Store.YES));
         doc.add(new IntField("statusesCount", status.getStatusesCount(), Store.YES));

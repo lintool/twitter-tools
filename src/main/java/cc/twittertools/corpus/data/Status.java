@@ -27,6 +27,8 @@ public class Status {
   private int statusesCount;
   private double lattitude;
   private double longitude;
+  private long retweetedStatusId;
+  private long retweetedUserId;
   
   protected Status() {}
 
@@ -91,6 +93,14 @@ public class Status {
     return longitude;
   }
   
+  public long getRetweetedStatusId() {
+    return retweetedStatusId;
+  }
+
+  public long getRetweetedUserId() {
+    return retweetedUserId;
+  }
+  
   public static Status fromJson(String json) {
     JsonObject obj = null;
     try {
@@ -128,6 +138,23 @@ public class Status {
     } catch (Exception e) {
       status.inReplyToUserId = -1L;
     }
+    
+    try {
+      status.retweetedStatusId = obj.getAsJsonObject("retweeted_status").get("id").getAsLong();
+      status.retweetedUserId = obj.getAsJsonObject("retweeted_status").get("user").getAsJsonObject().get("id").getAsLong();
+      
+      
+    } catch (Exception e) {
+      status.inReplyToStatusId = -1L;
+    }
+    
+    try {
+      status.inReplyToUserId = obj.get("in_reply_to_user_id").getAsLong();
+    } catch (Exception e) {
+      status.inReplyToUserId = -1L;
+    }
+    
+    
     
     try {
       status.lattitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(0).getAsDouble();
