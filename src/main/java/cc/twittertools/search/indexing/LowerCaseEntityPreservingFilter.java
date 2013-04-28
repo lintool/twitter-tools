@@ -118,7 +118,9 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
     final char[] buffer = termAtt.buffer();
     // Remove any remaining non-alphanumeric characters
     for (int i = 0; i < termAtt.length(); i++) {
-      if (!(Character.isAlphabetic(buffer[i]) || Character.isDigit(buffer[i]))) {
+      // TODO: isAlphabetic is a better choice than isLetter since it scrubs some weird
+      // characters, but isAlphabetic is a JDK7 method. Note, affects a test case.
+      if (!(Character.isLetter(buffer[i]) || Character.isDigit(buffer[i]))) {
         System.arraycopy(buffer, i + 1, buffer, i, buffer.length - 1 - i);
         termAtt.setLength(termAtt.length() - 1);
         i--; // Correct for the (now displaced) buffer position
