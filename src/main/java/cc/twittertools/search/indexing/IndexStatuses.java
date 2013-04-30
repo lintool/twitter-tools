@@ -56,7 +56,7 @@ public class IndexStatuses {
     FOLLOWERS_COUNT("followers_count"),
     FRIENDS_COUNT("friends_count"),
     STATUSES_COUNT("statuses_count"),
-    LATTITUDE("lattitude"),
+    latitude("latitude"),
     LONGITUDE("longitude"),
     RETWEETED_STATUS_ID("retweeted_status_id"),
     RETWEETED_USER_ID("retweeted_user_id"),
@@ -162,59 +162,25 @@ public class IndexStatuses {
           doc.add(new TextField(StatusField.LANG.name, status.getLang(), Store.YES));
         }
         
-        double lattitude = status.getLattitude();
-        if(! Double.isInfinite(lattitude)) {
-          doc.add(new DoubleField(StatusField.LATTITUDE.name, lattitude, Field.Store.YES));
+        double latitude = status.getlatitude();
+        if(! Double.isInfinite(latitude)) {
+          doc.add(new DoubleField(StatusField.latitude.name, latitude, Field.Store.YES));
           doc.add(new DoubleField(StatusField.LONGITUDE.name, status.getLongitude(), Field.Store.YES));          
         }
         
+        /*
         long retweetStatusId = status.getRetweetedStatusId();
         if(retweetStatusId > 0) {
           doc.add(new LongField(StatusField.RETWEETED_STATUS_ID.name, retweetStatusId, Field.Store.YES));
           doc.add(new LongField(StatusField.RETWEETED_USER_ID.name, status.getRetweetedUserId(), Field.Store.YES));
         }
+        */
         
         doc.add(new IntField(StatusField.FRIENDS_COUNT.name, status.getFollowersCount(), Store.YES));
         doc.add(new IntField(StatusField.FOLLOWERS_COUNT.name, status.getFriendsCount(), Store.YES));
         doc.add(new IntField(StatusField.STATUSES_COUNT.name, status.getStatusesCount(), Store.YES));
         
-        /*
-        doc.add(new LongField(StatusField.SCREEN_NAME.name, status.getId(), Field.Store.YES));
-        doc.add(new LongField("epoch", status.getEpoch(), Field.Store.NO));
-        doc.add(new TextField("screen_name", status.getScreenname(), Store.YES));
-        doc.add(new TextField("created_at", status.getCreatedAt(), Store.YES));
-        doc.add(new TextField("text", status.getText(), Store.YES));
-        doc.add(new IntField("retweet_count", status.getRetweetCount(), Store.YES));
-        
-        // the following tests for presence or absence of fields are going to slow down indexing a lot.
-        
-        long inReplyToStatusId = status.getInReplyToStatusId();
-        if(inReplyToStatusId > 0) {
-          doc.add(new LongField("inReplyToStatusId", inReplyToStatusId, Field.Store.YES));
-          doc.add(new LongField("inReplyToUserId", status.getInReplyToUserId(), Field.Store.YES));
-        }
-        
-        String lang = status.getLang();
-        if(! lang.equals("unknown")) {
-          doc.add(new TextField("lang", status.getLang(), Store.YES));
-        }
-        
-        double lattitude = status.getLattitude();
-        if(! Double.isInfinite(lattitude)) {
-          doc.add(new DoubleField("lattitude", lattitude, Field.Store.YES));
-          doc.add(new DoubleField("longitude", status.getLongitude(), Field.Store.YES));          
-        }
-        
-        long retweetStatusId = status.getRetweetedStatusId();
-        if(retweetStatusId > 0) {
-          doc.add(new LongField("retweetStatusId", retweetStatusId, Field.Store.YES));
-          doc.add(new LongField("retweetUserId", status.getRetweetedUserId(), Field.Store.YES));
-        }
-        
-        doc.add(new IntField("followersCount", status.getFollowersCount(), Store.YES));
-        doc.add(new IntField("friendsCount", status.getFriendsCount(), Store.YES));
-        doc.add(new IntField("statusesCount", status.getStatusesCount(), Store.YES));
-        */
+
         
         
         writer.addDocument(doc);

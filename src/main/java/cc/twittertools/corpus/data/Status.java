@@ -25,10 +25,10 @@ public class Status {
   private int followersCount;
   private int friendsCount;
   private int statusesCount;
-  private double lattitude;
+  private double latitude;
   private double longitude;
-  private long retweetedStatusId;
-  private long retweetedUserId;
+  private long retweetStatusId;
+  private long retweetUserId;
   private int retweetCount;
 
   protected Status() {}
@@ -86,8 +86,8 @@ public class Status {
     return inReplyToUserId;
   }
 
-  public double getLattitude() {
-    return lattitude;
+  public double getlatitude() {
+    return latitude;
   }
 
   public double getLongitude() {
@@ -95,11 +95,11 @@ public class Status {
   }
 
   public long getRetweetedStatusId() {
-    return retweetedStatusId;
+    return retweetStatusId;
   }
 
   public long getRetweetedUserId() {
-    return retweetedUserId;
+    return retweetUserId;
   }
 
   public int getRetweetCount() {
@@ -147,16 +147,16 @@ public class Status {
     }
 
     try {
-      status.retweetedStatusId = obj.getAsJsonObject("retweeted_status").get("id").getAsLong();
-      status.retweetedUserId = obj.getAsJsonObject("retweeted_status").get("user").getAsJsonObject().get("id").getAsLong(); 
+      status.retweetStatusId = obj.getAsJsonObject("retweeted_status").get("id").getAsLong();
+      status.retweetUserId = obj.getAsJsonObject("retweeted_status").get("user").getAsJsonObject().get("id").getAsLong(); 
     } catch (Exception e) {
-      status.retweetedStatusId = -1L;
+      status.retweetStatusId = -1L;
     }
 
     try {
       status.inReplyToUserId = obj.get("in_reply_to_user_id").getAsLong();
     } catch (Exception e) {
-      status.retweetedUserId = -1L;
+      status.retweetUserId = -1L;
     }
 
     status.retweetCount = obj.get("retweet_count").getAsInt();
@@ -164,10 +164,10 @@ public class Status {
 
 
     try {
-      status.lattitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(0).getAsDouble();
-      status.longitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(1).getAsDouble();
+      status.latitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(1).getAsDouble();
+      status.longitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(0).getAsDouble();
     } catch (Exception e) {
-      status.lattitude = Double.NEGATIVE_INFINITY;
+      status.latitude = Double.NEGATIVE_INFINITY;
       status.longitude = Double.NEGATIVE_INFINITY;
     }
 
