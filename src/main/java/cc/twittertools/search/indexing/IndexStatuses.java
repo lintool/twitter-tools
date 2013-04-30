@@ -145,7 +145,7 @@ public class IndexStatuses {
         doc.add(new LongField(StatusField.ID.name, status.getId(), Field.Store.YES));
         doc.add(new LongField(StatusField.EPOCH.name, status.getEpoch(), Field.Store.YES));
         doc.add(new TextField(StatusField.SCREEN_NAME.name, status.getScreenname(), Store.YES));
-        doc.add(new TextField(StatusField.CREATED_AT.name, status.getCreatedAt(), Store.YES));
+        //doc.add(new TextField(StatusField.CREATED_AT.name, status.getCreatedAt(), Store.YES));
         doc.add(new TextField(StatusField.TEXT.name, status.getText(), Store.YES));
         doc.add(new IntField(StatusField.RETWEET_COUNT.name, status.getRetweetCount(), Store.YES));
 
@@ -162,11 +162,13 @@ public class IndexStatuses {
           doc.add(new TextField(StatusField.LANG.name, status.getLang(), Store.YES));
         }
         
+        /*
         double latitude = status.getlatitude();
         if(! Double.isInfinite(latitude)) {
           doc.add(new DoubleField(StatusField.latitude.name, latitude, Field.Store.YES));
           doc.add(new DoubleField(StatusField.LONGITUDE.name, status.getLongitude(), Field.Store.YES));          
         }
+        */
         
         /*
         long retweetStatusId = status.getRetweetedStatusId();
