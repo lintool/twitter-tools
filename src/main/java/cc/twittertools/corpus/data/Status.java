@@ -29,7 +29,8 @@ public class Status {
   private double longitude;
   private long retweetedStatusId;
   private long retweetedUserId;
-  
+  private int retweetCount;
+
   protected Status() {}
 
   public long getId() {
@@ -76,7 +77,7 @@ public class Status {
   public int getStatusesCount() {
     return statusesCount;
   }
-  
+
   public long getInReplyToStatusId() {
     return inReplyToStatusId;
   }
@@ -84,15 +85,15 @@ public class Status {
   public long getInReplyToUserId() {
     return inReplyToUserId;
   }
-  
+
   public double getLattitude() {
     return lattitude;
   }
-  
+
   public double getLongitude() {
     return longitude;
   }
-  
+
   public long getRetweetedStatusId() {
     return retweetedStatusId;
   }
@@ -100,7 +101,11 @@ public class Status {
   public long getRetweetedUserId() {
     return retweetedUserId;
   }
-  
+
+  public int getRetweetCount() {
+    return retweetCount;
+  }
+
   public static Status fromJson(String json) {
     JsonObject obj = null;
     try {
@@ -129,37 +134,38 @@ public class Status {
 
     try {
       status.inReplyToStatusId = obj.get("in_reply_to_status_id").getAsLong();
+      
+      
     } catch (Exception e) {
       status.inReplyToStatusId = -1L;
     }
-    
+
     try {
       status.inReplyToUserId = obj.get("in_reply_to_user_id").getAsLong();
     } catch (Exception e) {
       status.inReplyToUserId = -1L;
     }
-    
+
     try {
       status.retweetedStatusId = obj.getAsJsonObject("retweeted_status").get("id").getAsLong();
-      status.retweetedUserId = obj.getAsJsonObject("retweeted_status").get("user").getAsJsonObject().get("id").getAsLong();
-      
-      
+      status.retweetedUserId = obj.getAsJsonObject("retweeted_status").get("user").getAsJsonObject().get("id").getAsLong(); 
     } catch (Exception e) {
-      status.inReplyToStatusId = -1L;
+      status.retweetedStatusId = -1L;
     }
-    
+
     try {
       status.inReplyToUserId = obj.get("in_reply_to_user_id").getAsLong();
     } catch (Exception e) {
-      status.inReplyToUserId = -1L;
+      status.retweetedUserId = -1L;
     }
-    
-    
-    
+
+    status.retweetCount = obj.get("retweet_count").getAsInt();
+
+
+
     try {
       status.lattitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(0).getAsDouble();
       status.longitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(1).getAsDouble();
-      
     } catch (Exception e) {
       status.lattitude = Double.NEGATIVE_INFINITY;
       status.longitude = Double.NEGATIVE_INFINITY;
@@ -170,7 +176,7 @@ public class Status {
     } catch (Exception e) {
       status.lang = "unknown";
     }
-    
+
     status.followersCount = obj.get("user").getAsJsonObject().get("followers_count").getAsInt();
     status.friendsCount = obj.get("user").getAsJsonObject().get("friends_count").getAsInt();
     status.statusesCount = obj.get("user").getAsJsonObject().get("statuses_count").getAsInt();
