@@ -14,8 +14,10 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
@@ -46,8 +48,19 @@ public class IndexStatuses {
     ID("id"),
     SCREEN_NAME("screen_name"),
     CREATED_AT("created_at"),
+    EPOCH("epoch"),
     TEXT("text"),
-    DAY("day");
+    LANG("lang"),
+    IN_REPLY_TO_STATUS_ID("in_reply_to_status_id"),
+    IN_REPLY_TO_USER_ID("in_reply_to_user_id"),
+    FOLLOWERS_COUNT("followers_count"),
+    FRIENDS_COUNT("friends_count"),
+    STATUSES_COUNT("statuses_count"),
+    latitude("latitude"),
+    LONGITUDE("longitude"),
+    RETWEETED_STATUS_ID("retweeted_status_id"),
+    RETWEETED_USER_ID("retweeted_user_id"),
+    RETWEET_COUNT("retweet_count");
 
     public final String name;
 
@@ -117,7 +130,7 @@ public class IndexStatuses {
 
     LOG.info("collection: " + collectionPath);
     LOG.info("index: " + indexPath);
-    
+
     IndexWriter writer = new IndexWriter(dir, config);
     int cnt = 0;
     Status status;
@@ -129,11 +142,49 @@ public class IndexStatuses {
 
         cnt++;
         Document doc = new Document();
-        doc.add(new LongField("id", status.getId(), Field.Store.YES));
-        doc.add(new TextField("screen_name", status.getScreenname(), Store.YES));
-        doc.add(new TextField("created_at", status.getCreatedAt(), Store.YES));
-        doc.add(new TextField("text", status.getText(), Store.YES));
+        doc.add(new LongField(StatusField.ID.name, status.getId(), Field.Store.YES));
+        doc.add(new LongField(StatusField.EPOCH.name, status.getEpoch(), Field.Store.YES));
+        doc.add(new TextField(StatusField.SCREEN_NAME.name, status.getScreenname(), Store.YES));
+        //doc.add(new TextField(StatusField.CREATED_AT.name, status.getCreatedAt(), Store.YES));
+        doc.add(new TextField(StatusField.TEXT.name, status.getText(), Store.YES));
+        doc.add(new IntField(StatusField.RETWEET_COUNT.name, status.getRetweetCount(), Store.YES));
 
+        // the following tests for presence or absence of fields are going to slow down indexing a lot.
+        
+        long inReplyToStatusId = status.getInReplyToStatusId();
+        if(inReplyToStatusId > 0) {
+          doc.add(new LongField(StatusField.IN_REPLY_TO_STATUS_ID.name, inReplyToStatusId, Field.Store.YES));
+          doc.add(new LongField(StatusField.IN_REPLY_TO_USER_ID.name, status.getInReplyToUserId(), Field.Store.YES));
+        }
+        
+        String lang = status.getLang();
+        if(! lang.equals("unknown")) {
+          doc.add(new TextField(StatusField.LANG.name, status.getLang(), Store.YES));
+        }
+        
+        /*
+        double latitude = status.getlatitude();
+        if(! Double.isInfinite(latitude)) {
+          doc.add(new DoubleField(StatusField.latitude.name, latitude, Field.Store.YES));
+          doc.add(new DoubleField(StatusField.LONGITUDE.name, status.getLongitude(), Field.Store.YES));          
+        }
+        */
+        
+        /*
+        long retweetStatusId = status.getRetweetedStatusId();
+        if(retweetStatusId > 0) {
+          doc.add(new LongField(StatusField.RETWEETED_STATUS_ID.name, retweetStatusId, Field.Store.YES));
+          doc.add(new LongField(StatusField.RETWEETED_USER_ID.name, status.getRetweetedUserId(), Field.Store.YES));
+        }
+        */
+        
+        doc.add(new IntField(StatusField.FRIENDS_COUNT.name, status.getFollowersCount(), Store.YES));
+        doc.add(new IntField(StatusField.FOLLOWERS_COUNT.name, status.getFriendsCount(), Store.YES));
+        doc.add(new IntField(StatusField.STATUSES_COUNT.name, status.getStatusesCount(), Store.YES));
+        
+
+        
+        
         writer.addDocument(doc);
         if (cnt % 100000 == 0) {
           LOG.info(cnt + " statuses indexed");

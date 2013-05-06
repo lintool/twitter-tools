@@ -1,5 +1,8 @@
 package cc.twittertools.corpus.data;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -8,30 +11,47 @@ import com.google.gson.JsonParser;
  */
 public class Status {
   private static final JsonParser JSON_PARSER = new JsonParser();
-
+  private static final String DATE_FORMAT = "EEE MMM d k:m:s ZZZZZ yyyy"; //"Fri Mar 29 11:03:41 +0000 2013"; 
   private long id;
   private String screenname;
   private String createdAt;
+  private long epoch;
   private String text;
   private JsonObject jsonObject;
   private String jsonString;
+  private String lang;
+  private long inReplyToStatusId;
+  private long inReplyToUserId;
+  private int followersCount;
+  private int friendsCount;
+  private int statusesCount;
+  private double latitude;
+  private double longitude;
+  private long retweetStatusId;
+  private long retweetUserId;
+  private int retweetCount;
 
   protected Status() {}
-  
+
   public long getId() {
     return id;
   }
 
-  public String getText() {
-    return text;
+  public String getScreenname() {
+    return screenname;
   }
+
 
   public String getCreatedAt() {
     return createdAt;
   }
 
-  public String getScreenname() {
-    return screenname;
+  public long getEpoch() {
+    return epoch;
+  }
+
+  public String getText() {
+    return text;
   }
 
   public JsonObject getJsonObject() {
@@ -40,6 +60,50 @@ public class Status {
 
   public String getJsonString() {
     return jsonString;
+  }
+
+  public String getLang() {
+    return lang;
+  }
+
+  public int getFollowersCount() {
+    return followersCount;
+  }
+
+  public int getFriendsCount() {
+    return friendsCount;
+  }
+
+  public int getStatusesCount() {
+    return statusesCount;
+  }
+
+  public long getInReplyToStatusId() {
+    return inReplyToStatusId;
+  }
+
+  public long getInReplyToUserId() {
+    return inReplyToUserId;
+  }
+
+  public double getlatitude() {
+    return latitude;
+  }
+
+  public double getLongitude() {
+    return longitude;
+  }
+
+  public long getRetweetedStatusId() {
+    return retweetStatusId;
+  }
+
+  public long getRetweetedUserId() {
+    return retweetUserId;
+  }
+
+  public int getRetweetCount() {
+    return retweetCount;
   }
 
   public static Status fromJson(String json) {
@@ -62,14 +126,68 @@ public class Status {
     status.screenname = obj.get("user").getAsJsonObject().get("screen_name").getAsString();
     status.createdAt = obj.get("created_at").getAsString();
 
-    // TODO: We need to parse out the other fields.
+    try {
+      status.epoch = (new SimpleDateFormat(DATE_FORMAT)).parse(status.createdAt).getTime() / 1000;
+    } catch (ParseException e) {
+      status.epoch = -1L;
+    }
+
+    try {
+      status.inReplyToStatusId = obj.get("in_reply_to_status_id").getAsLong();
+      
+      
+    } catch (Exception e) {
+      status.inReplyToStatusId = -1L;
+    }
+
+    try {
+      status.inReplyToUserId = obj.get("in_reply_to_user_id").getAsLong();
+    } catch (Exception e) {
+      status.inReplyToUserId = -1L;
+    }
+
+    try {
+      status.retweetStatusId = obj.getAsJsonObject("retweeted_status").get("id").getAsLong();
+      status.retweetUserId = obj.getAsJsonObject("retweeted_status").get("user").getAsJsonObject().get("id").getAsLong(); 
+    } catch (Exception e) {
+      status.retweetStatusId = -1L;
+    }
+
+    try {
+      status.inReplyToUserId = obj.get("in_reply_to_user_id").getAsLong();
+    } catch (Exception e) {
+      status.retweetUserId = -1L;
+    }
+
+    status.retweetCount = obj.get("retweet_count").getAsInt();
+
+
+
+    try {
+      status.latitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(1).getAsDouble();
+      status.longitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(0).getAsDouble();
+    } catch (Exception e) {
+      status.latitude = Double.NEGATIVE_INFINITY;
+      status.longitude = Double.NEGATIVE_INFINITY;
+    }
+
+    try {
+      status.lang = obj.get("lang").getAsString();
+    } catch (Exception e) {
+      status.lang = "unknown";
+    }
+
+    status.followersCount = obj.get("user").getAsJsonObject().get("followers_count").getAsInt();
+    status.friendsCount = obj.get("user").getAsJsonObject().get("friends_count").getAsInt();
+    status.statusesCount = obj.get("user").getAsJsonObject().get("statuses_count").getAsInt();
+
 
     status.jsonObject = obj;
     status.jsonString = json;
 
     return status;
   }
-  
+
   public static Status fromTSV(String tsv) {
     String[] columns = tsv.split("\t");
 
