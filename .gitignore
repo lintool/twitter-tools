@@ -5,4 +5,10 @@ ivy/ivy.jar
 docs/api
 test/*
 etc/run.sh
+etc/trec_eval.9.0/
+etc/trec_eval
+data/qrels.microblog2011.txt
+data/qrels.microblog2012.txt
 *~
+.DS_Store
+

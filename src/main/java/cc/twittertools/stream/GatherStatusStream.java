@@ -16,6 +16,7 @@ import twitter4j.TwitterStreamFactory;
 public final class GatherStatusStream {
   private static int cnt = 0;
 
+  @SuppressWarnings("unused")
   private static final String MINUTE_ROLL = ".%d{yyyy-MM-dd-HH-mm}.gz";
   private static final String HOUR_ROLL = ".%d{yyyy-MM-dd-HH}.gz";
 
