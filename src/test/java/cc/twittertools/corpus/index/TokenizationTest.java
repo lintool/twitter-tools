@@ -10,7 +10,6 @@ import junit.framework.JUnit4TestAdapter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.util.Version;
 import org.junit.Test;
 
@@ -97,7 +96,6 @@ public class TokenizationTest {
   }
 
   public String parseKeywords(Analyzer analyzer, String keywords) {
-    System.out.println(keywords);
     StringBuilder sb = new StringBuilder("|");
     try {
       TokenStream tokenStream = analyzer.tokenStream(null, new StringReader(keywords));
@@ -116,7 +114,6 @@ public class TokenizationTest {
       throw new RuntimeException(e);
     }
 
-    System.out.println(sb + "\n");
     return sb.toString();
   }
 
