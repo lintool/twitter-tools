@@ -20,6 +20,7 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
   private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
   private final KeywordAttribute keywordAttr = addAttribute(KeywordAttribute.class);
   private char[] tailBuffer = null;
+  private char[] tailBufferSaved = null;
 
   public LowerCaseEntityPreservingFilter(TokenStream in) {
     super(in);
@@ -28,7 +29,7 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
   @Override
   public boolean incrementToken() throws IOException {
     // There is no saved state, and nothing remains on the input buffer
-    if (tailBuffer == null && !input.incrementToken()) {
+    if (tailBuffer == null && tailBufferSaved == null && !input.incrementToken()) {
       return false;
     }
 
@@ -39,21 +40,24 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
       System.arraycopy(tailBuffer, 0, buffer, 0, tailBuffer.length);
       termAtt.setLength(tailBuffer.length);
       tailBuffer = null;
+    } else  if (tailBufferSaved != null) {
+      System.arraycopy(tailBufferSaved, 0, buffer, 0, tailBufferSaved.length);
+      termAtt.setLength(tailBufferSaved.length);
+      tailBufferSaved = null;
     }
 
     int entityType = isEntity(termAtt.toString());
     if (entityType == VALID_URL) {
       keywordAttr.setKeyword(true);
       return true;
-
-    }
-
-    // Lowercase the token
-    for (int i = 0; i < termAtt.length(); i++) {
-      buffer[i] = Character.toLowerCase(buffer[i]);
     }
 
     if (entityType != INVALID_ENTITY) {
+      // Lowercase the token
+      for (int i = 0; i < termAtt.length(); i++) {
+        buffer[i] = Character.toLowerCase(buffer[i]);
+      }
+      
       // At this stage, if it's a valid entity and doesn't have any
       // proceeding characters, then we can stop processing
       if (isEntityDelimiter(0)) {
@@ -84,13 +88,17 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
           break;
         }
       }
-
+      
       // TODO: Preserve Email Addresses
 
       if (isEntity(termAtt.toString()) != INVALID_ENTITY) {
         // This was an entity with some trailing text - we've removed
         // the tail, all that remains is the entity
         keywordAttr.setKeyword(true);
+        
+        for (int i = 0; i < termAtt.length(); i++) {
+          buffer[i] = Character.toLowerCase(buffer[i]);
+        }
         return true;
       }
 
@@ -99,12 +107,18 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
         if (isEntityDelimiter(i)) {
           // Remove the tail of the string from the buffer and save it
           // for the next iteration
+          if(tailBuffer != null) {
+            tailBufferSaved = tailBuffer;
+          }
           tailBuffer = Arrays.copyOfRange(buffer, i + 1, termAtt.length());
           termAtt.setLength(i);
           break;
         }
       }
 
+      for (int i = 0; i < termAtt.length(); i++) {
+        buffer[i] = Character.toLowerCase(buffer[i]);
+      }
     }
 
     removeNonAlphanumeric();
@@ -118,8 +132,10 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
     final char[] buffer = termAtt.buffer();
     // Remove any remaining non-alphanumeric characters
     for (int i = 0; i < termAtt.length(); i++) {
-      // TODO: isAlphabetic is a better choice than isLetter since it scrubs some weird
-      // characters, but isAlphabetic is a JDK7 method. Note, affects a test case.
+      // TODO: isAlphabetic is a better choice than isLetter since it scrubs
+      // some weird
+      // characters, but isAlphabetic is a JDK7 method. Note, affects a test
+      // case.
       if (!(Character.isLetter(buffer[i]) || Character.isDigit(buffer[i]))) {
         System.arraycopy(buffer, i + 1, buffer, i, buffer.length - 1 - i);
         termAtt.setLength(termAtt.length() - 1);
@@ -150,23 +166,43 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
     final char[] buffer = termAtt.buffer();
     final int bufferLength = termAtt.length();
     switch (buffer[i]) {
-    case '-':
-    case '?':
-    case '!':
-    case ',':
-    case ';':
-    case ':':
-    case '(':
-    case ')':
     case '[':
     case ']':
+    case '!':
+    case '"':
+    case '$':
+    case '%':
+    case '(':
+    case ')':
+    case '*':
+    case '+':
+    case ',':
     case '/':
+    case ':':
+    case ';':
+    case '<':
+    case '=':
+    case '>':
+    case '?':
     case '\\':
+    case '^':
+    case '`':
+    case '{':
+    case '|':
+    case '}':
+    case '~':
+    case '-':
+    case '…':
+    case '¬':
+    case '·':
       return true;
     case '.':
       // A complex looking way of saying that a period isn't a delimiter if the
       // characters at current_position +/- 2 are also periods.
       return (i >= 2 && buffer[i - 2] != '.') || ((i + 2) < bufferLength && buffer[i + 2] != '.');
+    case '&':
+      // Preserve cases such as "AT&T" (i.e. uppercase characters on both sized of the ampersand)
+      return i < 1 || (i + 1) >= bufferLength || Character.isLowerCase(buffer[i - 1]) || Character.isLowerCase(buffer[i + 1]);
     }
     return false;
   }
