@@ -27,12 +27,11 @@ public class TokenizationTest {
     assertEquals(
         "|att|get|secret|immun|from|wiretap|law|for|govern|surveil|http://vrge.co/ZP3Fx5|", test1);
 
-    String test2 = parseKeywords(
-        analyzer,
-        // See comment in removeNonAlphanumeric() of LowerCaseEntityPreservingFilter: isAlphabetic
-        // will correctly scrub the trailing unicode "...", but is a JDK7 method.
-        //"want to see the @verge aston martin GT4 racer tear up long beach? http://theracersgroup.kinja.com/watch-an-aston-martin-vantage-gt4-tear-around-long-beac-479726219 …");
-        "want to see the @verge aston martin GT4 racer tear up long beach? http://theracersgroup.kinja.com/watch-an-aston-martin-vantage-gt4-tear-around-long-beac-479726219");
+    String test2 = parseKeywords(analyzer,
+    // See comment in removeNonAlphanumeric() of
+    // LowerCaseEntityPreservingFilter: isAlphabetic
+    // will correctly scrub the trailing unicode "...", but is a JDK7 method.
+        "want to see the @verge aston martin GT4 racer tear up long beach? http://theracersgroup.kinja.com/watch-an-aston-martin-vantage-gt4-tear-around-long-beac-479726219 …");
     assertEquals(
         "|want|to|see|the|@verge|aston|martin|gt4|racer|tear|up|long|beach|http://theracersgroup.kinja.com/watch-an-aston-martin-vantage-gt4-tear-around-long-beac-479726219|",
         test2);
@@ -44,13 +43,13 @@ public class TokenizationTest {
         "|incred|good|new|#drupal|user|ralli|http://bit.ly/Z8ZoFe|to|ensur|blind|access|contributor|get|to|@drupalcon|#opensource|",
         test3);
 
-// Issue with this test case... comment out for now.
-//    String test4 = parseKeywords(
-//        analyzer,
-//        "We're entering the quiet hours at #amznhack. #Rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz");
-//    assertEquals(
-//        "|were|enter|the|quiet|hour|at|#amznhack|#rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz|",
-//        test4);
+    // Issue with this test case... comment out for now.
+    String test4 = parseKeywords(
+        analyzer,
+        "We're entering the quiet hours at #amznhack. #Rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz");
+    assertEquals(
+        "|were|enter|the|quiet|hour|at|#amznhack|#rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz|",
+        test4);
 
     String test5 = parseKeywords(
         analyzer,
@@ -71,9 +70,10 @@ public class TokenizationTest {
     assertEquals(
         "|pleas|be|lower|case|when|you|come|out|the|other|side|also|a|@valid_valid|invalid|", test8);
 
-// Note: the at sign is not the normal (at) sign and the crazy hashtag is not the normal #
-//    String test9 = parseKeywords(analyzer, "＠reply @with #crazy ~＃at");
-//    assertEquals("|＠reply|@with|#crazy|＃at|", test9);
+    // Note: the at sign is not the normal (at) sign and the crazy hashtag is
+    // not the normal #
+    String test9 = parseKeywords(analyzer, "＠reply @with #crazy ~＃at");
+    assertEquals("|＠reply|@with|#crazy|＃at|", test9);
 
     String test10 = parseKeywords(
         analyzer,
@@ -81,7 +81,14 @@ public class TokenizationTest {
     assertEquals(
         "|@valid|test|valid|#hashtags|rt|@meniton|the|last|@mention|is|#valid|and|so|is|thi|@valid|howev|thi|is|invalid|",
         test10);
-    
+
+    String test11 = parseKeywords(
+        analyzer,
+        "this][is[lots[(of)words+with-lots=of-strange!characters?$in-fact=it&has&Every&Single:one;of<them>in_here_B&N_test_test?test\\test^testing`testing{testing}testing…testing¬testing·testing what?");
+    assertEquals(
+        "|thi|is|lot|of|word|with|lot|of|strang|charact|in|fact|it|ha|everi|singl|on|of|them|in|here|bn|test|test|test|test|test|test|test|test|test|test|test|what|",
+        test11);
+
   }
 
   public static junit.framework.Test suite() {
@@ -89,12 +96,11 @@ public class TokenizationTest {
   }
 
   public String parseKeywords(Analyzer analyzer, String keywords) {
-    StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder("|");
     try {
       TokenStream tokenStream = analyzer.tokenStream(null, new StringReader(keywords));
       CharTermAttribute cattr = tokenStream.addAttribute(CharTermAttribute.class);
       tokenStream.reset();
-      sb.append("|");
       while (tokenStream.incrementToken()) {
         if (cattr.toString().length() == 0)
           continue;
