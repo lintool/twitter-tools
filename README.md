@@ -142,7 +142,7 @@ We've also provided a reference implementation of using Lucene to index the stat
 
     etc/run.sh cc.twittertools.search.indexing.IndexStatuses \
         -json -collection path/to/json \
-	-index /path/to/index/destination
+        -index /path/to/index/destination
 
 Note that JVM parameters including maximum heap size are set in the
 run.sh script.
