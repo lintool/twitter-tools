@@ -159,9 +159,11 @@ public class Status {
       status.retweetUserId = -1L;
     }
 
-    status.retweetCount = obj.get("retweet_count").getAsInt();
-
-
+    try {
+      status.retweetCount = obj.get("retweet_count").getAsInt();
+    } catch (Exception e) {
+      status.retweetCount = -1;
+    }
 
     try {
       status.latitude = obj.getAsJsonObject("coordinates").getAsJsonArray("coordinates").get(1).getAsDouble();
