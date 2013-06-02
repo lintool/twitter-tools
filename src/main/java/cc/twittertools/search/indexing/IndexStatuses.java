@@ -170,13 +170,13 @@ public class IndexStatuses {
         }
         */
         
-        /*
+        
         long retweetStatusId = status.getRetweetedStatusId();
         if(retweetStatusId > 0) {
           doc.add(new LongField(StatusField.RETWEETED_STATUS_ID.name, retweetStatusId, Field.Store.YES));
           doc.add(new LongField(StatusField.RETWEETED_USER_ID.name, status.getRetweetedUserId(), Field.Store.YES));
         }
-        */
+        
         
         doc.add(new IntField(StatusField.FRIENDS_COUNT.name, status.getFollowersCount(), Store.YES));
         doc.add(new IntField(StatusField.FOLLOWERS_COUNT.name, status.getFriendsCount(), Store.YES));
