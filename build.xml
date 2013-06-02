@@ -93,11 +93,11 @@
   </target>
 
   <target name="compile" depends="init,resolve" description="compile the source ">
-    <javac classpathref="lib.path.id" srcdir="${src.dir}/gen/java" destdir="${build.dir}" optimize="on" debug="on"/>
-    <javac classpathref="lib.path.id" srcdir="${src.dir}/main/java" destdir="${build.dir}" optimize="on" debug="on">
+    <javac classpathref="lib.path.id" srcdir="${src.dir}/gen/java" destdir="${build.dir}" optimize="on" debug="on" encoding="utf-8"/>
+    <javac classpathref="lib.path.id" srcdir="${src.dir}/main/java" destdir="${build.dir}" optimize="on" debug="on" encoding="utf-8">
       <compilerarg value="-Xlint:unchecked" />
     </javac>
-    <javac classpathref="lib.path.id" srcdir="${src.dir}/test/java" destdir="${build.dir}" optimize="on" debug="on">
+    <javac classpathref="lib.path.id" srcdir="${src.dir}/test/java" destdir="${build.dir}" optimize="on" debug="on" encoding="utf-8">
       <compilerarg value="-Xlint:unchecked" />
     </javac>
     <copy todir="${build.dir}">

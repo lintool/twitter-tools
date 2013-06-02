@@ -132,10 +132,8 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
     final char[] buffer = termAtt.buffer();
     // Remove any remaining non-alphanumeric characters
     for (int i = 0; i < termAtt.length(); i++) {
-      // TODO: isAlphabetic is a better choice than isLetter since it scrubs
-      // some weird
-      // characters, but isAlphabetic is a JDK7 method. Note, affects a test
-      // case.
+      // TODO: isAlphabetic is a better choice than isLetter since it scrubs some weird characters,
+      // but isAlphabetic is a JDK7 method.
       if (!(Character.isLetter(buffer[i]) || Character.isDigit(buffer[i]))) {
         System.arraycopy(buffer, i + 1, buffer, i, buffer.length - 1 - i);
         termAtt.setLength(termAtt.length() - 1);
@@ -191,6 +189,12 @@ public class LowerCaseEntityPreservingFilter extends TokenFilter {
     case '|':
     case '}':
     case '~':
+    // Note that following are non-ASCII code characters. To compile correctly, need to make sure:
+    //   javac -encoding utf8 SourceFile.java
+    //
+    // otherwise, javac uses platform default encoding,
+    // which may lead to unpredictable results. In ant:
+    //   <javac ... encoding="utf-8">
     case '-':
     case '…':
     case '¬':
