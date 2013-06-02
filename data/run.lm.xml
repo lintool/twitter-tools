@@ -1,0 +1,6 @@
+<parameters>
+ <index>tweets2011-index</index>
+ <trecFormat>true</trecFormat>
+ <count>1000</count>
+ <similarity>lm</similarity>
+</parameters>
