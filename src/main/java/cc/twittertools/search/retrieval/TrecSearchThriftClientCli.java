@@ -97,9 +97,8 @@ public class TrecSearchThriftClientCli {
     int i = 1;
     for (TResult result : results) {
       System.out.println(qid + " Q0 " + result.id + " " + i + " " + result.rsv + " " + runid);
+      System.out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
       i++;
     }
-
-    client.close();
   }
 }

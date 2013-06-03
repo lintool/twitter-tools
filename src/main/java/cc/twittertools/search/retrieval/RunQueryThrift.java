@@ -74,7 +74,7 @@ public class RunQueryThrift {
     Query query;
     while((query = queries.getNextQuery()) != null) {
       List<TResult> results = client.search(query.getQueryString(),
-          Long.parseLong(query.getMetadataField("lastrel")), 10000);
+          Long.parseLong(query.getMetadataField("lastrel")), 1000);
       int i = 1;
       for (TResult result : results) {
         System.out.println(query.getQueryName() + " Q0 " + result.id + " " + i + " " + result.rsv + " lucy");
@@ -83,6 +83,5 @@ public class RunQueryThrift {
       
     }
 
-    client.close();
   }
 }

@@ -132,10 +132,9 @@ public class Status {
       status.epoch = -1L;
     }
 
+    // TODO: trying to fetch fields and then catching exceptions is bad practice, fix!
     try {
       status.inReplyToStatusId = obj.get("in_reply_to_status_id").getAsLong();
-      
-      
     } catch (Exception e) {
       status.inReplyToStatusId = -1L;
     }
@@ -148,21 +147,20 @@ public class Status {
 
     try {
       status.retweetStatusId = obj.getAsJsonObject("retweeted_status").get("id").getAsLong();
-      status.retweetUserId = obj.getAsJsonObject("retweeted_status").get("user").getAsJsonObject().get("id").getAsLong(); 
+      status.retweetUserId = obj.getAsJsonObject("retweeted_status").get("user").getAsJsonObject().get("id").getAsLong();
+      // retweet_count might say "100+"
+      // TODO: This is ugly, come back and fix later.
+      status.retweetCount = Integer.parseInt(obj.get("retweet_count").getAsString().replace("+", ""));
     } catch (Exception e) {
       status.retweetStatusId = -1L;
+      status.retweetUserId = -1L;
+      status.retweetCount = -1;
     }
 
     try {
       status.inReplyToUserId = obj.get("in_reply_to_user_id").getAsLong();
     } catch (Exception e) {
-      status.retweetUserId = -1L;
-    }
-
-    try {
-      status.retweetCount = obj.get("retweet_count").getAsInt();
-    } catch (Exception e) {
-      status.retweetCount = -1;
+      status.inReplyToUserId = -1L;
     }
 
     try {

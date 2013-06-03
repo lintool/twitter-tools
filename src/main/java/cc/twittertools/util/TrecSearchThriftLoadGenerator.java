@@ -72,7 +72,6 @@ public class TrecSearchThriftLoadGenerator {
       }
 
       LOG.info(Thread.currentThread().getName() + " finished.");
-      client.close();
     }
   }
 

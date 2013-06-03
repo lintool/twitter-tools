@@ -90,11 +90,39 @@ public class TrecSearchHandler implements TrecSearch.Iface {
         Document hit = searcher.doc(scoreDoc.doc);
 
         TResult p = new TResult();
+        // TODO: Fix String parsing.
         p.id = Long.parseLong(hit.get(StatusField.ID.name));
         p.screen_name = hit.get(StatusField.SCREEN_NAME.name);
-        p.created_at = hit.get(StatusField.CREATED_AT.name);
+        p.epoch = Long.parseLong(hit.get(StatusField.EPOCH.name));
         p.text = hit.get(StatusField.TEXT.name);
         p.rsv = scoreDoc.score;
+
+        p.followers_count = Integer.parseInt(hit.get(StatusField.FOLLOWERS_COUNT.name));
+        p.statuses_count = Integer.parseInt(hit.get(StatusField.STATUSES_COUNT.name));
+
+        if ( hit.get(StatusField.LANG.name) != null) {
+          p.lang = hit.get(StatusField.LANG.name);
+        }
+
+        if ( hit.get(StatusField.IN_REPLY_TO_STATUS_ID.name) != null) {
+          p.in_reply_to_status_id = Long.parseLong(hit.get(StatusField.IN_REPLY_TO_STATUS_ID.name));
+        }
+
+        if ( hit.get(StatusField.IN_REPLY_TO_USER_ID.name) != null) {
+          p.in_reply_to_user_id = Long.parseLong(hit.get(StatusField.IN_REPLY_TO_USER_ID.name));
+        }
+
+        if ( hit.get(StatusField.RETWEETED_STATUS_ID.name) != null) {
+          p.retweeted_status_id = Long.parseLong(hit.get(StatusField.RETWEETED_STATUS_ID.name));
+        }
+
+        if ( hit.get(StatusField.RETWEETED_USER_ID.name) != null) {
+          p.retweeted_user_id = Long.parseLong(hit.get(StatusField.RETWEETED_USER_ID.name));
+        }
+
+        if ( hit.get(StatusField.RETWEET_COUNT.name) != null) {
+          p.retweeted_count = Integer.parseInt(hit.get(StatusField.RETWEET_COUNT.name));
+        }
 
         results.add(p);
       }

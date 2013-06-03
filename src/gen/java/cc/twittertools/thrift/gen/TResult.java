@@ -36,8 +36,16 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
   private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I64, (short)1);
   private static final org.apache.thrift.protocol.TField RSV_FIELD_DESC = new org.apache.thrift.protocol.TField("rsv", org.apache.thrift.protocol.TType.DOUBLE, (short)2);
   private static final org.apache.thrift.protocol.TField SCREEN_NAME_FIELD_DESC = new org.apache.thrift.protocol.TField("screen_name", org.apache.thrift.protocol.TType.STRING, (short)3);
-  private static final org.apache.thrift.protocol.TField CREATED_AT_FIELD_DESC = new org.apache.thrift.protocol.TField("created_at", org.apache.thrift.protocol.TType.STRING, (short)4);
+  private static final org.apache.thrift.protocol.TField EPOCH_FIELD_DESC = new org.apache.thrift.protocol.TField("epoch", org.apache.thrift.protocol.TType.I64, (short)4);
   private static final org.apache.thrift.protocol.TField TEXT_FIELD_DESC = new org.apache.thrift.protocol.TField("text", org.apache.thrift.protocol.TType.STRING, (short)5);
+  private static final org.apache.thrift.protocol.TField FOLLOWERS_COUNT_FIELD_DESC = new org.apache.thrift.protocol.TField("followers_count", org.apache.thrift.protocol.TType.I32, (short)6);
+  private static final org.apache.thrift.protocol.TField STATUSES_COUNT_FIELD_DESC = new org.apache.thrift.protocol.TField("statuses_count", org.apache.thrift.protocol.TType.I32, (short)7);
+  private static final org.apache.thrift.protocol.TField LANG_FIELD_DESC = new org.apache.thrift.protocol.TField("lang", org.apache.thrift.protocol.TType.STRING, (short)8);
+  private static final org.apache.thrift.protocol.TField IN_REPLY_TO_STATUS_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("in_reply_to_status_id", org.apache.thrift.protocol.TType.I64, (short)9);
+  private static final org.apache.thrift.protocol.TField IN_REPLY_TO_USER_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("in_reply_to_user_id", org.apache.thrift.protocol.TType.I64, (short)10);
+  private static final org.apache.thrift.protocol.TField RETWEETED_STATUS_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("retweeted_status_id", org.apache.thrift.protocol.TType.I64, (short)11);
+  private static final org.apache.thrift.protocol.TField RETWEETED_USER_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("retweeted_user_id", org.apache.thrift.protocol.TType.I64, (short)12);
+  private static final org.apache.thrift.protocol.TField RETWEETED_COUNT_FIELD_DESC = new org.apache.thrift.protocol.TField("retweeted_count", org.apache.thrift.protocol.TType.I32, (short)13);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -48,16 +56,32 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
   public long id; // required
   public double rsv; // required
   public String screen_name; // required
-  public String created_at; // required
+  public long epoch; // required
   public String text; // required
+  public int followers_count; // required
+  public int statuses_count; // required
+  public String lang; // required
+  public long in_reply_to_status_id; // required
+  public long in_reply_to_user_id; // required
+  public long retweeted_status_id; // required
+  public long retweeted_user_id; // required
+  public int retweeted_count; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
     ID((short)1, "id"),
     RSV((short)2, "rsv"),
     SCREEN_NAME((short)3, "screen_name"),
-    CREATED_AT((short)4, "created_at"),
-    TEXT((short)5, "text");
+    EPOCH((short)4, "epoch"),
+    TEXT((short)5, "text"),
+    FOLLOWERS_COUNT((short)6, "followers_count"),
+    STATUSES_COUNT((short)7, "statuses_count"),
+    LANG((short)8, "lang"),
+    IN_REPLY_TO_STATUS_ID((short)9, "in_reply_to_status_id"),
+    IN_REPLY_TO_USER_ID((short)10, "in_reply_to_user_id"),
+    RETWEETED_STATUS_ID((short)11, "retweeted_status_id"),
+    RETWEETED_USER_ID((short)12, "retweeted_user_id"),
+    RETWEETED_COUNT((short)13, "retweeted_count");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -78,10 +102,26 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
           return RSV;
         case 3: // SCREEN_NAME
           return SCREEN_NAME;
-        case 4: // CREATED_AT
-          return CREATED_AT;
+        case 4: // EPOCH
+          return EPOCH;
         case 5: // TEXT
           return TEXT;
+        case 6: // FOLLOWERS_COUNT
+          return FOLLOWERS_COUNT;
+        case 7: // STATUSES_COUNT
+          return STATUSES_COUNT;
+        case 8: // LANG
+          return LANG;
+        case 9: // IN_REPLY_TO_STATUS_ID
+          return IN_REPLY_TO_STATUS_ID;
+        case 10: // IN_REPLY_TO_USER_ID
+          return IN_REPLY_TO_USER_ID;
+        case 11: // RETWEETED_STATUS_ID
+          return RETWEETED_STATUS_ID;
+        case 12: // RETWEETED_USER_ID
+          return RETWEETED_USER_ID;
+        case 13: // RETWEETED_COUNT
+          return RETWEETED_COUNT;
         default:
           return null;
       }
@@ -124,7 +164,15 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
   // isset id assignments
   private static final int __ID_ISSET_ID = 0;
   private static final int __RSV_ISSET_ID = 1;
-  private byte __isset_bitfield = 0;
+  private static final int __EPOCH_ISSET_ID = 2;
+  private static final int __FOLLOWERS_COUNT_ISSET_ID = 3;
+  private static final int __STATUSES_COUNT_ISSET_ID = 4;
+  private static final int __IN_REPLY_TO_STATUS_ID_ISSET_ID = 5;
+  private static final int __IN_REPLY_TO_USER_ID_ISSET_ID = 6;
+  private static final int __RETWEETED_STATUS_ID_ISSET_ID = 7;
+  private static final int __RETWEETED_USER_ID_ISSET_ID = 8;
+  private static final int __RETWEETED_COUNT_ISSET_ID = 9;
+  private short __isset_bitfield = 0;
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
@@ -134,10 +182,26 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.DOUBLE)));
     tmpMap.put(_Fields.SCREEN_NAME, new org.apache.thrift.meta_data.FieldMetaData("screen_name", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-    tmpMap.put(_Fields.CREATED_AT, new org.apache.thrift.meta_data.FieldMetaData("created_at", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+    tmpMap.put(_Fields.EPOCH, new org.apache.thrift.meta_data.FieldMetaData("epoch", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
     tmpMap.put(_Fields.TEXT, new org.apache.thrift.meta_data.FieldMetaData("text", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+    tmpMap.put(_Fields.FOLLOWERS_COUNT, new org.apache.thrift.meta_data.FieldMetaData("followers_count", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+    tmpMap.put(_Fields.STATUSES_COUNT, new org.apache.thrift.meta_data.FieldMetaData("statuses_count", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+    tmpMap.put(_Fields.LANG, new org.apache.thrift.meta_data.FieldMetaData("lang", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+    tmpMap.put(_Fields.IN_REPLY_TO_STATUS_ID, new org.apache.thrift.meta_data.FieldMetaData("in_reply_to_status_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+    tmpMap.put(_Fields.IN_REPLY_TO_USER_ID, new org.apache.thrift.meta_data.FieldMetaData("in_reply_to_user_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+    tmpMap.put(_Fields.RETWEETED_STATUS_ID, new org.apache.thrift.meta_data.FieldMetaData("retweeted_status_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+    tmpMap.put(_Fields.RETWEETED_USER_ID, new org.apache.thrift.meta_data.FieldMetaData("retweeted_user_id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+    tmpMap.put(_Fields.RETWEETED_COUNT, new org.apache.thrift.meta_data.FieldMetaData("retweeted_count", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
     org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TResult.class, metaDataMap);
   }
@@ -149,8 +213,16 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
     long id,
     double rsv,
     String screen_name,
-    String created_at,
-    String text)
+    long epoch,
+    String text,
+    int followers_count,
+    int statuses_count,
+    String lang,
+    long in_reply_to_status_id,
+    long in_reply_to_user_id,
+    long retweeted_status_id,
+    long retweeted_user_id,
+    int retweeted_count)
   {
     this();
     this.id = id;
@@ -158,8 +230,24 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
     this.rsv = rsv;
     setRsvIsSet(true);
     this.screen_name = screen_name;
-    this.created_at = created_at;
+    this.epoch = epoch;
+    setEpochIsSet(true);
     this.text = text;
+    this.followers_count = followers_count;
+    setFollowers_countIsSet(true);
+    this.statuses_count = statuses_count;
+    setStatuses_countIsSet(true);
+    this.lang = lang;
+    this.in_reply_to_status_id = in_reply_to_status_id;
+    setIn_reply_to_status_idIsSet(true);
+    this.in_reply_to_user_id = in_reply_to_user_id;
+    setIn_reply_to_user_idIsSet(true);
+    this.retweeted_status_id = retweeted_status_id;
+    setRetweeted_status_idIsSet(true);
+    this.retweeted_user_id = retweeted_user_id;
+    setRetweeted_user_idIsSet(true);
+    this.retweeted_count = retweeted_count;
+    setRetweeted_countIsSet(true);
   }
 
   /**
@@ -172,12 +260,20 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
     if (other.isSetScreen_name()) {
       this.screen_name = other.screen_name;
     }
-    if (other.isSetCreated_at()) {
-      this.created_at = other.created_at;
-    }
+    this.epoch = other.epoch;
     if (other.isSetText()) {
       this.text = other.text;
     }
+    this.followers_count = other.followers_count;
+    this.statuses_count = other.statuses_count;
+    if (other.isSetLang()) {
+      this.lang = other.lang;
+    }
+    this.in_reply_to_status_id = other.in_reply_to_status_id;
+    this.in_reply_to_user_id = other.in_reply_to_user_id;
+    this.retweeted_status_id = other.retweeted_status_id;
+    this.retweeted_user_id = other.retweeted_user_id;
+    this.retweeted_count = other.retweeted_count;
   }
 
   public TResult deepCopy() {
@@ -191,8 +287,24 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
     setRsvIsSet(false);
     this.rsv = 0.0;
     this.screen_name = null;
-    this.created_at = null;
+    setEpochIsSet(false);
+    this.epoch = 0;
     this.text = null;
+    setFollowers_countIsSet(false);
+    this.followers_count = 0;
+    setStatuses_countIsSet(false);
+    this.statuses_count = 0;
+    this.lang = null;
+    setIn_reply_to_status_idIsSet(false);
+    this.in_reply_to_status_id = 0;
+    setIn_reply_to_user_idIsSet(false);
+    this.in_reply_to_user_id = 0;
+    setRetweeted_status_idIsSet(false);
+    this.retweeted_status_id = 0;
+    setRetweeted_user_idIsSet(false);
+    this.retweeted_user_id = 0;
+    setRetweeted_countIsSet(false);
+    this.retweeted_count = 0;
   }
 
   public long getId() {
@@ -265,28 +377,27 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
     }
   }
 
-  public String getCreated_at() {
-    return this.created_at;
+  public long getEpoch() {
+    return this.epoch;
   }
 
-  public TResult setCreated_at(String created_at) {
-    this.created_at = created_at;
+  public TResult setEpoch(long epoch) {
+    this.epoch = epoch;
+    setEpochIsSet(true);
     return this;
   }
 
-  public void unsetCreated_at() {
-    this.created_at = null;
+  public void unsetEpoch() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __EPOCH_ISSET_ID);
   }
 
-  /** Returns true if field created_at is set (has been assigned a value) and false otherwise */
-  public boolean isSetCreated_at() {
-    return this.created_at != null;
+  /** Returns true if field epoch is set (has been assigned a value) and false otherwise */
+  public boolean isSetEpoch() {
+    return EncodingUtils.testBit(__isset_bitfield, __EPOCH_ISSET_ID);
   }
 
-  public void setCreated_atIsSet(boolean value) {
-    if (!value) {
-      this.created_at = null;
-    }
+  public void setEpochIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __EPOCH_ISSET_ID, value);
   }
 
   public String getText() {
@@ -311,6 +422,191 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
     if (!value) {
       this.text = null;
     }
+  }
+
+  public int getFollowers_count() {
+    return this.followers_count;
+  }
+
+  public TResult setFollowers_count(int followers_count) {
+    this.followers_count = followers_count;
+    setFollowers_countIsSet(true);
+    return this;
+  }
+
+  public void unsetFollowers_count() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __FOLLOWERS_COUNT_ISSET_ID);
+  }
+
+  /** Returns true if field followers_count is set (has been assigned a value) and false otherwise */
+  public boolean isSetFollowers_count() {
+    return EncodingUtils.testBit(__isset_bitfield, __FOLLOWERS_COUNT_ISSET_ID);
+  }
+
+  public void setFollowers_countIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __FOLLOWERS_COUNT_ISSET_ID, value);
+  }
+
+  public int getStatuses_count() {
+    return this.statuses_count;
+  }
+
+  public TResult setStatuses_count(int statuses_count) {
+    this.statuses_count = statuses_count;
+    setStatuses_countIsSet(true);
+    return this;
+  }
+
+  public void unsetStatuses_count() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __STATUSES_COUNT_ISSET_ID);
+  }
+
+  /** Returns true if field statuses_count is set (has been assigned a value) and false otherwise */
+  public boolean isSetStatuses_count() {
+    return EncodingUtils.testBit(__isset_bitfield, __STATUSES_COUNT_ISSET_ID);
+  }
+
+  public void setStatuses_countIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __STATUSES_COUNT_ISSET_ID, value);
+  }
+
+  public String getLang() {
+    return this.lang;
+  }
+
+  public TResult setLang(String lang) {
+    this.lang = lang;
+    return this;
+  }
+
+  public void unsetLang() {
+    this.lang = null;
+  }
+
+  /** Returns true if field lang is set (has been assigned a value) and false otherwise */
+  public boolean isSetLang() {
+    return this.lang != null;
+  }
+
+  public void setLangIsSet(boolean value) {
+    if (!value) {
+      this.lang = null;
+    }
+  }
+
+  public long getIn_reply_to_status_id() {
+    return this.in_reply_to_status_id;
+  }
+
+  public TResult setIn_reply_to_status_id(long in_reply_to_status_id) {
+    this.in_reply_to_status_id = in_reply_to_status_id;
+    setIn_reply_to_status_idIsSet(true);
+    return this;
+  }
+
+  public void unsetIn_reply_to_status_id() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __IN_REPLY_TO_STATUS_ID_ISSET_ID);
+  }
+
+  /** Returns true if field in_reply_to_status_id is set (has been assigned a value) and false otherwise */
+  public boolean isSetIn_reply_to_status_id() {
+    return EncodingUtils.testBit(__isset_bitfield, __IN_REPLY_TO_STATUS_ID_ISSET_ID);
+  }
+
+  public void setIn_reply_to_status_idIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __IN_REPLY_TO_STATUS_ID_ISSET_ID, value);
+  }
+
+  public long getIn_reply_to_user_id() {
+    return this.in_reply_to_user_id;
+  }
+
+  public TResult setIn_reply_to_user_id(long in_reply_to_user_id) {
+    this.in_reply_to_user_id = in_reply_to_user_id;
+    setIn_reply_to_user_idIsSet(true);
+    return this;
+  }
+
+  public void unsetIn_reply_to_user_id() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __IN_REPLY_TO_USER_ID_ISSET_ID);
+  }
+
+  /** Returns true if field in_reply_to_user_id is set (has been assigned a value) and false otherwise */
+  public boolean isSetIn_reply_to_user_id() {
+    return EncodingUtils.testBit(__isset_bitfield, __IN_REPLY_TO_USER_ID_ISSET_ID);
+  }
+
+  public void setIn_reply_to_user_idIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __IN_REPLY_TO_USER_ID_ISSET_ID, value);
+  }
+
+  public long getRetweeted_status_id() {
+    return this.retweeted_status_id;
+  }
+
+  public TResult setRetweeted_status_id(long retweeted_status_id) {
+    this.retweeted_status_id = retweeted_status_id;
+    setRetweeted_status_idIsSet(true);
+    return this;
+  }
+
+  public void unsetRetweeted_status_id() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __RETWEETED_STATUS_ID_ISSET_ID);
+  }
+
+  /** Returns true if field retweeted_status_id is set (has been assigned a value) and false otherwise */
+  public boolean isSetRetweeted_status_id() {
+    return EncodingUtils.testBit(__isset_bitfield, __RETWEETED_STATUS_ID_ISSET_ID);
+  }
+
+  public void setRetweeted_status_idIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __RETWEETED_STATUS_ID_ISSET_ID, value);
+  }
+
+  public long getRetweeted_user_id() {
+    return this.retweeted_user_id;
+  }
+
+  public TResult setRetweeted_user_id(long retweeted_user_id) {
+    this.retweeted_user_id = retweeted_user_id;
+    setRetweeted_user_idIsSet(true);
+    return this;
+  }
+
+  public void unsetRetweeted_user_id() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __RETWEETED_USER_ID_ISSET_ID);
+  }
+
+  /** Returns true if field retweeted_user_id is set (has been assigned a value) and false otherwise */
+  public boolean isSetRetweeted_user_id() {
+    return EncodingUtils.testBit(__isset_bitfield, __RETWEETED_USER_ID_ISSET_ID);
+  }
+
+  public void setRetweeted_user_idIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __RETWEETED_USER_ID_ISSET_ID, value);
+  }
+
+  public int getRetweeted_count() {
+    return this.retweeted_count;
+  }
+
+  public TResult setRetweeted_count(int retweeted_count) {
+    this.retweeted_count = retweeted_count;
+    setRetweeted_countIsSet(true);
+    return this;
+  }
+
+  public void unsetRetweeted_count() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __RETWEETED_COUNT_ISSET_ID);
+  }
+
+  /** Returns true if field retweeted_count is set (has been assigned a value) and false otherwise */
+  public boolean isSetRetweeted_count() {
+    return EncodingUtils.testBit(__isset_bitfield, __RETWEETED_COUNT_ISSET_ID);
+  }
+
+  public void setRetweeted_countIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __RETWEETED_COUNT_ISSET_ID, value);
   }
 
   public void setFieldValue(_Fields field, Object value) {
@@ -339,11 +635,11 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
       }
       break;
 
-    case CREATED_AT:
+    case EPOCH:
       if (value == null) {
-        unsetCreated_at();
+        unsetEpoch();
       } else {
-        setCreated_at((String)value);
+        setEpoch((Long)value);
       }
       break;
 
@@ -352,6 +648,70 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
         unsetText();
       } else {
         setText((String)value);
+      }
+      break;
+
+    case FOLLOWERS_COUNT:
+      if (value == null) {
+        unsetFollowers_count();
+      } else {
+        setFollowers_count((Integer)value);
+      }
+      break;
+
+    case STATUSES_COUNT:
+      if (value == null) {
+        unsetStatuses_count();
+      } else {
+        setStatuses_count((Integer)value);
+      }
+      break;
+
+    case LANG:
+      if (value == null) {
+        unsetLang();
+      } else {
+        setLang((String)value);
+      }
+      break;
+
+    case IN_REPLY_TO_STATUS_ID:
+      if (value == null) {
+        unsetIn_reply_to_status_id();
+      } else {
+        setIn_reply_to_status_id((Long)value);
+      }
+      break;
+
+    case IN_REPLY_TO_USER_ID:
+      if (value == null) {
+        unsetIn_reply_to_user_id();
+      } else {
+        setIn_reply_to_user_id((Long)value);
+      }
+      break;
+
+    case RETWEETED_STATUS_ID:
+      if (value == null) {
+        unsetRetweeted_status_id();
+      } else {
+        setRetweeted_status_id((Long)value);
+      }
+      break;
+
+    case RETWEETED_USER_ID:
+      if (value == null) {
+        unsetRetweeted_user_id();
+      } else {
+        setRetweeted_user_id((Long)value);
+      }
+      break;
+
+    case RETWEETED_COUNT:
+      if (value == null) {
+        unsetRetweeted_count();
+      } else {
+        setRetweeted_count((Integer)value);
       }
       break;
 
@@ -369,11 +729,35 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
     case SCREEN_NAME:
       return getScreen_name();
 
-    case CREATED_AT:
-      return getCreated_at();
+    case EPOCH:
+      return Long.valueOf(getEpoch());
 
     case TEXT:
       return getText();
+
+    case FOLLOWERS_COUNT:
+      return Integer.valueOf(getFollowers_count());
+
+    case STATUSES_COUNT:
+      return Integer.valueOf(getStatuses_count());
+
+    case LANG:
+      return getLang();
+
+    case IN_REPLY_TO_STATUS_ID:
+      return Long.valueOf(getIn_reply_to_status_id());
+
+    case IN_REPLY_TO_USER_ID:
+      return Long.valueOf(getIn_reply_to_user_id());
+
+    case RETWEETED_STATUS_ID:
+      return Long.valueOf(getRetweeted_status_id());
+
+    case RETWEETED_USER_ID:
+      return Long.valueOf(getRetweeted_user_id());
+
+    case RETWEETED_COUNT:
+      return Integer.valueOf(getRetweeted_count());
 
     }
     throw new IllegalStateException();
@@ -392,10 +776,26 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
       return isSetRsv();
     case SCREEN_NAME:
       return isSetScreen_name();
-    case CREATED_AT:
-      return isSetCreated_at();
+    case EPOCH:
+      return isSetEpoch();
     case TEXT:
       return isSetText();
+    case FOLLOWERS_COUNT:
+      return isSetFollowers_count();
+    case STATUSES_COUNT:
+      return isSetStatuses_count();
+    case LANG:
+      return isSetLang();
+    case IN_REPLY_TO_STATUS_ID:
+      return isSetIn_reply_to_status_id();
+    case IN_REPLY_TO_USER_ID:
+      return isSetIn_reply_to_user_id();
+    case RETWEETED_STATUS_ID:
+      return isSetRetweeted_status_id();
+    case RETWEETED_USER_ID:
+      return isSetRetweeted_user_id();
+    case RETWEETED_COUNT:
+      return isSetRetweeted_count();
     }
     throw new IllegalStateException();
   }
@@ -440,12 +840,12 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
         return false;
     }
 
-    boolean this_present_created_at = true && this.isSetCreated_at();
-    boolean that_present_created_at = true && that.isSetCreated_at();
-    if (this_present_created_at || that_present_created_at) {
-      if (!(this_present_created_at && that_present_created_at))
+    boolean this_present_epoch = true;
+    boolean that_present_epoch = true;
+    if (this_present_epoch || that_present_epoch) {
+      if (!(this_present_epoch && that_present_epoch))
         return false;
-      if (!this.created_at.equals(that.created_at))
+      if (this.epoch != that.epoch)
         return false;
     }
 
@@ -455,6 +855,78 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
       if (!(this_present_text && that_present_text))
         return false;
       if (!this.text.equals(that.text))
+        return false;
+    }
+
+    boolean this_present_followers_count = true;
+    boolean that_present_followers_count = true;
+    if (this_present_followers_count || that_present_followers_count) {
+      if (!(this_present_followers_count && that_present_followers_count))
+        return false;
+      if (this.followers_count != that.followers_count)
+        return false;
+    }
+
+    boolean this_present_statuses_count = true;
+    boolean that_present_statuses_count = true;
+    if (this_present_statuses_count || that_present_statuses_count) {
+      if (!(this_present_statuses_count && that_present_statuses_count))
+        return false;
+      if (this.statuses_count != that.statuses_count)
+        return false;
+    }
+
+    boolean this_present_lang = true && this.isSetLang();
+    boolean that_present_lang = true && that.isSetLang();
+    if (this_present_lang || that_present_lang) {
+      if (!(this_present_lang && that_present_lang))
+        return false;
+      if (!this.lang.equals(that.lang))
+        return false;
+    }
+
+    boolean this_present_in_reply_to_status_id = true;
+    boolean that_present_in_reply_to_status_id = true;
+    if (this_present_in_reply_to_status_id || that_present_in_reply_to_status_id) {
+      if (!(this_present_in_reply_to_status_id && that_present_in_reply_to_status_id))
+        return false;
+      if (this.in_reply_to_status_id != that.in_reply_to_status_id)
+        return false;
+    }
+
+    boolean this_present_in_reply_to_user_id = true;
+    boolean that_present_in_reply_to_user_id = true;
+    if (this_present_in_reply_to_user_id || that_present_in_reply_to_user_id) {
+      if (!(this_present_in_reply_to_user_id && that_present_in_reply_to_user_id))
+        return false;
+      if (this.in_reply_to_user_id != that.in_reply_to_user_id)
+        return false;
+    }
+
+    boolean this_present_retweeted_status_id = true;
+    boolean that_present_retweeted_status_id = true;
+    if (this_present_retweeted_status_id || that_present_retweeted_status_id) {
+      if (!(this_present_retweeted_status_id && that_present_retweeted_status_id))
+        return false;
+      if (this.retweeted_status_id != that.retweeted_status_id)
+        return false;
+    }
+
+    boolean this_present_retweeted_user_id = true;
+    boolean that_present_retweeted_user_id = true;
+    if (this_present_retweeted_user_id || that_present_retweeted_user_id) {
+      if (!(this_present_retweeted_user_id && that_present_retweeted_user_id))
+        return false;
+      if (this.retweeted_user_id != that.retweeted_user_id)
+        return false;
+    }
+
+    boolean this_present_retweeted_count = true;
+    boolean that_present_retweeted_count = true;
+    if (this_present_retweeted_count || that_present_retweeted_count) {
+      if (!(this_present_retweeted_count && that_present_retweeted_count))
+        return false;
+      if (this.retweeted_count != that.retweeted_count)
         return false;
     }
 
@@ -504,12 +976,12 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
         return lastComparison;
       }
     }
-    lastComparison = Boolean.valueOf(isSetCreated_at()).compareTo(typedOther.isSetCreated_at());
+    lastComparison = Boolean.valueOf(isSetEpoch()).compareTo(typedOther.isSetEpoch());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    if (isSetCreated_at()) {
-      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.created_at, typedOther.created_at);
+    if (isSetEpoch()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.epoch, typedOther.epoch);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -520,6 +992,86 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
     }
     if (isSetText()) {
       lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.text, typedOther.text);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetFollowers_count()).compareTo(typedOther.isSetFollowers_count());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetFollowers_count()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.followers_count, typedOther.followers_count);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetStatuses_count()).compareTo(typedOther.isSetStatuses_count());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetStatuses_count()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.statuses_count, typedOther.statuses_count);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetLang()).compareTo(typedOther.isSetLang());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetLang()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.lang, typedOther.lang);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetIn_reply_to_status_id()).compareTo(typedOther.isSetIn_reply_to_status_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetIn_reply_to_status_id()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.in_reply_to_status_id, typedOther.in_reply_to_status_id);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetIn_reply_to_user_id()).compareTo(typedOther.isSetIn_reply_to_user_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetIn_reply_to_user_id()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.in_reply_to_user_id, typedOther.in_reply_to_user_id);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetRetweeted_status_id()).compareTo(typedOther.isSetRetweeted_status_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetRetweeted_status_id()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.retweeted_status_id, typedOther.retweeted_status_id);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetRetweeted_user_id()).compareTo(typedOther.isSetRetweeted_user_id());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetRetweeted_user_id()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.retweeted_user_id, typedOther.retweeted_user_id);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetRetweeted_count()).compareTo(typedOther.isSetRetweeted_count());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetRetweeted_count()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.retweeted_count, typedOther.retweeted_count);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -560,12 +1112,8 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
     }
     first = false;
     if (!first) sb.append(", ");
-    sb.append("created_at:");
-    if (this.created_at == null) {
-      sb.append("null");
-    } else {
-      sb.append(this.created_at);
-    }
+    sb.append("epoch:");
+    sb.append(this.epoch);
     first = false;
     if (!first) sb.append(", ");
     sb.append("text:");
@@ -574,6 +1122,42 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
     } else {
       sb.append(this.text);
     }
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("followers_count:");
+    sb.append(this.followers_count);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("statuses_count:");
+    sb.append(this.statuses_count);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("lang:");
+    if (this.lang == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.lang);
+    }
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("in_reply_to_status_id:");
+    sb.append(this.in_reply_to_status_id);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("in_reply_to_user_id:");
+    sb.append(this.in_reply_to_user_id);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("retweeted_status_id:");
+    sb.append(this.retweeted_status_id);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("retweeted_user_id:");
+    sb.append(this.retweeted_user_id);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("retweeted_count:");
+    sb.append(this.retweeted_count);
     first = false;
     sb.append(")");
     return sb.toString();
@@ -644,10 +1228,10 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
-          case 4: // CREATED_AT
-            if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-              struct.created_at = iprot.readString();
-              struct.setCreated_atIsSet(true);
+          case 4: // EPOCH
+            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+              struct.epoch = iprot.readI64();
+              struct.setEpochIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
@@ -656,6 +1240,70 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
             if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
               struct.text = iprot.readString();
               struct.setTextIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 6: // FOLLOWERS_COUNT
+            if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
+              struct.followers_count = iprot.readI32();
+              struct.setFollowers_countIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 7: // STATUSES_COUNT
+            if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
+              struct.statuses_count = iprot.readI32();
+              struct.setStatuses_countIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 8: // LANG
+            if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+              struct.lang = iprot.readString();
+              struct.setLangIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 9: // IN_REPLY_TO_STATUS_ID
+            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+              struct.in_reply_to_status_id = iprot.readI64();
+              struct.setIn_reply_to_status_idIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 10: // IN_REPLY_TO_USER_ID
+            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+              struct.in_reply_to_user_id = iprot.readI64();
+              struct.setIn_reply_to_user_idIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 11: // RETWEETED_STATUS_ID
+            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+              struct.retweeted_status_id = iprot.readI64();
+              struct.setRetweeted_status_idIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 12: // RETWEETED_USER_ID
+            if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+              struct.retweeted_user_id = iprot.readI64();
+              struct.setRetweeted_user_idIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
+          case 13: // RETWEETED_COUNT
+            if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
+              struct.retweeted_count = iprot.readI32();
+              struct.setRetweeted_countIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
@@ -686,16 +1334,40 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
         oprot.writeString(struct.screen_name);
         oprot.writeFieldEnd();
       }
-      if (struct.created_at != null) {
-        oprot.writeFieldBegin(CREATED_AT_FIELD_DESC);
-        oprot.writeString(struct.created_at);
-        oprot.writeFieldEnd();
-      }
+      oprot.writeFieldBegin(EPOCH_FIELD_DESC);
+      oprot.writeI64(struct.epoch);
+      oprot.writeFieldEnd();
       if (struct.text != null) {
         oprot.writeFieldBegin(TEXT_FIELD_DESC);
         oprot.writeString(struct.text);
         oprot.writeFieldEnd();
       }
+      oprot.writeFieldBegin(FOLLOWERS_COUNT_FIELD_DESC);
+      oprot.writeI32(struct.followers_count);
+      oprot.writeFieldEnd();
+      oprot.writeFieldBegin(STATUSES_COUNT_FIELD_DESC);
+      oprot.writeI32(struct.statuses_count);
+      oprot.writeFieldEnd();
+      if (struct.lang != null) {
+        oprot.writeFieldBegin(LANG_FIELD_DESC);
+        oprot.writeString(struct.lang);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldBegin(IN_REPLY_TO_STATUS_ID_FIELD_DESC);
+      oprot.writeI64(struct.in_reply_to_status_id);
+      oprot.writeFieldEnd();
+      oprot.writeFieldBegin(IN_REPLY_TO_USER_ID_FIELD_DESC);
+      oprot.writeI64(struct.in_reply_to_user_id);
+      oprot.writeFieldEnd();
+      oprot.writeFieldBegin(RETWEETED_STATUS_ID_FIELD_DESC);
+      oprot.writeI64(struct.retweeted_status_id);
+      oprot.writeFieldEnd();
+      oprot.writeFieldBegin(RETWEETED_USER_ID_FIELD_DESC);
+      oprot.writeI64(struct.retweeted_user_id);
+      oprot.writeFieldEnd();
+      oprot.writeFieldBegin(RETWEETED_COUNT_FIELD_DESC);
+      oprot.writeI32(struct.retweeted_count);
+      oprot.writeFieldEnd();
       oprot.writeFieldStop();
       oprot.writeStructEnd();
     }
@@ -723,13 +1395,37 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
       if (struct.isSetScreen_name()) {
         optionals.set(2);
       }
-      if (struct.isSetCreated_at()) {
+      if (struct.isSetEpoch()) {
         optionals.set(3);
       }
       if (struct.isSetText()) {
         optionals.set(4);
       }
-      oprot.writeBitSet(optionals, 5);
+      if (struct.isSetFollowers_count()) {
+        optionals.set(5);
+      }
+      if (struct.isSetStatuses_count()) {
+        optionals.set(6);
+      }
+      if (struct.isSetLang()) {
+        optionals.set(7);
+      }
+      if (struct.isSetIn_reply_to_status_id()) {
+        optionals.set(8);
+      }
+      if (struct.isSetIn_reply_to_user_id()) {
+        optionals.set(9);
+      }
+      if (struct.isSetRetweeted_status_id()) {
+        optionals.set(10);
+      }
+      if (struct.isSetRetweeted_user_id()) {
+        optionals.set(11);
+      }
+      if (struct.isSetRetweeted_count()) {
+        optionals.set(12);
+      }
+      oprot.writeBitSet(optionals, 13);
       if (struct.isSetId()) {
         oprot.writeI64(struct.id);
       }
@@ -739,18 +1435,42 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
       if (struct.isSetScreen_name()) {
         oprot.writeString(struct.screen_name);
       }
-      if (struct.isSetCreated_at()) {
-        oprot.writeString(struct.created_at);
+      if (struct.isSetEpoch()) {
+        oprot.writeI64(struct.epoch);
       }
       if (struct.isSetText()) {
         oprot.writeString(struct.text);
+      }
+      if (struct.isSetFollowers_count()) {
+        oprot.writeI32(struct.followers_count);
+      }
+      if (struct.isSetStatuses_count()) {
+        oprot.writeI32(struct.statuses_count);
+      }
+      if (struct.isSetLang()) {
+        oprot.writeString(struct.lang);
+      }
+      if (struct.isSetIn_reply_to_status_id()) {
+        oprot.writeI64(struct.in_reply_to_status_id);
+      }
+      if (struct.isSetIn_reply_to_user_id()) {
+        oprot.writeI64(struct.in_reply_to_user_id);
+      }
+      if (struct.isSetRetweeted_status_id()) {
+        oprot.writeI64(struct.retweeted_status_id);
+      }
+      if (struct.isSetRetweeted_user_id()) {
+        oprot.writeI64(struct.retweeted_user_id);
+      }
+      if (struct.isSetRetweeted_count()) {
+        oprot.writeI32(struct.retweeted_count);
       }
     }
 
     @Override
     public void read(org.apache.thrift.protocol.TProtocol prot, TResult struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
-      BitSet incoming = iprot.readBitSet(5);
+      BitSet incoming = iprot.readBitSet(13);
       if (incoming.get(0)) {
         struct.id = iprot.readI64();
         struct.setIdIsSet(true);
@@ -764,12 +1484,44 @@ public class TResult implements org.apache.thrift.TBase<TResult, TResult._Fields
         struct.setScreen_nameIsSet(true);
       }
       if (incoming.get(3)) {
-        struct.created_at = iprot.readString();
-        struct.setCreated_atIsSet(true);
+        struct.epoch = iprot.readI64();
+        struct.setEpochIsSet(true);
       }
       if (incoming.get(4)) {
         struct.text = iprot.readString();
         struct.setTextIsSet(true);
+      }
+      if (incoming.get(5)) {
+        struct.followers_count = iprot.readI32();
+        struct.setFollowers_countIsSet(true);
+      }
+      if (incoming.get(6)) {
+        struct.statuses_count = iprot.readI32();
+        struct.setStatuses_countIsSet(true);
+      }
+      if (incoming.get(7)) {
+        struct.lang = iprot.readString();
+        struct.setLangIsSet(true);
+      }
+      if (incoming.get(8)) {
+        struct.in_reply_to_status_id = iprot.readI64();
+        struct.setIn_reply_to_status_idIsSet(true);
+      }
+      if (incoming.get(9)) {
+        struct.in_reply_to_user_id = iprot.readI64();
+        struct.setIn_reply_to_user_idIsSet(true);
+      }
+      if (incoming.get(10)) {
+        struct.retweeted_status_id = iprot.readI64();
+        struct.setRetweeted_status_idIsSet(true);
+      }
+      if (incoming.get(11)) {
+        struct.retweeted_user_id = iprot.readI64();
+        struct.setRetweeted_user_idIsSet(true);
+      }
+      if (incoming.get(12)) {
+        struct.retweeted_count = iprot.readI32();
+        struct.setRetweeted_countIsSet(true);
       }
     }
   }
