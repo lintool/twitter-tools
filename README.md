@@ -1,7 +1,7 @@
 Twitter Tools
 =============
 
-**version 1.1.1**
+**version 1.2.0**
 
 These tools associated with the tweets corpus prepared for the [TREC Microblog Track](https://sites.google.com/site/microblogtrack/). The mailing list is [ trec-microblog@googlegroups.com](http://groups.google.com/group/trec-microblog).
 

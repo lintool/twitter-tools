@@ -1,3 +1,9 @@
+Version 1.2.0
+=============
+June 6, 2013
+
++ Initial release of the API for TREC 2013
+
 Version 1.1.1
 =============
 January 28, 2013
