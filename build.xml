@@ -93,15 +93,17 @@
   </target>
 
   <target name="compile" depends="init,resolve" description="compile the source ">
-    <javac classpathref="lib.path.id" srcdir="${src.dir}/main/java" destdir="${build.dir}" optimize="on" debug="on">
+    <javac classpathref="lib.path.id" srcdir="${src.dir}/gen/java" destdir="${build.dir}" optimize="on" debug="on" encoding="utf-8"/>
+    <javac classpathref="lib.path.id" srcdir="${src.dir}/main/java" destdir="${build.dir}" optimize="on" debug="on" encoding="utf-8">
       <compilerarg value="-Xlint:unchecked" />
     </javac>
-    <javac classpathref="lib.path.id" srcdir="${src.dir}/test/java" destdir="${build.dir}" optimize="on" debug="on">
+    <javac classpathref="lib.path.id" srcdir="${src.dir}/test/java" destdir="${build.dir}" optimize="on" debug="on" encoding="utf-8">
       <compilerarg value="-Xlint:unchecked" />
     </javac>
     <copy todir="${build.dir}">
       <fileset dir="${src.dir}/main/java" excludes="**/*.java" />
       <fileset dir="${src.dir}/test/java" excludes="**/*.java" />
+      <fileset dir="${src.dir}/gen/java" excludes="**/*.java" />
     </copy>
   </target>
 
@@ -169,7 +171,7 @@
 
     <echo file="./etc/run.${suffix}" message="${script_prefix}" />
     <echo file="./etc/run.${suffix}" message="${java_command} " append="true" />
-    <echo file="./etc/run.${suffix}" message="${param_prefix}1 ${param_prefix}2 ${param_prefix}3 ${param_prefix}4 ${param_prefix}5 ${param_prefix}6 ${param_prefix}7 ${param_prefix}8 ${param_prefix}9${line.separator}" append="true" />
+    <echo file="./etc/run.${suffix}" message="&quot;${param_prefix}1&quot; &quot;${param_prefix}2&quot; &quot;${param_prefix}3&quot; &quot;${param_prefix}4&quot; &quot;${param_prefix}5&quot; &quot;${param_prefix}6&quot; &quot;${param_prefix}7&quot; &quot;${param_prefix}8&quot; &quot;${param_prefix}9&quot; &quot;${param_prefix}{10}&quot; &quot;${param_prefix}{11}&quot; &quot;${param_prefix}{12}&quot; &quot;${param_prefix}{13}&quot; &quot;${param_prefix}{14}&quot; &quot;${param_prefix}{15}&quot; &quot;${param_prefix}{16}&quot; &quot;${param_prefix}{17}&quot; &quot;${param_prefix}{18}&quot; &quot;${param_prefix}{19}&quot; &quot;${param_prefix}{20}&quot;${line.separator}" append="true" />
 
      <chmod dir="./etc/" perm="ugo+rx" includes="**/*.sh"/>
   </target>

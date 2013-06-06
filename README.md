@@ -134,26 +134,21 @@ And the corresponding repair:
 
 * There are known issues with retweets, which cause only the original tweet to appear in the output. In order to preserve the requested tweet id, the crawler therefore injects a 'requested\_id' field into each JSON status with the value of the originally requested (input) tweet id. Statuses where 'requested\_id' differs from 'id' can be considered to be retweets.
 
-Reading the Corpus
-------------------
 
-The demo program `cc.twittertools.corpus.demo.ReadStatuses` provides a simple example of how to process the downloaded statuses, once you download the status blocks. Here's a sample command-line invocation:
-
-     etc/run.sh cc.twittertools.corpus.demo.ReadStatuses \
-        -input json/20110123-000.json.gz -dump
-
-The `-input` option will also accept a directory, in which case it'll process all status blocks in the directory.
-
-
-Searching the Corpus
+Indexing and Searching the Corpus
 --------------------
 
 We've also provided a reference implementation of using Lucene to index the statuses:
 
-    etc/run.sh cc.twittertools.corpus.demo.IndexStatuses \
-        -input json/ -index index/
+    etc/run.sh cc.twittertools.search.indexing.IndexStatuses \
+        -json -collection path/to/json \
+        -index /path/to/index/destination
 
-Simple program to search the built index:
+Note that JVM parameters including maximum heap size are set in the
+run.sh script.
 
-    etc/run.sh cc.twittertools.corpus.demo.SearchStatuses \
-        -index index/ -query egypt -num_hits 100
+There is also a simple program to run batch queries against the build index:
+
+    etc/run.sh cc.twittertools.search.retrieval.RunQuery \
+    	/path/to/config/file /path/to/query/file
+
