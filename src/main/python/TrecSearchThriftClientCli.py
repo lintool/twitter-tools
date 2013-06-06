@@ -1,17 +1,27 @@
 import sys
 
+"""
+A demonstration of how to use the python thrift bindings to retrieve tweets from the TREC 2013 API. 
+
+This script requires the python-thrift package, which can installed using 'pip install thrift'.
+
+To execute this script:
+    python TrecSearchThriftClientCli.py -host='host' -port=port -group='team_name' -token='access_token' -qid='MB01' -q='BBC World Service staff cuts' -runtag='lucene4lm' -max_id=34952194402811905
+
+"""
+
 # Path the the automatically generated thrift files
 # Alternatively, the files in the /src/gen/python directory can be added to your python path
-sys.path.append('./gen/python')
+sys.path.append('../../gen/python')
 
 from Search import TrecSearch, ttypes
-
-import argparse
 
 from thrift import Thrift
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
+
+import argparse
 
 try:
     # Command line arguments
@@ -44,7 +54,7 @@ try:
     q.max_id = long(args.max_id)
     q.num_results = int(args.num_results)
 
-    # Performs the actual search on the index
+    # Performs the actual search
     results = client.search(q)
 
     for i, result in enumerate(results, 1):
