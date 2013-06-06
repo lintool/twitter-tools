@@ -1,7 +1,7 @@
-package cc.twittertools.search.retrieval;
+package cc.twittertools.search.local;
 
 
-import cc.twittertools.search.retrieval.QueryEnvironment;
+import cc.twittertools.search.QueryEnvironment;
 
 
 public class RunQuery {

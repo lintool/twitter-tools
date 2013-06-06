@@ -7,7 +7,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import cc.twittertools.search.retrieval.Queries;
+import cc.twittertools.search.Queries;
 
 /**
  * Utility class for parsing a file full of indri queries stored as XML.

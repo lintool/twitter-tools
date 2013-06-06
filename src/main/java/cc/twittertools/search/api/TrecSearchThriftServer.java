@@ -1,4 +1,4 @@
-package cc.twittertools.search.retrieval;
+package cc.twittertools.search.api;
 
 import java.io.File;
 import java.util.Map;

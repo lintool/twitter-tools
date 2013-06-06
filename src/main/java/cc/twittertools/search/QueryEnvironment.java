@@ -1,4 +1,4 @@
-package cc.twittertools.search.retrieval;
+package cc.twittertools.search;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +78,7 @@ public class QueryEnvironment {
 
     queryParser = new QueryParser(Version.LUCENE_41, DocField.TEXT.name, analyzer);
 
-    cc.twittertools.search.retrieval.Query query = null;
+    cc.twittertools.search.Query query = null;
     while ((query = queries.getNextQuery()) != null) {
       System.err.println(query.getQueryName());
 

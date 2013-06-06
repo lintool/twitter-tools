@@ -1,4 +1,4 @@
-package cc.twittertools.util;
+package cc.twittertools.search.api;
 
 import java.io.File;
 import java.util.List;
@@ -18,8 +18,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 
-import cc.twittertools.search.retrieval.TrecSearchThriftClient;
-import cc.twittertools.search.retrieval.TrecSearchThriftServer;
 import cc.twittertools.thrift.gen.TResult;
 
 import com.google.common.base.Charsets;

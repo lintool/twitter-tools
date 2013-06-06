@@ -1,4 +1,4 @@
-package cc.twittertools.search.retrieval;
+package cc.twittertools.search.api;
 
 import java.io.File;
 import java.util.List;
@@ -12,6 +12,8 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import cc.twittertools.search.Queries;
+import cc.twittertools.search.Query;
 import cc.twittertools.search.configuration.IndriQueryParams;
 import cc.twittertools.thrift.gen.TResult;
 

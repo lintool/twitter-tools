@@ -1,4 +1,4 @@
-package cc.twittertools.corpus.index;
+package cc.twittertools.index;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,7 +14,7 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 import org.junit.Test;
 
-import cc.twittertools.search.indexing.TweetAnalyzer;
+import cc.twittertools.index.TweetAnalyzer;
 
 import com.google.common.collect.Lists;
 

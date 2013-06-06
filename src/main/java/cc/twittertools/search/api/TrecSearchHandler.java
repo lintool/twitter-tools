@@ -1,4 +1,4 @@
-package cc.twittertools.search.retrieval;
+package cc.twittertools.search.api;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,8 +27,8 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
-import cc.twittertools.search.indexing.IndexStatuses.StatusField;
-import cc.twittertools.search.retrieval.QueryEnvironment.DocField;
+import cc.twittertools.index.IndexStatuses.StatusField;
+import cc.twittertools.search.QueryEnvironment.DocField;
 import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
 import cc.twittertools.thrift.gen.TrecSearch;

@@ -1,4 +1,4 @@
-package cc.twittertools.search.indexing;
+package cc.twittertools.index;
 
 import java.io.IOException;
 import java.util.Arrays;

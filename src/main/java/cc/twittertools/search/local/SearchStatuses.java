@@ -1,4 +1,4 @@
-package cc.twittertools.search.indexing;
+package cc.twittertools.search.local;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -29,7 +29,8 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
-import cc.twittertools.search.retrieval.QueryEnvironment.DocField;
+import cc.twittertools.index.IndexStatuses;
+import cc.twittertools.search.QueryEnvironment.DocField;
 
 /**
  * Reference implementation for searching statuses.
