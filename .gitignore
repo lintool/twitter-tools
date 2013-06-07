@@ -12,4 +12,4 @@ data/qrels.microblog2012.txt
 data/queries.trec2005efficiency.txt
 *~
 .DS_Store
-
+*.pyc
