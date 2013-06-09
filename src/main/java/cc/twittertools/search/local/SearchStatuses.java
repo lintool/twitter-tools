@@ -30,7 +30,7 @@ import org.apache.solr.common.util.NamedList;
 import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
 import cc.twittertools.index.IndexStatuses;
-import cc.twittertools.search.QueryEnvironment.DocField;
+import cc.twittertools.index.IndexStatuses.StatusField;
 
 /**
  * Reference implementation for searching statuses.
@@ -128,7 +128,7 @@ public class SearchStatuses {
 
     QueryParser p = new QueryParser(Version.LUCENE_41, IndexStatuses.StatusField.TEXT.name, IndexStatuses.ANALYZER);
     Query query = p.parse(queryText);
-    Filter filter = NumericRangeFilter.newLongRange(DocField.TIME.name, 0L, maxId, true, true);
+    Filter filter = NumericRangeFilter.newLongRange(StatusField.ID.name, 0L, maxId, true, true);
 
     out.println("Query: " + query);
 

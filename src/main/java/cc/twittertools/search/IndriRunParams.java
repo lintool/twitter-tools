@@ -1,4 +1,4 @@
-package cc.twittertools.search.configuration;
+package cc.twittertools.search;
 
 
 

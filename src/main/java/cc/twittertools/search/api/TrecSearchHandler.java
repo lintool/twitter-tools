@@ -28,7 +28,6 @@ import org.apache.solr.common.util.NamedList;
 import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
 import cc.twittertools.index.IndexStatuses.StatusField;
-import cc.twittertools.search.QueryEnvironment.DocField;
 import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
 import cc.twittertools.thrift.gen.TrecSearch;
@@ -42,7 +41,7 @@ public class TrecSearchHandler implements TrecSearch.Iface {
 
   private static final Analyzer ANALYZER = new StandardAnalyzer(Version.LUCENE_41);
   private static QueryParser QUERY_PARSER =
-      new QueryParser(Version.LUCENE_41, DocField.TEXT.name, ANALYZER);
+      new QueryParser(Version.LUCENE_41, StatusField.TEXT.name, ANALYZER);
 
   private final IndexSearcher searcher;
   private final Map<String, String> credentials;
@@ -82,7 +81,7 @@ public class TrecSearchHandler implements TrecSearch.Iface {
 
     try {
       Filter filter =
-          NumericRangeFilter.newLongRange(DocField.TIME.name, 0L, query.max_id, true, true);
+          NumericRangeFilter.newLongRange(StatusField.ID.name, 0L, query.max_id, true, true);
 
       Query q = QUERY_PARSER.parse(query.text);
       TopDocs rs = searcher.search(q, filter, query.num_results);

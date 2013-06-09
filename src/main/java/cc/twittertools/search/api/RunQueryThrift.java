@@ -12,9 +12,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import cc.twittertools.search.Queries;
-import cc.twittertools.search.Query;
-import cc.twittertools.search.configuration.IndriQueryParams;
+import cc.twittertools.search.TrecTopicSet;
 import cc.twittertools.thrift.gen.TResult;
 
 public class RunQueryThrift {
@@ -63,8 +61,7 @@ public class RunQueryThrift {
       System.exit(-1);
     }
 
-    IndriQueryParams queryParams = new IndriQueryParams();
-    queryParams.ParseXMLQueryFile(queryFile);
+    TrecTopicSet queries = TrecTopicSet.fromFile(queryFile);
 
     String group = cmdline.hasOption(GROUP_OPTION) ? cmdline.getOptionValue(GROUP_OPTION) : null;
     String token = cmdline.hasOption(TOKEN_OPTION) ? cmdline.getOptionValue(TOKEN_OPTION) : null;
@@ -72,14 +69,12 @@ public class RunQueryThrift {
     TrecSearchThriftClient client = new TrecSearchThriftClient(cmdline.getOptionValue(HOST_OPTION),
         Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)), group, token);
 
-    Queries queries = queryParams.getQueries();
-    Query query;
-    while((query = queries.getNextQuery()) != null) {
-      List<TResult> results = client.search(query.getQueryString(),
-          Long.parseLong(query.getMetadataField("lastrel")), 1000);
+    for(cc.twittertools.search.TrecTopic query : queries) {
+      List<TResult> results = client.search(query.getQuery(),
+          query.getQueryTweetTime(), 1000);
       int i = 1;
       for (TResult result : results) {
-        System.out.println(query.getQueryName() + " Q0 " + result.id + " " + i + " " + result.rsv + " lucy");
+        System.out.println(query.getId() + " Q0 " + result.id + " " + i + " " + result.rsv + " lucy");
         i++;
       }
       
