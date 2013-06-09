@@ -1,9 +1,15 @@
 package cc.twittertools.search.local;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.PrintStream;
 
-import org.apache.lucene.analysis.Analyzer;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -24,48 +30,77 @@ import org.apache.solr.common.util.NamedList;
 import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
 import cc.twittertools.index.IndexStatuses.StatusField;
-import cc.twittertools.search.IndriRunParams;
+import cc.twittertools.search.TrecTopic;
 import cc.twittertools.search.TrecTopicSet;
 
 public class RunQuery {
 
-  /**
-   * @param args
-   * @throws Exception
-   */
+  private RunQuery() {}
+
+  private static final String INDEX_OPTION = "index";
+  private static final String TOPICS_OPTION = "queries";
+  private static final String NUM_HITS_OPTION = "num_hits";
+  private static final String SIMILARITY_OPTION = "similarity";
+
+  @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
-    String pathToIndexFile = args[0];
-    String pathToQueryFile = args[1];
+    Options options = new Options();
+    options.addOption(OptionBuilder.withArgName("path").hasArg()
+        .withDescription("index location").create(INDEX_OPTION));
+    options.addOption(OptionBuilder.withArgName("num").hasArg()
+        .withDescription("number of hits to return").create(NUM_HITS_OPTION));
+    options.addOption(OptionBuilder.withArgName("query").hasArg()
+        .withDescription("query").create(TOPICS_OPTION));
+    options.addOption(OptionBuilder.withArgName("similarity").hasArg()
+        .withDescription("similarity to use (BM25, LM)").create(SIMILARITY_OPTION));
 
-    RunQuery env = new RunQuery();
-    env.setPathToIndexFile(pathToIndexFile);
-    env.setPathToQueryFile(pathToQueryFile);
+    CommandLine cmdline = null;
+    CommandLineParser parser = new GnuParser();
+    try {
+      cmdline = parser.parse(options, args);
+    } catch (ParseException exp) {
+      System.err.println("Error parsing command line: " + exp.getMessage());
+      System.exit(-1);
+    }
 
-    env.parseParams();
-    env.runQueries();
-  }
+    if (!cmdline.hasOption(TOPICS_OPTION) || !cmdline.hasOption(INDEX_OPTION)) {
+      HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp(SearchStatuses.class.getName(), options);
+      System.exit(-1);
+    }
 
-  private String pathToRunParamFile;
-  private String pathToQueryFile;
-  private String similarity = "lm";
+    File indexLocation = new File(cmdline.getOptionValue(INDEX_OPTION));
+    if (!indexLocation.exists()) {
+      System.err.println("Error: " + indexLocation + " does not exist!");
+      System.exit(-1);
+    }
 
-  private String pathToIndex; // i.e. the actual index location. specified in
-                              // pathToRunParamFile
-  private TrecTopicSet queries = new TrecTopicSet();
-  private int count = 0;
+    String topicsFile = cmdline.getOptionValue(TOPICS_OPTION);
+    
+    int numHits = 1000;
+    try {
+      if (cmdline.hasOption(NUM_HITS_OPTION)) {
+        numHits = Integer.parseInt(cmdline.getOptionValue(NUM_HITS_OPTION));
+      }
+    } catch (NumberFormatException e) {
+      System.err.println("Invalid " + NUM_HITS_OPTION + ": " + cmdline.getOptionValue(NUM_HITS_OPTION));
+      System.exit(-1);
+    }
 
-  private QueryParser queryParser;
-  private IndexSearcher searcher;
+    String similarity = "LM";
+    if (cmdline.hasOption(SIMILARITY_OPTION)) {
+      similarity = cmdline.getOptionValue(SIMILARITY_OPTION);
+    }
 
+    PrintStream out = new PrintStream(System.out, true, "UTF-8");
 
-  public void runQueries() throws IOException {
-    IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(pathToIndex)));
-    searcher = new IndexSearcher(reader);
+    IndexReader reader = DirectoryReader.open(FSDirectory.open(indexLocation));
+    IndexSearcher searcher = new IndexSearcher(reader);
 
-    if (similarity.equalsIgnoreCase("bm25")) {
+    if (similarity.equalsIgnoreCase("BM25")) {
       Similarity simBM25 = new BM25Similarity();
       searcher.setSimilarity(simBM25);
-    } else if (similarity.equalsIgnoreCase("lm")) {
+    } else if (similarity.equalsIgnoreCase("LM")) {
       NamedList<Double> paramNamedList = new NamedList<Double>();
       paramNamedList.add("mu", 2500.0);
       SolrParams params = SolrParams.toSolrParams(paramNamedList);
@@ -75,111 +110,30 @@ public class RunQuery {
       searcher.setSimilarity(simLMDir);
     }
 
-    Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_41);
+    //out.println("Using similarity: " + searcher.getSimilarity().toString());
+    QueryParser p = new QueryParser(Version.LUCENE_41, StatusField.TEXT.name,
+        new StandardAnalyzer(Version.LUCENE_41));
+        //IndexStatuses.ANALYZER);
 
-    queryParser = new QueryParser(Version.LUCENE_41, StatusField.TEXT.name, analyzer);
+    TrecTopicSet topics = TrecTopicSet.fromFile(topicsFile);
+    for ( TrecTopic topic : topics ) {
+      Query query = p.parse(topic.getQuery());
+      Filter filter = NumericRangeFilter.newLongRange(StatusField.ID.name, 0L,
+          topic.getQueryTweetTime(), true, true);
 
-    for (cc.twittertools.search.TrecTopic query : queries) {
-      System.err.println(query.getId());
+      //out.println("Query: " + query);
 
-      try {
-        Query luceneQuery = queryParser.parse(query.getQuery());
-        Filter filter = NumericRangeFilter.newLongRange(StatusField.ID.name, 0L,
-            query.getQueryTweetTime(), true, true);
+      TopDocs rs = searcher.search(query, filter, numHits);
 
-        this.runQuery(query.getId(), luceneQuery, filter, count);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-
-    reader.close();
-  }
-
-  public void runQuery(String queryName, Query query, Filter filter, int count) {
-    try {
-
-      System.err.println(query);
-
-      TopDocs rs = searcher.search(query, filter, count);
-
-      int j = 1;
+      int i = 1;
       for (ScoreDoc scoreDoc : rs.scoreDocs) {
         Document hit = searcher.doc(scoreDoc.doc);
-
-        System.out.println(queryName + " Q0 " + hit.getField("id").numericValue() + " " + (j++)
-            + " " + scoreDoc.score + " lucy");
-
+        out.println(topic.getId() + " Q0 " + 
+        hit.getField(StatusField.ID.name).stringValue() + " " + i + " " + scoreDoc.score + " lucy");
+        i++;
       }
-
-    } catch (Exception e) {
-      e.printStackTrace();
     }
-
-  }
-
-  public void parseParams() throws Exception {
-
-    // make sure we've got a file specifying the index to search and a file with
-    // queries to run
-
-    // first the index
-    if (pathToRunParamFile == null) {
-      System.err.println("QueryEnvironment: pathToRunParamFile not set!");
-      throw new IOException();
-    }
-    File paramFile = new File(pathToRunParamFile);
-    if (!paramFile.exists()) {
-      System.err.println("QueryEnvironment: pathToRunParamFile does not exist!");
-      throw new IOException();
-    }
-
-    IndriRunParams runParams = new IndriRunParams();
-    runParams.ParseXMLQueryFile(pathToRunParamFile);
-
-    similarity = runParams.getSimilarity();
-    if (similarity == null) {
-      similarity = "lm";
-    }
-
-    pathToIndex = runParams.getIndexName();
-    if (pathToIndex == null) {
-      System.err.println("IndexEnvironment: null value for index name!");
-      throw new IllegalArgumentException();
-    }
-    count = runParams.getCount();
-    if (count < 1) {
-      System.err.println("cannot retrieve " + count + " docs!");
-      System.exit(-1);
-    }
-
-    System.err.println("index:  " + pathToIndex);
-
-    // now the queries
-    if (pathToQueryFile == null) {
-      System.err.println("QueryEnvironment: pathToQueryFile not set!");
-      throw new IOException();
-    }
-    File queryFile = new File(pathToQueryFile);
-    if (!queryFile.exists()) {
-      System.err.println("QueryEnvironment: pathToQueryFile does not exist!");
-      throw new IOException();
-    }
-
-    // IndriQueryParams queryParams = new IndriQueryParams();
-    // queryParams.
-    System.err.println(pathToQueryFile);
-    queries = TrecTopicSet.fromFile(pathToQueryFile);
-
-    // queries = queryParams.getQueries();
-  }
-
-  public void setPathToIndexFile(String pathToRunParamFile) {
-    this.pathToRunParamFile = pathToRunParamFile;
-  }
-
-  public void setPathToQueryFile(String setPathToQueryFile) {
-    this.pathToQueryFile = setPathToQueryFile;
+    reader.close();
   }
 
 }
