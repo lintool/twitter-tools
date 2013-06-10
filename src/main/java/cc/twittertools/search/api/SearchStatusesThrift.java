@@ -1,5 +1,6 @@
 package cc.twittertools.search.api;
 
+import java.io.PrintStream;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -28,9 +29,10 @@ public class SearchStatusesThrift {
   private static final String QUERY_OPTION = "q";
   private static final String RUNTAG_OPTION = "runtag";
   private static final String MAX_ID_OPTION = "max_id";
-  private static final String NUM_RESULTS_OPTION = "num_results";
+  private static final String NUM_HITS_OPTION = "num_hits";
   private static final String GROUP_OPTION = "group";
   private static final String TOKEN_OPTION = "token";
+  private static final String VERBOSE_OPTION = "verbose";
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
@@ -50,11 +52,12 @@ public class SearchStatusesThrift {
     options.addOption(OptionBuilder.withArgName("num").hasArg()
         .withDescription("maxid").create(MAX_ID_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
-        .withDescription("number of results").create(NUM_RESULTS_OPTION));
+        .withDescription("number of hits").create(NUM_HITS_OPTION));
     options.addOption(OptionBuilder.withArgName("string").hasArg()
         .withDescription("group id").create(GROUP_OPTION));
     options.addOption(OptionBuilder.withArgName("string").hasArg()
         .withDescription("access token").create(TOKEN_OPTION));
+    options.addOption(new Option(VERBOSE_OPTION, "print out complete document"));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -76,12 +79,13 @@ public class SearchStatusesThrift {
         cmdline.getOptionValue(QID_OPTION) : DEFAULT_QID;
     String query = cmdline.hasOption(QUERY_OPTION) ?
         cmdline.getOptionValue(QUERY_OPTION) : DEFAULT_Q;
-    String runid = cmdline.hasOption(RUNTAG_OPTION) ?
+    String runtag = cmdline.hasOption(RUNTAG_OPTION) ?
         cmdline.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
     long maxId = cmdline.hasOption(MAX_ID_OPTION) ?
         Long.parseLong(cmdline.getOptionValue(MAX_ID_OPTION)) : DEFAULT_MAX_ID;
-    int numResults = cmdline.hasOption(NUM_RESULTS_OPTION) ?
-        Integer.parseInt(cmdline.getOptionValue(NUM_RESULTS_OPTION)) : DEFAULT_NUM_RESULTS;
+    int numHits = cmdline.hasOption(NUM_HITS_OPTION) ?
+        Integer.parseInt(cmdline.getOptionValue(NUM_HITS_OPTION)) : DEFAULT_NUM_RESULTS;
+    boolean verbose = cmdline.hasOption(VERBOSE_OPTION);
 
     String group = cmdline.hasOption(GROUP_OPTION) ? cmdline.getOptionValue(GROUP_OPTION) : null;
     String token = cmdline.hasOption(TOKEN_OPTION) ? cmdline.getOptionValue(TOKEN_OPTION) : null;
@@ -91,14 +95,19 @@ public class SearchStatusesThrift {
     System.err.println("qid: " + qid);
     System.err.println("q: " + query);
     System.err.println("max_id: " + maxId);
-    System.err.println("num_results: " + numResults);
-    
-    List<TResult> results = client.search(query, maxId, numResults);
+    System.err.println("num_results: " + numHits);
+
+    PrintStream out = new PrintStream(System.out, true, "UTF-8");
+
+    List<TResult> results = client.search(query, maxId, numHits);
     int i = 1;
     for (TResult result : results) {
-      System.out.println(qid + " Q0 " + result.id + " " + i + " " + result.rsv + " " + runid);
-      System.out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
+      out.println(String.format("%s Q0 %d %d %f %s", qid, result.id, i, result.rsv, runtag));
+      if (verbose) {
+        System.out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
+      }
       i++;
     }
+    out.close();
   }
 }

@@ -7,11 +7,11 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -38,25 +38,40 @@ import cc.twittertools.index.IndexStatuses.StatusField;
 public class SearchStatuses {
   private SearchStatuses() {}
 
+  // Defaults: if user doesn't specify an actual query, run MB01 as a demo.
+  private static final String DEFAULT_QID = "MB01";
+  private static final String DEFAULT_Q = "BBC World Service staff cuts";
+  private static final long DEFAULT_MAX_ID = 34952194402811905L;
+  private static final int DEFAULT_NUM_RESULTS = 10;
+  private static final String DEFAULT_RUNTAG = "lucene4lm";
+
   private static final String INDEX_OPTION = "index";
-  private static final String QUERY_OPTION = "query";
-  private static final String NUM_HITS_OPTION = "num_hits";
+  private static final String QID_OPTION = "qid";
+  private static final String QUERY_OPTION = "q";
+  private static final String RUNTAG_OPTION = "runtag";
   private static final String MAX_ID_OPTION = "max_id";
+  private static final String NUM_HITS_OPTION = "num_hits";
   private static final String SIMILARITY_OPTION = "similarity";
+  private static final String VERBOSE_OPTION = "verbose";
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
     Options options = new Options();
     options.addOption(OptionBuilder.withArgName("path").hasArg()
         .withDescription("index location").create(INDEX_OPTION));
+    options.addOption(OptionBuilder.withArgName("string").hasArg()
+        .withDescription("query id").create(QID_OPTION));
+    options.addOption(OptionBuilder.withArgName("string").hasArg()
+        .withDescription("query text").create(QUERY_OPTION));
+    options.addOption(OptionBuilder.withArgName("string").hasArg()
+        .withDescription("runtag").create(RUNTAG_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
-        .withDescription("number of hits to return").create(NUM_HITS_OPTION));
+        .withDescription("maxid").create(MAX_ID_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
-        .withDescription("max id").create(MAX_ID_OPTION));
-    options.addOption(OptionBuilder.withArgName("query").hasArg()
-        .withDescription("query").create(QUERY_OPTION));
+        .withDescription("number of hits").create(NUM_HITS_OPTION));
     options.addOption(OptionBuilder.withArgName("similarity").hasArg()
         .withDescription("similarity to use (BM25, LM)").create(SIMILARITY_OPTION));
+    options.addOption(new Option(VERBOSE_OPTION, "print out complete document"));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -79,27 +94,17 @@ public class SearchStatuses {
       System.exit(-1);
     }
 
-    String queryText = cmdline.getOptionValue(QUERY_OPTION);
-    
-    int numHits = 10;
-    try {
-      if (cmdline.hasOption(NUM_HITS_OPTION)) {
-        numHits = Integer.parseInt(cmdline.getOptionValue(NUM_HITS_OPTION));
-      }
-    } catch (NumberFormatException e) {
-      System.err.println("Invalid " + NUM_HITS_OPTION + ": " + cmdline.getOptionValue(NUM_HITS_OPTION));
-      System.exit(-1);
-    }
-
-    long maxId = Long.MAX_VALUE;
-    try {
-      if (cmdline.hasOption(MAX_ID_OPTION)) {
-        maxId = Long.parseLong(cmdline.getOptionValue(MAX_ID_OPTION));
-      }
-    } catch (NumberFormatException e) {
-      System.err.println("Invalid " + MAX_ID_OPTION + ": " + cmdline.getOptionValue(MAX_ID_OPTION));
-      System.exit(-1);
-    }
+    String qid = cmdline.hasOption(QID_OPTION) ?
+        cmdline.getOptionValue(QID_OPTION) : DEFAULT_QID;
+    String queryText = cmdline.hasOption(QUERY_OPTION) ?
+        cmdline.getOptionValue(QUERY_OPTION) : DEFAULT_Q;
+    String runtag = cmdline.hasOption(RUNTAG_OPTION) ?
+        cmdline.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
+    long maxId = cmdline.hasOption(MAX_ID_OPTION) ?
+        Long.parseLong(cmdline.getOptionValue(MAX_ID_OPTION)) : DEFAULT_MAX_ID;
+    int numHits = cmdline.hasOption(NUM_HITS_OPTION) ?
+        Integer.parseInt(cmdline.getOptionValue(NUM_HITS_OPTION)) : DEFAULT_NUM_RESULTS;
+    boolean verbose = cmdline.hasOption(VERBOSE_OPTION);
 
     String similarity = "LM";
     if (cmdline.hasOption(SIMILARITY_OPTION)) {
@@ -124,29 +129,25 @@ public class SearchStatuses {
       searcher.setSimilarity(simLMDir);
     }
 
-    out.println("Using similarity: " + searcher.getSimilarity().toString());
-
     QueryParser p = new QueryParser(Version.LUCENE_41, IndexStatuses.StatusField.TEXT.name, IndexStatuses.ANALYZER);
     Query query = p.parse(queryText);
     Filter filter = NumericRangeFilter.newLongRange(StatusField.ID.name, 0L, maxId, true, true);
 
-    out.println("Query: " + query);
-
     TopDocs rs = searcher.search(query, filter, numHits);
 
+    int i = 1;
     for (ScoreDoc scoreDoc : rs.scoreDocs) {
       Document hit = searcher.doc(scoreDoc.doc);
-      System.out.println(hit);
-      Field epoch = (Field) hit.getField(IndexStatuses.StatusField.EPOCH.name);
 
-      out.println(String.format("%s\t%s\t%s\t%s\t%s",
-          scoreDoc.score,
-          hit.getField(IndexStatuses.StatusField.ID.name).stringValue(),
-          hit.getField(IndexStatuses.StatusField.SCREEN_NAME.name).stringValue(),
-          (epoch == null ? "" : epoch.stringValue()),
-          hit.getField(IndexStatuses.StatusField.TEXT.name).stringValue()));
+      out.println(String.format("%s Q0 %s %d %f %s", qid,
+          hit.getField(StatusField.ID.name).stringValue(), i, scoreDoc.score, runtag));
+      if (verbose) {
+        out.println("# " + hit.toString().replaceAll("[\\n\\r]+", " "));
+      }
+      i++;
     }
 
     reader.close();
+    out.close();
   }
 }

@@ -72,7 +72,7 @@ public class RunQueriesThrift {
       System.exit(-1);
     }
 
-    String runid = cmdline.hasOption(RUNTAG_OPTION) ?
+    String runtag = cmdline.hasOption(RUNTAG_OPTION) ?
         cmdline.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
 
     TrecTopicSet topicsFile = TrecTopicSet.fromFile(queryFile);
@@ -102,7 +102,7 @@ public class RunQueriesThrift {
           query.getQueryTweetTime(), numHits);
       int i = 1;
       for (TResult result : results) {
-        out.println(String.format("%s Q0 %d %d %f %s", query.getId(), result.id, i, result.rsv, runid));
+        out.println(String.format("%s Q0 %d %d %f %s", query.getId(), result.id, i, result.rsv, runtag));
         if ( verbose) {
           out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
         }

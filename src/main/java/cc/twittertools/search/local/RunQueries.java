@@ -83,7 +83,7 @@ public class RunQueries {
       System.exit(-1);
     }
 
-    String runid = cmdline.hasOption(RUNTAG_OPTION) ?
+    String runtag = cmdline.hasOption(RUNTAG_OPTION) ?
         cmdline.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
 
     String topicsFile = cmdline.getOptionValue(QUERIES_OPTION);
@@ -138,7 +138,7 @@ public class RunQueries {
       for (ScoreDoc scoreDoc : rs.scoreDocs) {
         Document hit = searcher.doc(scoreDoc.doc);
         out.println(String.format("%s Q0 %s %d %f %s", topic.getId(),
-            hit.getField(StatusField.ID.name).stringValue(), i, scoreDoc.score, runid));
+            hit.getField(StatusField.ID.name).stringValue(), i, scoreDoc.score, runtag));
         if ( verbose) {
           out.println("# " + hit.toString().replaceAll("[\\n\\r]+", " "));
         }
