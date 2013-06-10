@@ -12,7 +12,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
@@ -117,10 +116,8 @@ public class IndexStatuses {
       stream = new JsonStatusCorpusReader(file);
     }
 
-    Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_41);
-
     Directory dir = FSDirectory.open(new File(indexPath));
-    IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_41, analyzer);
+    IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_41, IndexStatuses.ANALYZER);
     config.setOpenMode(OpenMode.CREATE);
 
     LOG.info("collection: " + collectionPath);

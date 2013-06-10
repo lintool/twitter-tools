@@ -7,10 +7,10 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -29,30 +29,38 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
+import cc.twittertools.index.IndexStatuses;
 import cc.twittertools.index.IndexStatuses.StatusField;
 import cc.twittertools.search.TrecTopic;
 import cc.twittertools.search.TrecTopicSet;
 
-public class RunQuery {
-
-  private RunQuery() {}
+public class RunQueries {
+  private static final String DEFAULT_RUNTAG = "lucene4lm";
 
   private static final String INDEX_OPTION = "index";
-  private static final String TOPICS_OPTION = "queries";
+  private static final String QUERIES_OPTION = "queries";
   private static final String NUM_HITS_OPTION = "num_hits";
   private static final String SIMILARITY_OPTION = "similarity";
+  private static final String RUNTAG_OPTION = "runtag";
+  private static final String VERBOSE_OPTION = "verbose";
+
+  private RunQueries() {}
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
     Options options = new Options();
+
     options.addOption(OptionBuilder.withArgName("path").hasArg()
         .withDescription("index location").create(INDEX_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
         .withDescription("number of hits to return").create(NUM_HITS_OPTION));
-    options.addOption(OptionBuilder.withArgName("query").hasArg()
-        .withDescription("query").create(TOPICS_OPTION));
+    options.addOption(OptionBuilder.withArgName("file").hasArg()
+        .withDescription("file containing topics in TREC format").create(QUERIES_OPTION));
     options.addOption(OptionBuilder.withArgName("similarity").hasArg()
         .withDescription("similarity to use (BM25, LM)").create(SIMILARITY_OPTION));
+    options.addOption(OptionBuilder.withArgName("string").hasArg()
+        .withDescription("runtag").create(RUNTAG_OPTION));
+    options.addOption(new Option(VERBOSE_OPTION, "print out complete document"));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -63,7 +71,7 @@ public class RunQuery {
       System.exit(-1);
     }
 
-    if (!cmdline.hasOption(TOPICS_OPTION) || !cmdline.hasOption(INDEX_OPTION)) {
+    if (!cmdline.hasOption(QUERIES_OPTION) || !cmdline.hasOption(INDEX_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
       formatter.printHelp(SearchStatuses.class.getName(), options);
       System.exit(-1);
@@ -75,7 +83,10 @@ public class RunQuery {
       System.exit(-1);
     }
 
-    String topicsFile = cmdline.getOptionValue(TOPICS_OPTION);
+    String runid = cmdline.hasOption(RUNTAG_OPTION) ?
+        cmdline.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
+
+    String topicsFile = cmdline.getOptionValue(QUERIES_OPTION);
     
     int numHits = 1000;
     try {
@@ -91,6 +102,8 @@ public class RunQuery {
     if (cmdline.hasOption(SIMILARITY_OPTION)) {
       similarity = cmdline.getOptionValue(SIMILARITY_OPTION);
     }
+
+    boolean verbose = cmdline.hasOption(VERBOSE_OPTION);
 
     PrintStream out = new PrintStream(System.out, true, "UTF-8");
 
@@ -110,10 +123,8 @@ public class RunQuery {
       searcher.setSimilarity(simLMDir);
     }
 
-    //out.println("Using similarity: " + searcher.getSimilarity().toString());
     QueryParser p = new QueryParser(Version.LUCENE_41, StatusField.TEXT.name,
-        new StandardAnalyzer(Version.LUCENE_41));
-        //IndexStatuses.ANALYZER);
+        IndexStatuses.ANALYZER);
 
     TrecTopicSet topics = TrecTopicSet.fromFile(topicsFile);
     for ( TrecTopic topic : topics ) {
@@ -121,19 +132,20 @@ public class RunQuery {
       Filter filter = NumericRangeFilter.newLongRange(StatusField.ID.name, 0L,
           topic.getQueryTweetTime(), true, true);
 
-      //out.println("Query: " + query);
-
       TopDocs rs = searcher.search(query, filter, numHits);
 
       int i = 1;
       for (ScoreDoc scoreDoc : rs.scoreDocs) {
         Document hit = searcher.doc(scoreDoc.doc);
-        out.println(topic.getId() + " Q0 " + 
-        hit.getField(StatusField.ID.name).stringValue() + " " + i + " " + scoreDoc.score + " lucy");
+        out.println(String.format("%s Q0 %s %d %f %s", topic.getId(),
+            hit.getField(StatusField.ID.name).stringValue(), i, scoreDoc.score, runid));
+        if ( verbose) {
+          out.println("# " + hit.toString().replaceAll("[\\n\\r]+", " "));
+        }
         i++;
       }
     }
     reader.close();
+    out.close();
   }
-
 }

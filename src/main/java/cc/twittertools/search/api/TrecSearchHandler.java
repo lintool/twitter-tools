@@ -8,8 +8,6 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import org.apache.log4j.Logger;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -27,6 +25,7 @@ import org.apache.solr.common.params.SolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
+import cc.twittertools.index.IndexStatuses;
 import cc.twittertools.index.IndexStatuses.StatusField;
 import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
@@ -39,9 +38,8 @@ import com.google.common.collect.Lists;
 public class TrecSearchHandler implements TrecSearch.Iface {
   private static final Logger LOG = Logger.getLogger(TrecSearchHandler.class);
 
-  private static final Analyzer ANALYZER = new StandardAnalyzer(Version.LUCENE_41);
   private static QueryParser QUERY_PARSER =
-      new QueryParser(Version.LUCENE_41, StatusField.TEXT.name, ANALYZER);
+      new QueryParser(Version.LUCENE_41, StatusField.TEXT.name, IndexStatuses.ANALYZER);
 
   private final IndexSearcher searcher;
   private final Map<String, String> credentials;

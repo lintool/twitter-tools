@@ -13,7 +13,7 @@ import org.apache.commons.cli.ParseException;
 
 import cc.twittertools.thrift.gen.TResult;
 
-public class TrecSearchThriftClientCli {
+public class SearchStatusesThrift {
   // Defaults: if user doesn't specify an actual query, run MB01 as a demo.
   private static final String DEFAULT_QID = "MB01";
   private static final String DEFAULT_Q = "BBC World Service staff cuts";
@@ -68,7 +68,7 @@ public class TrecSearchThriftClientCli {
     if (cmdline.hasOption(HELP_OPTION) || !cmdline.hasOption(HOST_OPTION)
         || !cmdline.hasOption(PORT_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(TrecSearchThriftClientCli.class.getName(), options);
+      formatter.printHelp(SearchStatusesThrift.class.getName(), options);
       System.exit(-1);
     }
 
