@@ -62,7 +62,7 @@ public class RunQueriesThrift {
     if (!cmdline.hasOption(HOST_OPTION) || !cmdline.hasOption(PORT_OPTION)
         || !cmdline.hasOption(QUERIES_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(SearchStatusesThrift.class.getName(), options);
+      formatter.printHelp(RunQueriesThrift.class.getName(), options);
       System.exit(-1);
     }
 

@@ -14,7 +14,7 @@ import cc.twittertools.corpus.data.JsonStatusCorpusReader;
 import cc.twittertools.corpus.data.Status;
 import cc.twittertools.corpus.data.StatusStream;
 
-public class ExtractTweetids {
+public class ExtractTweetidsFromCollection {
   private static final String COLLECTION_OPTION = "collection";
 
   @SuppressWarnings("static-access")
@@ -35,7 +35,7 @@ public class ExtractTweetids {
 
     if (!cmdline.hasOption(COLLECTION_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(ExtractTweetids.class.getName(), options);
+      formatter.printHelp(ExtractTweetidsFromCollection.class.getName(), options);
       System.exit(-1);
     }
 

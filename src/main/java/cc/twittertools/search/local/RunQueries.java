@@ -73,7 +73,7 @@ public class RunQueries {
 
     if (!cmdline.hasOption(QUERIES_OPTION) || !cmdline.hasOption(INDEX_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(SearchStatuses.class.getName(), options);
+      formatter.printHelp(RunQueries.class.getName(), options);
       System.exit(-1);
     }
 
