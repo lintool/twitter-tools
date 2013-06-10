@@ -10,7 +10,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -22,8 +21,6 @@ import cc.twittertools.index.IndexStatuses.StatusField;
  * Reference implementation for indexing statuses.
  */
 public class ExtractTweetidsFromIndex {
-  private static final Logger LOG = Logger.getLogger(ExtractTweetidsFromIndex.class);
-
   private ExtractTweetidsFromIndex() {}
 
   private static final String INDEX_OPTION = "index";
@@ -50,8 +47,6 @@ public class ExtractTweetidsFromIndex {
       System.exit(-1);
     }
 
-    long startTime = System.currentTimeMillis();
-
     File indexLocation = new File(cmdline.getOptionValue(INDEX_OPTION));
     if (!indexLocation.exists()) {
       System.err.println("Error: " + indexLocation + " does not exist!");
@@ -67,7 +62,5 @@ public class ExtractTweetidsFromIndex {
     }
     out.close();
     reader.close();
-
-    LOG.info("Total elapsed time: " + (System.currentTimeMillis() - startTime) + "ms");
   }
 }
