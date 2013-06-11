@@ -31,7 +31,12 @@ public class TrecTopicSet implements Iterable<TrecTopic>{
 
   private static final Pattern TOP_PATTERN = Pattern.compile("<top(.*?)</top>", Pattern.DOTALL);
   private static final Pattern NUM_PATTERN = Pattern.compile("<num> Number: (MB\\d+) </num>", Pattern.DOTALL);
+
+  // This is used in TREC 2011
   private static final Pattern TITLE_PATTERN = Pattern.compile("<title>\\s*(.*?)\\s*</title>", Pattern.DOTALL);
+  // This is used in TREC 2012
+  private static final Pattern TITLE_PATTERN2 = Pattern.compile("<query>\\s*(.*?)\\s*</query>", Pattern.DOTALL);
+
   private static final Pattern TWEETTIME_PATTERN = Pattern.compile("<querytweettime>\\s*(\\d+)\\s*</querytweettime>", Pattern.DOTALL);
 
   public static TrecTopicSet fromFile(String fileName) throws Exception {
@@ -49,10 +54,18 @@ public class TrecTopicSet implements Iterable<TrecTopic>{
       }
       //System.out.println("--" + m.group(1));
       String id = m.group(1);
+      if (id.matches("MB0\\d\\d")) {
+        //System.out.println(id);
+        id = id.replace("MB0", "MB");
+        
+      }
 
       m = TITLE_PATTERN.matcher(top);
       if (!m.find()) {
-        throw new RuntimeException();
+        m = TITLE_PATTERN2.matcher(top);
+        if (!m.find()) {
+          throw new RuntimeException();
+        }
       }
       //System.out.println("--" + m.group(1));
       String text = m.group(1);

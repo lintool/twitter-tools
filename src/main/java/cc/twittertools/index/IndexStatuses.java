@@ -36,7 +36,7 @@ import cc.twittertools.corpus.data.TSVStatusCorpusReader;
 public class IndexStatuses {
   private static final Logger LOG = Logger.getLogger(IndexStatuses.class);
 
-  public static final Analyzer ANALYZER = new TweetAnalyzer(Version.LUCENE_41);
+  public static final Analyzer ANALYZER = new TweetAnalyzer(Version.LUCENE_43);
   public static String corpusFormat = null;
 
   private IndexStatuses() {}
@@ -117,7 +117,7 @@ public class IndexStatuses {
     }
 
     Directory dir = FSDirectory.open(new File(indexPath));
-    IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_41, IndexStatuses.ANALYZER);
+    IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_43, IndexStatuses.ANALYZER);
     config.setOpenMode(OpenMode.CREATE);
 
     LOG.info("collection: " + collectionPath);

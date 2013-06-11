@@ -129,7 +129,7 @@ public class SearchStatuses {
       searcher.setSimilarity(simLMDir);
     }
 
-    QueryParser p = new QueryParser(Version.LUCENE_41, IndexStatuses.StatusField.TEXT.name, IndexStatuses.ANALYZER);
+    QueryParser p = new QueryParser(Version.LUCENE_43, IndexStatuses.StatusField.TEXT.name, IndexStatuses.ANALYZER);
     Query query = p.parse(queryText);
     Filter filter = NumericRangeFilter.newLongRange(StatusField.ID.name, 0L, maxId, true, true);
 

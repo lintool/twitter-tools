@@ -39,7 +39,7 @@ public class TrecSearchHandler implements TrecSearch.Iface {
   private static final Logger LOG = Logger.getLogger(TrecSearchHandler.class);
 
   private static QueryParser QUERY_PARSER =
-      new QueryParser(Version.LUCENE_41, StatusField.TEXT.name, IndexStatuses.ANALYZER);
+      new QueryParser(Version.LUCENE_43, StatusField.TEXT.name, IndexStatuses.ANALYZER);
 
   private final IndexSearcher searcher;
   private final Map<String, String> credentials;

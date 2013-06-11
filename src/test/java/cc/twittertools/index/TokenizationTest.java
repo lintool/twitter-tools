@@ -58,7 +58,7 @@ public class TokenizationTest {
   
   @Test
   public void basic() throws Exception {
-    Analyzer analyzer = new TweetAnalyzer(Version.LUCENE_41);
+    Analyzer analyzer = new TweetAnalyzer(Version.LUCENE_43);
 
     for (int i = 0; i < examples.length; i++) {
       verify((String[]) examples[i][1], parseKeywords(analyzer, (String) examples[i][0]));

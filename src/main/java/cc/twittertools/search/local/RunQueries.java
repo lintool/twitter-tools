@@ -123,7 +123,7 @@ public class RunQueries {
       searcher.setSimilarity(simLMDir);
     }
 
-    QueryParser p = new QueryParser(Version.LUCENE_41, StatusField.TEXT.name,
+    QueryParser p = new QueryParser(Version.LUCENE_43, StatusField.TEXT.name,
         IndexStatuses.ANALYZER);
 
     TrecTopicSet topics = TrecTopicSet.fromFile(topicsFile);
