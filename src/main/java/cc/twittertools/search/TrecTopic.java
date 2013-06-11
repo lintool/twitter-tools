@@ -10,6 +10,7 @@ public class TrecTopic {
   public TrecTopic(String id, String query, long time) {
     this.id = Preconditions.checkNotNull(id);
     this.query = Preconditions.checkNotNull(query);
+    Preconditions.checkArgument(time > 0);
     this.time = time;
   }
 

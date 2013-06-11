@@ -126,7 +126,7 @@ public class RunQueries {
     QueryParser p = new QueryParser(Version.LUCENE_43, StatusField.TEXT.name,
         IndexStatuses.ANALYZER);
 
-    TrecTopicSet topics = TrecTopicSet.fromFile(topicsFile);
+    TrecTopicSet topics = TrecTopicSet.fromFile(new File(topicsFile));
     for ( TrecTopic topic : topics ) {
       Query query = p.parse(topic.getQuery());
       Filter filter = NumericRangeFilter.newLongRange(StatusField.ID.name, 0L,

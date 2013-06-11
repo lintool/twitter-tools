@@ -75,7 +75,7 @@ public class RunQueriesThrift {
     String runtag = cmdline.hasOption(RUNTAG_OPTION) ?
         cmdline.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
 
-    TrecTopicSet topicsFile = TrecTopicSet.fromFile(queryFile);
+    TrecTopicSet topicsFile = TrecTopicSet.fromFile(new File(queryFile));
 
     int numHits = 1000;
     try {

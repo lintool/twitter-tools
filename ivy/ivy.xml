@@ -15,12 +15,9 @@
     <dependency org="commons-io" name="commons-io" rev="2.4" conf="*->*,!sources,!javadoc"/>
     <dependency org="com.ning" name="async-http-client" rev="1.7.5" conf="*->*,!sources,!javadoc"/>
     <dependency org="com.google.code.gson" name="gson" rev="1.6" conf="*->*,!sources,!javadoc"/>
-    <dependency org="org.apache.hadoop" name="hadoop-core" rev="0.20.2" conf="*->*,!sources,!javadoc"/>
-
     <dependency org="org.apache.lucene" name="lucene-core" rev="4.3.0" conf="*->*,!sources,!javadoc"/>
     <dependency org="org.apache.lucene" name="lucene-queryparser" rev="4.3.0" conf="*->*,!sources,!javadoc"/>
     <dependency org="org.apache.solr" name="solr-core" rev="4.3.0" conf="*->*,!sources,!javadoc"/>
-
     <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1" conf="*->*,!sources,!javadoc"/>
     <dependency org="junit" name="junit" rev="4.8.2" conf="*->*,!sources,!javadoc"/>
     <dependency org="log4j" name="log4j" rev="1.2.17" conf="*->*,!sources,!javadoc"/>
