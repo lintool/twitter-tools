@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/gen/java"/>
 	<classpathentry kind="src" path="src/test/java"/>
-	<classpathentry kind="src" path="src/attic/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/activation-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/apache-log4j-extras-1.1.jar"/>

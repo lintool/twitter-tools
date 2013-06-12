@@ -15,9 +15,11 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.FieldInfo.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
@@ -28,7 +30,6 @@ import org.apache.lucene.util.Version;
 import cc.twittertools.corpus.data.JsonStatusCorpusReader;
 import cc.twittertools.corpus.data.Status;
 import cc.twittertools.corpus.data.StatusStream;
-import cc.twittertools.corpus.data.TSVStatusCorpusReader;
 
 /**
  * Reference implementation for indexing statuses.
@@ -66,16 +67,17 @@ public class IndexStatuses {
   private static final String HELP_OPTION = "h";
   private static final String COLLECTION_OPTION = "collection";
   private static final String INDEX_OPTION = "index";
-  private static final String JSON_OPTION = "json";
-  private static final String TSV_OPTION = "tsv";
+  private static final String OPTIMIZE_OPTION = "optimize";
+  private static final String STORE_TERM_VECTORS_OPTION = "store";
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
     Options options = new Options();
 
     options.addOption(new Option(HELP_OPTION, "show help"));
-    options.addOption(new Option(JSON_OPTION, "input in JSON"));
-    options.addOption(new Option(TSV_OPTION, "input in TSV"));
+    options.addOption(new Option(OPTIMIZE_OPTION, "merge indexes into a single segment"));
+    options.addOption(new Option(STORE_TERM_VECTORS_OPTION, "store term vectors"));
+
     options.addOption(OptionBuilder.withArgName("dir").hasArg()
         .withDescription("source collection directory").create(COLLECTION_OPTION));
     options.addOption(OptionBuilder.withArgName("dir").hasArg()
@@ -100,21 +102,23 @@ public class IndexStatuses {
     String collectionPath = cmdline.getOptionValue(COLLECTION_OPTION);
     String indexPath = cmdline.getOptionValue(INDEX_OPTION);
 
+    final FieldType textOptions = new FieldType();
+    textOptions.setIndexed(true);
+    textOptions.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
+    textOptions.setStored(true);
+    textOptions.setTokenized(true);        
+    if (cmdline.hasOption(STORE_TERM_VECTORS_OPTION)) {
+      textOptions.setStoreTermVectors(true);
+    }
+
     long startTime = System.currentTimeMillis();
-
-    StatusStream stream;
-
     File file = new File(collectionPath);
     if (!file.exists()) {
       System.err.println("Error: " + file + " does not exist!");
       System.exit(-1);
     }
 
-    if (cmdline.hasOption(TSV_OPTION)) {
-      stream = new TSVStatusCorpusReader(file);
-    } else {
-      stream = new JsonStatusCorpusReader(file);
-    }
+    StatusStream stream = new JsonStatusCorpusReader(file);
 
     Directory dir = FSDirectory.open(new File(indexPath));
     IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_43, IndexStatuses.ANALYZER);
@@ -137,7 +141,8 @@ public class IndexStatuses {
         doc.add(new LongField(StatusField.ID.name, status.getId(), Field.Store.YES));
         doc.add(new LongField(StatusField.EPOCH.name, status.getEpoch(), Field.Store.YES));
         doc.add(new TextField(StatusField.SCREEN_NAME.name, status.getScreenname(), Store.YES));
-        doc.add(new TextField(StatusField.TEXT.name, status.getText(), Store.YES));
+
+        doc.add(new Field(StatusField.TEXT.name, status.getText(), textOptions));
 
         doc.add(new IntField(StatusField.FRIENDS_COUNT.name, status.getFollowersCount(), Store.YES));
         doc.add(new IntField(StatusField.FOLLOWERS_COUNT.name, status.getFriendsCount(), Store.YES));
@@ -171,9 +176,13 @@ public class IndexStatuses {
       }
 
       LOG.info(String.format("Total of %s statuses added", cnt));
-      LOG.info("Merging segments...");
-      writer.forceMerge(1);
-      LOG.info("Done!");
+      
+      if (cmdline.hasOption(OPTIMIZE_OPTION)) {
+        LOG.info("Merging segments...");
+        writer.forceMerge(1);
+        LOG.info("Done!");
+      }
+
       LOG.info("Total elapsed time: " + (System.currentTimeMillis() - startTime) + "ms");
     } catch (Exception e) {
       e.printStackTrace();
