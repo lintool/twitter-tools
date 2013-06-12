@@ -1,3 +1,12 @@
+Version 1.3.0
+=============
+June 12, 2013
+
++ Package refactoring/renaming and code cleanup.
++ Upgraded to Lucene 4.3
++ Added initial Python client
++ Installed Tweet-specific Lucene analyzer
+
 Version 1.2.0
 =============
 June 6, 2013
