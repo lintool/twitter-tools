@@ -50,7 +50,7 @@ public class SearchStatuses {
   private static final String QUERY_OPTION = "q";
   private static final String RUNTAG_OPTION = "runtag";
   private static final String MAX_ID_OPTION = "max_id";
-  private static final String NUM_HITS_OPTION = "num_hits";
+  private static final String NUM_RESULTS_OPTION = "num_results";
   private static final String SIMILARITY_OPTION = "similarity";
   private static final String VERBOSE_OPTION = "verbose";
 
@@ -68,7 +68,7 @@ public class SearchStatuses {
     options.addOption(OptionBuilder.withArgName("num").hasArg()
         .withDescription("maxid").create(MAX_ID_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
-        .withDescription("number of hits").create(NUM_HITS_OPTION));
+        .withDescription("number of results to return").create(NUM_RESULTS_OPTION));
     options.addOption(OptionBuilder.withArgName("similarity").hasArg()
         .withDescription("similarity to use (BM25, LM)").create(SIMILARITY_OPTION));
     options.addOption(new Option(VERBOSE_OPTION, "print out complete document"));
@@ -102,8 +102,8 @@ public class SearchStatuses {
         cmdline.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
     long maxId = cmdline.hasOption(MAX_ID_OPTION) ?
         Long.parseLong(cmdline.getOptionValue(MAX_ID_OPTION)) : DEFAULT_MAX_ID;
-    int numHits = cmdline.hasOption(NUM_HITS_OPTION) ?
-        Integer.parseInt(cmdline.getOptionValue(NUM_HITS_OPTION)) : DEFAULT_NUM_RESULTS;
+    int numResults = cmdline.hasOption(NUM_RESULTS_OPTION) ?
+        Integer.parseInt(cmdline.getOptionValue(NUM_RESULTS_OPTION)) : DEFAULT_NUM_RESULTS;
     boolean verbose = cmdline.hasOption(VERBOSE_OPTION);
 
     String similarity = "LM";
@@ -133,7 +133,7 @@ public class SearchStatuses {
     Query query = p.parse(queryText);
     Filter filter = NumericRangeFilter.newLongRange(StatusField.ID.name, 0L, maxId, true, true);
 
-    TopDocs rs = searcher.search(query, filter, numHits);
+    TopDocs rs = searcher.search(query, filter, numResults);
 
     int i = 1;
     for (ScoreDoc scoreDoc : rs.scoreDocs) {

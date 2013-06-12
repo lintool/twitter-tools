@@ -22,7 +22,7 @@ public class RunQueriesThrift {
   private static final String HOST_OPTION = "host";
   private static final String PORT_OPTION = "port";
   private static final String QUERIES_OPTION = "queries";
-  private static final String NUM_HITS_OPTION = "num_hits";
+  private static final String NUM_RESULTS_OPTION = "num_results";
   private static final String GROUP_OPTION = "group";
   private static final String TOKEN_OPTION = "token";
   private static final String RUNTAG_OPTION = "runtag";
@@ -41,7 +41,7 @@ public class RunQueriesThrift {
     options.addOption(OptionBuilder.withArgName("file").hasArg()
         .withDescription("file containing topics in TREC format").create(QUERIES_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
-        .withDescription("number of hits to return").create(NUM_HITS_OPTION));
+        .withDescription("number of results to return").create(NUM_RESULTS_OPTION));
     options.addOption(OptionBuilder.withArgName("string").hasArg()
         .withDescription("group id").create(GROUP_OPTION));
     options.addOption(OptionBuilder.withArgName("string").hasArg()
@@ -77,13 +77,13 @@ public class RunQueriesThrift {
 
     TrecTopicSet topicsFile = TrecTopicSet.fromFile(new File(queryFile));
 
-    int numHits = 1000;
+    int numResults = 1000;
     try {
-      if (cmdline.hasOption(NUM_HITS_OPTION)) {
-        numHits = Integer.parseInt(cmdline.getOptionValue(NUM_HITS_OPTION));
+      if (cmdline.hasOption(NUM_RESULTS_OPTION)) {
+        numResults = Integer.parseInt(cmdline.getOptionValue(NUM_RESULTS_OPTION));
       }
     } catch (NumberFormatException e) {
-      System.err.println("Invalid " + NUM_HITS_OPTION + ": " + cmdline.getOptionValue(NUM_HITS_OPTION));
+      System.err.println("Invalid " + NUM_RESULTS_OPTION + ": " + cmdline.getOptionValue(NUM_RESULTS_OPTION));
       System.exit(-1);
     }
 
@@ -99,7 +99,7 @@ public class RunQueriesThrift {
 
     for(cc.twittertools.search.TrecTopic query : topicsFile) {
       List<TResult> results = client.search(query.getQuery(),
-          query.getQueryTweetTime(), numHits);
+          query.getQueryTweetTime(), numResults);
       int i = 1;
       for (TResult result : results) {
         out.println(String.format("%s Q0 %d %d %f %s", query.getId(), result.id, i, result.rsv, runtag));

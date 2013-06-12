@@ -29,7 +29,7 @@ public class SearchStatusesThrift {
   private static final String QUERY_OPTION = "q";
   private static final String RUNTAG_OPTION = "runtag";
   private static final String MAX_ID_OPTION = "max_id";
-  private static final String NUM_HITS_OPTION = "num_hits";
+  private static final String NUM_RESULTS_OPTION = "num_results";
   private static final String GROUP_OPTION = "group";
   private static final String TOKEN_OPTION = "token";
   private static final String VERBOSE_OPTION = "verbose";
@@ -52,7 +52,7 @@ public class SearchStatusesThrift {
     options.addOption(OptionBuilder.withArgName("num").hasArg()
         .withDescription("maxid").create(MAX_ID_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
-        .withDescription("number of hits").create(NUM_HITS_OPTION));
+        .withDescription("number of results to return").create(NUM_RESULTS_OPTION));
     options.addOption(OptionBuilder.withArgName("string").hasArg()
         .withDescription("group id").create(GROUP_OPTION));
     options.addOption(OptionBuilder.withArgName("string").hasArg()
@@ -83,8 +83,8 @@ public class SearchStatusesThrift {
         cmdline.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
     long maxId = cmdline.hasOption(MAX_ID_OPTION) ?
         Long.parseLong(cmdline.getOptionValue(MAX_ID_OPTION)) : DEFAULT_MAX_ID;
-    int numHits = cmdline.hasOption(NUM_HITS_OPTION) ?
-        Integer.parseInt(cmdline.getOptionValue(NUM_HITS_OPTION)) : DEFAULT_NUM_RESULTS;
+    int numResults = cmdline.hasOption(NUM_RESULTS_OPTION) ?
+        Integer.parseInt(cmdline.getOptionValue(NUM_RESULTS_OPTION)) : DEFAULT_NUM_RESULTS;
     boolean verbose = cmdline.hasOption(VERBOSE_OPTION);
 
     String group = cmdline.hasOption(GROUP_OPTION) ? cmdline.getOptionValue(GROUP_OPTION) : null;
@@ -95,11 +95,11 @@ public class SearchStatusesThrift {
     System.err.println("qid: " + qid);
     System.err.println("q: " + query);
     System.err.println("max_id: " + maxId);
-    System.err.println("num_results: " + numHits);
+    System.err.println("num_results: " + numResults);
 
     PrintStream out = new PrintStream(System.out, true, "UTF-8");
 
-    List<TResult> results = client.search(query, maxId, numHits);
+    List<TResult> results = client.search(query, maxId, numResults);
     int i = 1;
     for (TResult result : results) {
       out.println(String.format("%s Q0 %d %d %f %s", qid, result.id, i, result.rsv, runtag));

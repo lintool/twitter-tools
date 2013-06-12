@@ -39,7 +39,7 @@ public class RunQueries {
 
   private static final String INDEX_OPTION = "index";
   private static final String QUERIES_OPTION = "queries";
-  private static final String NUM_HITS_OPTION = "num_hits";
+  private static final String NUM_RESULTS_OPTION = "num_results";
   private static final String SIMILARITY_OPTION = "similarity";
   private static final String RUNTAG_OPTION = "runtag";
   private static final String VERBOSE_OPTION = "verbose";
@@ -53,7 +53,7 @@ public class RunQueries {
     options.addOption(OptionBuilder.withArgName("path").hasArg()
         .withDescription("index location").create(INDEX_OPTION));
     options.addOption(OptionBuilder.withArgName("num").hasArg()
-        .withDescription("number of hits to return").create(NUM_HITS_OPTION));
+        .withDescription("number of results to return").create(NUM_RESULTS_OPTION));
     options.addOption(OptionBuilder.withArgName("file").hasArg()
         .withDescription("file containing topics in TREC format").create(QUERIES_OPTION));
     options.addOption(OptionBuilder.withArgName("similarity").hasArg()
@@ -88,13 +88,13 @@ public class RunQueries {
 
     String topicsFile = cmdline.getOptionValue(QUERIES_OPTION);
     
-    int numHits = 1000;
+    int numResults = 1000;
     try {
-      if (cmdline.hasOption(NUM_HITS_OPTION)) {
-        numHits = Integer.parseInt(cmdline.getOptionValue(NUM_HITS_OPTION));
+      if (cmdline.hasOption(NUM_RESULTS_OPTION)) {
+        numResults = Integer.parseInt(cmdline.getOptionValue(NUM_RESULTS_OPTION));
       }
     } catch (NumberFormatException e) {
-      System.err.println("Invalid " + NUM_HITS_OPTION + ": " + cmdline.getOptionValue(NUM_HITS_OPTION));
+      System.err.println("Invalid " + NUM_RESULTS_OPTION + ": " + cmdline.getOptionValue(NUM_RESULTS_OPTION));
       System.exit(-1);
     }
 
@@ -132,7 +132,7 @@ public class RunQueries {
       Filter filter = NumericRangeFilter.newLongRange(StatusField.ID.name, 0L,
           topic.getQueryTweetTime(), true, true);
 
-      TopDocs rs = searcher.search(query, filter, numHits);
+      TopDocs rs = searcher.search(query, filter, numResults);
 
       int i = 1;
       for (ScoreDoc scoreDoc : rs.scoreDocs) {
