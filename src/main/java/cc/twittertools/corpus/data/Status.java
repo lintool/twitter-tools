@@ -3,6 +3,8 @@ package cc.twittertools.corpus.data;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.apache.log4j.Logger;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -10,6 +12,8 @@ import com.google.gson.JsonParser;
  * Object representing a status.
  */
 public class Status {
+  private static final Logger LOG = Logger.getLogger(Status.class);
+
   private static final JsonParser JSON_PARSER = new JsonParser();
   private static final String DATE_FORMAT = "EEE MMM d k:m:s ZZZZZ yyyy"; //"Fri Mar 29 11:03:41 +0000 2013"; 
   private long id;
@@ -111,8 +115,8 @@ public class Status {
     try {
       obj = (JsonObject) JSON_PARSER.parse(json);
     } catch (Exception e) {
-      e.printStackTrace();
       // Catch any malformed JSON.
+      LOG.error("Error parsing: " + json);
       return null;
     }
 
