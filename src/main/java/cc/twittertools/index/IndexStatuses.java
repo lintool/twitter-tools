@@ -1,6 +1,11 @@
 package cc.twittertools.index;
 
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -26,6 +31,7 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.apache.tools.bzip2.CBZip2InputStream;
 
 import cc.twittertools.corpus.data.JsonStatusCorpusReader;
 import cc.twittertools.corpus.data.Status;
@@ -67,6 +73,7 @@ public class IndexStatuses {
   private static final String HELP_OPTION = "h";
   private static final String COLLECTION_OPTION = "collection";
   private static final String INDEX_OPTION = "index";
+  private static final String DELETES_OPTION = "deletes";
   private static final String OPTIMIZE_OPTION = "optimize";
   private static final String STORE_TERM_VECTORS_OPTION = "store";
 
@@ -82,6 +89,8 @@ public class IndexStatuses {
         .withDescription("source collection directory").create(COLLECTION_OPTION));
     options.addOption(OptionBuilder.withArgName("dir").hasArg()
         .withDescription("index location").create(INDEX_OPTION));
+    options.addOption(OptionBuilder.withArgName("file").hasArg()
+        .withDescription("file with deleted tweetids").create(DELETES_OPTION));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -111,6 +120,33 @@ public class IndexStatuses {
       textOptions.setStoreTermVectors(true);
     }
 
+    LOG.info("collection: " + collectionPath);
+    LOG.info("index: " + indexPath);
+
+    LongOpenHashSet deletes = null;
+    if (cmdline.hasOption(DELETES_OPTION)) {
+      deletes = new LongOpenHashSet();
+      File deletesFile = new File(cmdline.getOptionValue(DELETES_OPTION));
+      if (!deletesFile.exists()) {
+        System.err.println("Error: " + deletesFile + " does not exist!");
+        System.exit(-1);
+      }
+      LOG.info("Reading deletes from " + deletesFile);
+      
+      FileInputStream fin = new FileInputStream(deletesFile);
+      byte[] ignoreBytes = new byte[2];
+      fin.read(ignoreBytes); // "B", "Z" bytes from commandline tools
+      BufferedReader br = new BufferedReader(new InputStreamReader(new CBZip2InputStream(fin)));
+
+      String s;
+      while ((s = br.readLine()) != null) {
+        deletes.add(Long.parseLong(s));
+      }
+      br.close();
+      fin.close();
+      LOG.info("Read " + deletes.size() + " tweetids from deletes file.");
+    }
+
     long startTime = System.currentTimeMillis();
     File file = new File(collectionPath);
     if (!file.exists()) {
@@ -124,15 +160,17 @@ public class IndexStatuses {
     IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_43, IndexStatuses.ANALYZER);
     config.setOpenMode(OpenMode.CREATE);
 
-    LOG.info("collection: " + collectionPath);
-    LOG.info("index: " + indexPath);
-
     IndexWriter writer = new IndexWriter(dir, config);
     int cnt = 0;
     Status status;
     try {
       while ((status = stream.next()) != null) {
         if (status.getText() == null) {
+          continue;
+        }
+
+        // Skip deletes tweetids.
+        if (deletes != null && deletes.contains(status.getId())) {
           continue;
         }
 

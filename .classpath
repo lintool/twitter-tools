@@ -74,5 +74,8 @@
 	<classpathentry kind="lib" path="lib/twitter4j-stream-3.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/wstx-asl-3.2.7.jar"/>
 	<classpathentry kind="lib" path="lib/zookeeper-3.4.5.jar"/>
+	<classpathentry kind="lib" path="lib/fastutil-6.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/ant-1.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/ant-launcher-1.9.1.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
