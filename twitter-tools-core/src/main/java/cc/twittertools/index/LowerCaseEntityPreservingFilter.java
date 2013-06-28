@@ -10,7 +10,7 @@ import org.apache.lucene.analysis.tokenattributes.KeywordAttribute;
 
 import com.twitter.Regex;
 
-public class LowerCaseEntityPreservingFilter extends TokenFilter {
+public final class LowerCaseEntityPreservingFilter extends TokenFilter {
 
   private static final int INVALID_ENTITY = 0;
   private static final int VALID_HASHTAG = 1;

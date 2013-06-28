@@ -11,7 +11,7 @@ import org.apache.lucene.util.Version;
 
 import com.google.common.base.Preconditions;
 
-public class TweetAnalyzer extends Analyzer {
+public final class TweetAnalyzer extends Analyzer {
   private final Version matchVersion;
   private final boolean stemming;
 

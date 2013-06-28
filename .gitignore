@@ -1,9 +1,6 @@
-build/
-/dist/
-lib/
-ivy/ivy.jar
-docs/api
-test/*
+twitter-tools-core/.classpath
+twitter-tools-core/.project
+twitter-tools-core/target/
 etc/run.sh
 etc/trec_eval.9.0/
 etc/trec_eval
