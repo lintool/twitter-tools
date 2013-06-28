@@ -140,7 +140,11 @@ public class IndexStatuses {
 
       String s;
       while ((s = br.readLine()) != null) {
-        deletes.add(Long.parseLong(s));
+        if (s.contains("\t")) {
+          deletes.add(Long.parseLong(s.split("\t")[0]));
+        } else {
+          deletes.add(Long.parseLong(s));
+        }
       }
       br.close();
       fin.close();
