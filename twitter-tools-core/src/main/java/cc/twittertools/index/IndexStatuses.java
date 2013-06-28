@@ -73,6 +73,7 @@ public class IndexStatuses {
   private static final String HELP_OPTION = "h";
   private static final String COLLECTION_OPTION = "collection";
   private static final String INDEX_OPTION = "index";
+  private static final String MAX_ID_OPTION = "max_id";
   private static final String DELETES_OPTION = "deletes";
   private static final String OPTIMIZE_OPTION = "optimize";
   private static final String STORE_TERM_VECTORS_OPTION = "store";
@@ -91,6 +92,8 @@ public class IndexStatuses {
         .withDescription("index location").create(INDEX_OPTION));
     options.addOption(OptionBuilder.withArgName("file").hasArg()
         .withDescription("file with deleted tweetids").create(DELETES_OPTION));
+    options.addOption(OptionBuilder.withArgName("id").hasArg()
+        .withDescription("max id").create(MAX_ID_OPTION));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -140,13 +143,23 @@ public class IndexStatuses {
 
       String s;
       while ((s = br.readLine()) != null) {
-        deletes.add(Long.parseLong(s));
+        if (s.contains("\t")) {
+          deletes.add(Long.parseLong(s.split("\t")[0]));
+        } else {
+          deletes.add(Long.parseLong(s));
+        }
       }
       br.close();
       fin.close();
       LOG.info("Read " + deletes.size() + " tweetids from deletes file.");
     }
 
+    long maxId = Long.MAX_VALUE;
+    if (cmdline.hasOption(MAX_ID_OPTION)) {
+      maxId = Long.parseLong(cmdline.getOptionValue(MAX_ID_OPTION));
+      LOG.info("index: " + maxId);
+    }
+    
     long startTime = System.currentTimeMillis();
     File file = new File(collectionPath);
     if (!file.exists()) {
@@ -171,6 +184,10 @@ public class IndexStatuses {
 
         // Skip deletes tweetids.
         if (deletes != null && deletes.contains(status.getId())) {
+          continue;
+        }
+
+        if (status.getId() > maxId) {
           continue;
         }
 
