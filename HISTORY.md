@@ -1,11 +1,18 @@
+Version 1.4.0
+=============
+July 3, 2013
+
++ Switched over from Ant to Maven for build management, with artifactId `twitter-tools-core`
+
 Version 1.3.0
 =============
 June 12, 2013
 
-+ Package refactoring/renaming and code cleanup.
++ Package refactoring/renaming and code cleanup
 + Upgraded to Lucene 4.3
 + Added initial Python client
 + Installed Tweet-specific Lucene analyzer
++ Added simple Perl scripts for processing deletes
 
 Version 1.2.0
 =============
