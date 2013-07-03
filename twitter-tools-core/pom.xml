@@ -60,8 +60,16 @@
               <name>RunQueriesThrift</name>
             </program>
             <program>
+              <mainClass>cc.twittertools.search.local.RunQueries</mainClass>
+              <name>RunQueries</name>
+            </program>
+            <program>
               <mainClass>cc.twittertools.search.api.SearchStatusesThrift</mainClass>
               <name>SearchStatusesThrift</name>
+            </program>
+            <program>
+              <mainClass>cc.twittertools.search.local.SearchStatuses</mainClass>
+              <name>SearchStatuses</name>
             </program>
           </programs>
         </configuration>
