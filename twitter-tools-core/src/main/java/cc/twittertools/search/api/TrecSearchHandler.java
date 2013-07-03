@@ -34,12 +34,9 @@ import org.apache.lucene.search.NumericRangeFilter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
-import org.apache.solr.common.params.SolrParams;
-import org.apache.solr.common.util.NamedList;
-import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
 import cc.twittertools.index.IndexStatuses;
 import cc.twittertools.index.IndexStatuses.StatusField;
@@ -70,14 +67,7 @@ public class TrecSearchHandler implements TrecSearch.Iface {
 
     IndexReader reader = DirectoryReader.open(FSDirectory.open(indexPath));
     searcher = new IndexSearcher(reader);
-
-    NamedList<Double> paramNamedList = new NamedList<Double>();
-    paramNamedList.add("mu", 2500.0);
-    SolrParams params = SolrParams.toSolrParams(paramNamedList);
-    LMDirichletSimilarityFactory factory = new LMDirichletSimilarityFactory();
-    factory.init(params);
-    Similarity simLMDir = factory.getSimilarity();
-    searcher.setSimilarity(simLMDir);
+    searcher.setSimilarity(new LMDirichletSimilarity(2500.0f));
   }
 
   public List<TResult> search(TQuery query) throws TrecSearchException {
