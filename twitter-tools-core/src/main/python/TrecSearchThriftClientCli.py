@@ -10,10 +10,6 @@ To execute this script:
 
 """
 
-# Path the the automatically generated thrift files
-# Alternatively, the files in the /src/gen/python directory can be added to your python path
-sys.path.append('../../gen/python')
-
 from Search import TrecSearch, ttypes
 
 from thrift import Thrift
