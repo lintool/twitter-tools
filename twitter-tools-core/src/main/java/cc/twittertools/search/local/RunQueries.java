@@ -144,7 +144,7 @@ public class RunQueries {
       for (ScoreDoc scoreDoc : rs.scoreDocs) {
         Document hit = searcher.doc(scoreDoc.doc);
         out.println(String.format("%s Q0 %s %d %f %s", topic.getId(),
-            hit.getField(StatusField.ID.name).stringValue(), i, scoreDoc.score, runtag));
+            hit.getField(StatusField.ID.name).numericValue(), i, scoreDoc.score, runtag));
         if ( verbose) {
           out.println("# " + hit.toString().replaceAll("[\\n\\r]+", " "));
         }

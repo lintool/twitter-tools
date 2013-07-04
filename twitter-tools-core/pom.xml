@@ -56,6 +56,10 @@
               <name>IndexStatuses</name>
             </program>
             <program>
+              <mainClass>cc.twittertools.search.api.TrecSearchThriftServer</mainClass>
+              <name>TrecSearchThriftServer</name>
+            </program>
+            <program>
               <mainClass>cc.twittertools.search.api.RunQueriesThrift</mainClass>
               <name>RunQueriesThrift</name>
             </program>
