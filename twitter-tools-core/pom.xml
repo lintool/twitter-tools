@@ -54,10 +54,16 @@
             <program>
               <mainClass>cc.twittertools.index.IndexStatuses</mainClass>
               <name>IndexStatuses</name>
+              <jvmSettings>
+                <maxMemorySize>16g</maxMemorySize>
+              </jvmSettings>
             </program>
             <program>
               <mainClass>cc.twittertools.search.api.TrecSearchThriftServer</mainClass>
               <name>TrecSearchThriftServer</name>
+              <jvmSettings>
+                <maxMemorySize>16g</maxMemorySize>
+              </jvmSettings>
             </program>
             <program>
               <mainClass>cc.twittertools.search.api.RunQueriesThrift</mainClass>
