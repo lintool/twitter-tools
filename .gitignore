@@ -4,9 +4,9 @@ twitter-tools-core/target/
 etc/run.sh
 etc/trec_eval.9.0/
 etc/trec_eval
-data/qrels.microblog2011.txt
-data/qrels.microblog2012.txt
-data/queries.trec2005efficiency.txt
+twitter-tools-core/data/qrels.microblog2011.txt
+twitter-tools-core/data/qrels.microblog2012.txt
+twitter-tools-core/data/queries.trec2005efficiency.txt
 *~
 .DS_Store
 *.pyc

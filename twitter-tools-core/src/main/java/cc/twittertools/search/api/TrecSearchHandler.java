@@ -34,12 +34,9 @@ import org.apache.lucene.search.NumericRangeFilter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
-import org.apache.solr.common.params.SolrParams;
-import org.apache.solr.common.util.NamedList;
-import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
 import cc.twittertools.index.IndexStatuses;
 import cc.twittertools.index.IndexStatuses.StatusField;
@@ -70,14 +67,7 @@ public class TrecSearchHandler implements TrecSearch.Iface {
 
     IndexReader reader = DirectoryReader.open(FSDirectory.open(indexPath));
     searcher = new IndexSearcher(reader);
-
-    NamedList<Double> paramNamedList = new NamedList<Double>();
-    paramNamedList.add("mu", 2500.0);
-    SolrParams params = SolrParams.toSolrParams(paramNamedList);
-    LMDirichletSimilarityFactory factory = new LMDirichletSimilarityFactory();
-    factory.init(params);
-    Similarity simLMDir = factory.getSimilarity();
-    searcher.setSimilarity(simLMDir);
+    searcher.setSimilarity(new LMDirichletSimilarity(2500.0f));
   }
 
   public List<TResult> search(TQuery query) throws TrecSearchException {
@@ -98,48 +88,49 @@ public class TrecSearchHandler implements TrecSearch.Iface {
           NumericRangeFilter.newLongRange(StatusField.ID.name, 0L, query.max_id, true, true);
 
       Query q = QUERY_PARSER.parse(query.text);
-      TopDocs rs = searcher.search(q, filter, query.num_results);
+      int num = query.num_results > 10000 ? 10000 : query.num_results;
+      TopDocs rs = searcher.search(q, filter, num);
       for (ScoreDoc scoreDoc : rs.scoreDocs) {
         Document hit = searcher.doc(scoreDoc.doc);
 
         TResult p = new TResult();
-        // TODO: Fix String parsing.
-        p.id = Long.parseLong(hit.get(StatusField.ID.name));
+        p.id = (Long) hit.getField(StatusField.ID.name).numericValue();
         p.screen_name = hit.get(StatusField.SCREEN_NAME.name);
-        p.epoch = Long.parseLong(hit.get(StatusField.EPOCH.name));
+        p.epoch = (Long) hit.getField(StatusField.EPOCH.name).numericValue();
         p.text = hit.get(StatusField.TEXT.name);
         p.rsv = scoreDoc.score;
 
-        p.followers_count = Integer.parseInt(hit.get(StatusField.FOLLOWERS_COUNT.name));
-        p.statuses_count = Integer.parseInt(hit.get(StatusField.STATUSES_COUNT.name));
+        p.followers_count = (Integer) hit.getField(StatusField.FOLLOWERS_COUNT.name).numericValue();
+        p.statuses_count = (Integer) hit.getField(StatusField.STATUSES_COUNT.name).numericValue();
 
         if ( hit.get(StatusField.LANG.name) != null) {
           p.lang = hit.get(StatusField.LANG.name);
         }
 
         if ( hit.get(StatusField.IN_REPLY_TO_STATUS_ID.name) != null) {
-          p.in_reply_to_status_id = Long.parseLong(hit.get(StatusField.IN_REPLY_TO_STATUS_ID.name));
+          p.in_reply_to_status_id = (Long) hit.getField(StatusField.IN_REPLY_TO_STATUS_ID.name).numericValue();
         }
 
         if ( hit.get(StatusField.IN_REPLY_TO_USER_ID.name) != null) {
-          p.in_reply_to_user_id = Long.parseLong(hit.get(StatusField.IN_REPLY_TO_USER_ID.name));
+          p.in_reply_to_user_id = (Long) hit.getField(StatusField.IN_REPLY_TO_USER_ID.name).numericValue();
         }
 
         if ( hit.get(StatusField.RETWEETED_STATUS_ID.name) != null) {
-          p.retweeted_status_id = Long.parseLong(hit.get(StatusField.RETWEETED_STATUS_ID.name));
+          p.retweeted_status_id = (Long) hit.getField(StatusField.RETWEETED_STATUS_ID.name).numericValue();
         }
 
         if ( hit.get(StatusField.RETWEETED_USER_ID.name) != null) {
-          p.retweeted_user_id = Long.parseLong(hit.get(StatusField.RETWEETED_USER_ID.name));
+          p.retweeted_user_id = (Long) hit.getField(StatusField.RETWEETED_USER_ID.name).numericValue();
         }
 
         if ( hit.get(StatusField.RETWEET_COUNT.name) != null) {
-          p.retweeted_count = Integer.parseInt(hit.get(StatusField.RETWEET_COUNT.name));
+          p.retweeted_count = (Integer) hit.getField(StatusField.RETWEET_COUNT.name).numericValue();
         }
 
         results.add(p);
       }
     } catch (Exception e) {
+      e.printStackTrace();
       throw new TrecSearchException(e.getMessage());
     }
 

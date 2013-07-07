@@ -1,3 +1,10 @@
+Version 1.4.1
+=============
+July 7, 2013
+
++ Cleaned up dependencies and eliminated direct dependency on Solr
++ Fixed unnecessary string -> int/long parsing in retrieval
+
 Version 1.4.0
 =============
 July 3, 2013

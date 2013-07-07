@@ -38,12 +38,9 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.similarities.BM25Similarity;
-import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
-import org.apache.solr.common.params.SolrParams;
-import org.apache.solr.common.util.NamedList;
-import org.apache.solr.search.similarities.LMDirichletSimilarityFactory;
 
 import cc.twittertools.index.IndexStatuses;
 import cc.twittertools.index.IndexStatuses.StatusField;
@@ -127,16 +124,9 @@ public class RunQueries {
     IndexSearcher searcher = new IndexSearcher(reader);
 
     if (similarity.equalsIgnoreCase("BM25")) {
-      Similarity simBM25 = new BM25Similarity();
-      searcher.setSimilarity(simBM25);
+      searcher.setSimilarity(new BM25Similarity());
     } else if (similarity.equalsIgnoreCase("LM")) {
-      NamedList<Double> paramNamedList = new NamedList<Double>();
-      paramNamedList.add("mu", 2500.0);
-      SolrParams params = SolrParams.toSolrParams(paramNamedList);
-      LMDirichletSimilarityFactory factory = new LMDirichletSimilarityFactory();
-      factory.init(params);
-      Similarity simLMDir = factory.getSimilarity();
-      searcher.setSimilarity(simLMDir);
+      searcher.setSimilarity(new LMDirichletSimilarity(2500.0f));
     }
 
     QueryParser p = new QueryParser(Version.LUCENE_43, StatusField.TEXT.name,
@@ -154,7 +144,7 @@ public class RunQueries {
       for (ScoreDoc scoreDoc : rs.scoreDocs) {
         Document hit = searcher.doc(scoreDoc.doc);
         out.println(String.format("%s Q0 %s %d %f %s", topic.getId(),
-            hit.getField(StatusField.ID.name).stringValue(), i, scoreDoc.score, runtag));
+            hit.getField(StatusField.ID.name).numericValue(), i, scoreDoc.score, runtag));
         if ( verbose) {
           out.println("# " + hit.toString().replaceAll("[\\n\\r]+", " "));
         }
