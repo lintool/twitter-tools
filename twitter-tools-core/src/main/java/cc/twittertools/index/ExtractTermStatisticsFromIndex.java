@@ -38,6 +38,7 @@ import cc.twittertools.index.IndexStatuses.StatusField;
 
 public class ExtractTermStatisticsFromIndex {
   private static final String INDEX_OPTION = "index";
+  private static final String MIN_OPTION = "min";
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
@@ -45,6 +46,8 @@ public class ExtractTermStatisticsFromIndex {
 
     options.addOption(OptionBuilder.withArgName("dir").hasArg()
         .withDescription("index").create(INDEX_OPTION));
+    options.addOption(OptionBuilder.withArgName("num").hasArg()
+        .withDescription("min").create(MIN_OPTION));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -62,6 +65,8 @@ public class ExtractTermStatisticsFromIndex {
     }
 
     String indexLocation = cmdline.getOptionValue(INDEX_OPTION);
+    int min = cmdline.hasOption(MIN_OPTION) ?
+        Integer.parseInt(cmdline.getOptionValue(MIN_OPTION)) : 1;
 
     PrintStream out = new PrintStream(System.out, true, "UTF-8");
 
@@ -69,15 +74,27 @@ public class ExtractTermStatisticsFromIndex {
     Terms terms = SlowCompositeReaderWrapper.wrap(reader).terms(StatusField.TEXT.name);
     TermsEnum termsEnum = terms.iterator(TermsEnum.EMPTY);
 
+    long missingCnt = 0;
+    int skippedTerms = 0;
     BytesRef bytes = new BytesRef();
     while ( (bytes = termsEnum.next()) != null) {
       byte[] buf = new byte[bytes.length];
       System.arraycopy(bytes.bytes, 0, buf, 0, bytes.length);
       String term = new String(buf, "UTF-8");
-      out.println(term + "\t" + termsEnum.docFreq() + "\t" + termsEnum.totalTermFreq());
+      int df = termsEnum.docFreq();
+      long cf = termsEnum.totalTermFreq();
+
+      if ( df < min) {
+        skippedTerms++;
+        missingCnt += cf;
+        continue;
+      }
+
+      out.println(term + "\t" + df + "\t" + cf);
     }
 
     reader.close();
     out.close();
+    System.err.println("skipped terms: " + skippedTerms + ", cnt: " + missingCnt);
   }
 }
