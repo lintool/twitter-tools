@@ -5,8 +5,8 @@ This is a collection of tools for the TREC Microblog Track, which contains the o
 
 Currently, the project has a single Maven artifact `twitter-tools-core`. The latest releases of Maven artifacts are available at [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Ccc.twittertools).
 
-Getting Stated
---------------
+Getting Started
+---------------
 
 You can clone the repo with the following command:
 
