@@ -85,6 +85,10 @@
               <mainClass>cc.twittertools.index.ExtractTermStatisticsFromIndex</mainClass>
               <name>ExtractTermStatisticsFromIndex</name>
             </program>
+            <program>
+              <mainClass>cc.twittertools.util.ExtractSubcollection</mainClass>
+              <name>ExtractSubcollection</name>
+            </program>
           </programs>
         </configuration>
       </plugin>
