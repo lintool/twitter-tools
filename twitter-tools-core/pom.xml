@@ -89,6 +89,13 @@
               <mainClass>cc.twittertools.util.ExtractSubcollection</mainClass>
               <name>ExtractSubcollection</name>
             </program>
+            <program>
+              <mainClass>cc.twittertools.util.VerifySubcollection</mainClass>
+              <name>VerifySubcollection</name>
+              <jvmSettings>
+                <maxMemorySize>4g</maxMemorySize>
+              </jvmSettings>
+            </program>
           </programs>
         </configuration>
       </plugin>
