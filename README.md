@@ -38,3 +38,9 @@ License
 -------
 
 Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+
+
+Acknowledgements
+----------------
+
+This work is supported in part by the National Science Foundation under award [IIS-1218043](http://www.nsf.gov/awardsearch/showAward?AWD_ID=1218043). Any opinions, findings, and conclusions or recommendations expressed are those of the researchers and do not necessarily reflect the views of the National Science Foundation.
