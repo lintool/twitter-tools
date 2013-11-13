@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -34,7 +35,7 @@ import cc.twittertools.search.TrecTopicSet;
 import cc.twittertools.thrift.gen.TResult;
 import cc.twittertools.thrift.gen.TResultComparator;
 
-public class RunQueriesThrift {
+public class RunQueriesBaselineThrift {
   private static final String DEFAULT_RUNTAG = "lucene4lm";
 
   private static final String HOST_OPTION = "host";
@@ -46,7 +47,7 @@ public class RunQueriesThrift {
   private static final String RUNTAG_OPTION = "runtag";
   private static final String VERBOSE_OPTION = "verbose";
 
-  private RunQueriesThrift() {}
+  private RunQueriesBaselineThrift() {}
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
@@ -119,25 +120,48 @@ public class RunQueriesThrift {
       List<TResult> results = client.search(query.getQuery(),
           query.getQueryTweetTime(), numResults);
       int i = 1;
+      double rsv = 0;
+      List<TResultComparator> tempResultsComparator = new ArrayList<TResultComparator>();
 	  ArrayList<TResultComparator> tempList = new ArrayList<TResultComparator>();
       for (TResult result : results) {
-		boolean insert = true;
-		for (TResultComparator tresult : tempList) {
-	 	   if (new TResultComparator(result).equals(tresult)) {
-			   insert = false;
-			   break;
-		   }
-	    }
-		if (insert) {
-	       out.println(String.format("%s Q0 %d %d %f %s", query.getId(), result.id, i, result.rsv, runtag));
-	       if ( verbose) {
-	         out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
-	       }
-	       i++;
-		   tempList.add(new TResultComparator(result));
-		}
+        if (result.getRetweeted_status_id() == 0) {
+		  boolean insert = true;
+		  for (TResultComparator tresult : tempList) {
+		    if (new TResultComparator(result).equals(tresult)) {
+		      insert = false;
+			  break;
+			}
+		  }
+		  if (insert) {
+            if (Math.abs(result.rsv - rsv) > 0.000001) {
+              i = printTResults(tempResultsComparator, query, runtag, i, verbose, out);
+              tempResultsComparator.clear();
+              tempResultsComparator.add(new TResultComparator(result));
+              rsv = result.rsv;
+            } else {
+              tempResultsComparator.add(new TResultComparator(result));
+		    }
+			tempList.add(new TResultComparator(result));
+          }
+        }
       }
+      printTResults(tempResultsComparator, query, runtag, i, verbose, out);
     }
     out.close();
+  }
+  public static int printTResults(List<TResultComparator> tempResultsComparator, cc.twittertools.search.TrecTopic query, String runtag, int i, boolean verbose, PrintStream out) {
+    Collections.sort(tempResultsComparator);
+    int index = 0;
+    for (TResultComparator tempResultComparator : tempResultsComparator) {
+      TResult tempTResult = tempResultComparator.getTResult();
+      double adjust = 0.000001 / tempResultsComparator.size();
+      out.println(String.format("%s Q0 %d %d %.9f %s", query.getId(), tempTResult.id, i, tempTResult.rsv + adjust * index, runtag));
+      if (verbose) {
+        out.println("# " + tempTResult.toString().replaceAll("[\\n\\r]+", " "));
+      }
+      i++;
+      index++;
+    }
+    return i;
   }
 }

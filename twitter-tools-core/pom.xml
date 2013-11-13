@@ -69,6 +69,10 @@
               <mainClass>cc.twittertools.search.api.RunQueriesThrift</mainClass>
               <name>RunQueriesThrift</name>
             </program>
+	    <program>
+              <mainClass>cc.twittertools.search.api.RunQueriesBaselineThrift</mainClass>
+              <name>RunQueriesBaelineThrift</name>
+            </program>
             <program>
               <mainClass>cc.twittertools.search.local.RunQueries</mainClass>
               <name>RunQueries</name>
