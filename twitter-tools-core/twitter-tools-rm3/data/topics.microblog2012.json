@@ -1,0 +1,1168 @@
+{
+  "queries": [
+    {
+      "title": "MB51",
+      "text": "British Government cuts",
+      "epoch": "1.297209406E9",
+      "querytweettime": "35124912364457984",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "British"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Government"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cuts"
+        }
+      ]
+    },
+    {
+      "title": "MB52",
+      "text": "Bedbug epidemic",
+      "epoch": "1.296750298E9",
+      "querytweettime": "33199275462627328",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Bedbug"
+        },
+        {
+          "weight": 1.0,
+          "feature": "epidemic"
+        }
+      ]
+    },
+    {
+      "title": "MB53",
+      "text": "river boat cruises",
+      "epoch": "1.297209107E9",
+      "querytweettime": "35123660406657024",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "river"
+        },
+        {
+          "weight": 1.0,
+          "feature": "boat"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cruises"
+        }
+      ]
+    },
+    {
+      "title": "MB54",
+      "text": "The Daily",
+      "epoch": "1.297140584E9",
+      "querytweettime": "34836253874593792",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "The"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Daily"
+        }
+      ]
+    },
+    {
+      "title": "MB55",
+      "text": "berries and weight loss",
+      "epoch": "1.297127651E9",
+      "querytweettime": "34782005925249024",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "berries"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "weight"
+        },
+        {
+          "weight": 1.0,
+          "feature": "loss"
+        }
+      ]
+    },
+    {
+      "title": "MB56",
+      "text": "Hugo Chavez",
+      "epoch": "1.296792308E9",
+      "querytweettime": "33375478505013248",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Hugo"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Chavez"
+        }
+      ]
+    },
+    {
+      "title": "MB57",
+      "text": "Chicago blizzard",
+      "epoch": "1.296683586E9",
+      "querytweettime": "32919462151720960",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Chicago"
+        },
+        {
+          "weight": 1.0,
+          "feature": "blizzard"
+        }
+      ]
+    },
+    {
+      "title": "MB58",
+      "text": "FDA approval of drugs",
+      "epoch": "1.297189916E9",
+      "querytweettime": "35043166813949952",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "FDA"
+        },
+        {
+          "weight": 1.0,
+          "feature": "approval"
+        },
+        {
+          "weight": 1.0,
+          "feature": "of"
+        },
+        {
+          "weight": 1.0,
+          "feature": "drugs"
+        }
+      ]
+    },
+    {
+      "title": "MB59",
+      "text": "Glen Beck",
+      "epoch": "1.297182692E9",
+      "querytweettime": "35012866822119424",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Glen"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Beck"
+        }
+      ]
+    },
+    {
+      "title": "MB60",
+      "text": "fishing guidebooks",
+      "epoch": "1.297045339E9",
+      "querytweettime": "34436767029399552",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "fishing"
+        },
+        {
+          "weight": 1.0,
+          "feature": "guidebooks"
+        }
+      ]
+    },
+    {
+      "title": "MB61",
+      "text": "Hu Jintao visit to the United States",
+      "epoch": "1.297106962E9",
+      "querytweettime": "34695232985645056",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Hu"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Jintao"
+        },
+        {
+          "weight": 1.0,
+          "feature": "visit"
+        },
+        {
+          "weight": 1.0,
+          "feature": "to"
+        },
+        {
+          "weight": 1.0,
+          "feature": "the"
+        },
+        {
+          "weight": 1.0,
+          "feature": "United"
+        },
+        {
+          "weight": 1.0,
+          "feature": "States"
+        }
+      ]
+    },
+    {
+      "title": "MB62",
+      "text": "Starbucks Trenta cup",
+      "epoch": "1.297206141E9",
+      "querytweettime": "35111217613766657",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Starbucks"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Trenta"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cup"
+        }
+      ]
+    },
+    {
+      "title": "MB63",
+      "text": "Bieber and Stewart trading places",
+      "epoch": "1.296938061E9",
+      "querytweettime": "33986811273420800",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Bieber"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Stewart"
+        },
+        {
+          "weight": 1.0,
+          "feature": "trading"
+        },
+        {
+          "weight": 1.0,
+          "feature": "places"
+        }
+      ]
+    },
+    {
+      "title": "MB64",
+      "text": "red light cameras",
+      "epoch": "1.297180243E9",
+      "querytweettime": "35002593419726848",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "red"
+        },
+        {
+          "weight": 1.0,
+          "feature": "light"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cameras"
+        }
+      ]
+    },
+    {
+      "title": "MB65",
+      "text": "Michelle Obama s obesity campaign",
+      "epoch": "1.297045859E9",
+      "querytweettime": "34438945404092416",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Michelle"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Obama s"
+        },
+        {
+          "weight": 1.0,
+          "feature": "obesity"
+        },
+        {
+          "weight": 1.0,
+          "feature": "campaign"
+        }
+      ]
+    },
+    {
+      "title": "MB66",
+      "text": "Journalists treatment in Egypt",
+      "epoch": "1.296865923E9",
+      "querytweettime": "33684239400566784",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Journalists"
+        },
+        {
+          "weight": 1.0,
+          "feature": "treatment"
+        },
+        {
+          "weight": 1.0,
+          "feature": "in"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Egypt"
+        }
+      ]
+    },
+    {
+      "title": "MB67",
+      "text": "Boston Celtics championship",
+      "epoch": "1.297039978E9",
+      "querytweettime": "34414281218859008",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Boston"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Celtics"
+        },
+        {
+          "weight": 1.0,
+          "feature": "championship"
+        }
+      ]
+    },
+    {
+      "title": "MB68",
+      "text": "Charlie Sheen rehab",
+      "epoch": "1.296591293E9",
+      "querytweettime": "32532358276063232",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Charlie"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Sheen"
+        },
+        {
+          "weight": 1.0,
+          "feature": "rehab"
+        }
+      ]
+    },
+    {
+      "title": "MB69",
+      "text": "high taxes",
+      "epoch": "1.297197263E9",
+      "querytweettime": "35073980729802752",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "high"
+        },
+        {
+          "weight": 1.0,
+          "feature": "taxes"
+        }
+      ]
+    },
+    {
+      "title": "MB70",
+      "text": "farmers markets opinions",
+      "epoch": "1.297115095E9",
+      "querytweettime": "34729342210678784",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "farmers"
+        },
+        {
+          "weight": 1.0,
+          "feature": "markets"
+        },
+        {
+          "weight": 1.0,
+          "feature": "opinions"
+        }
+      ]
+    },
+    {
+      "title": "MB71",
+      "text": "Australian Open Djokovic vs. Murray",
+      "epoch": "1.29639098E9",
+      "querytweettime": "31692185296441344",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Australian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Open"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Djokovic"
+        },
+        {
+          "weight": 1.0,
+          "feature": "vs."
+        },
+        {
+          "weight": 1.0,
+          "feature": "Murray"
+        }
+      ]
+    },
+    {
+      "title": "MB72",
+      "text": "Kardashians opinions",
+      "epoch": "1.296508955E9",
+      "querytweettime": "32187009527193600",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Kardashians"
+        },
+        {
+          "weight": 1.0,
+          "feature": "opinions"
+        }
+      ]
+    },
+    {
+      "title": "MB73",
+      "text": "Iran nuclear program",
+      "epoch": "1.29682331E9",
+      "querytweettime": "33505508052701184",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Iran"
+        },
+        {
+          "weight": 1.0,
+          "feature": "nuclear"
+        },
+        {
+          "weight": 1.0,
+          "feature": "program"
+        }
+      ]
+    },
+    {
+      "title": "MB74",
+      "text": "credit card debt",
+      "epoch": "1.297062586E9",
+      "querytweettime": "34509105032859648",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "credit"
+        },
+        {
+          "weight": 1.0,
+          "feature": "card"
+        },
+        {
+          "weight": 1.0,
+          "feature": "debt"
+        }
+      ]
+    },
+    {
+      "title": "MB75",
+      "text": "Aguilera super bowl fail",
+      "epoch": "1.297202182E9",
+      "querytweettime": "35094611483426816",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Aguilera"
+        },
+        {
+          "weight": 1.0,
+          "feature": "super"
+        },
+        {
+          "weight": 1.0,
+          "feature": "bowl"
+        },
+        {
+          "weight": 1.0,
+          "feature": "fail"
+        }
+      ]
+    },
+    {
+      "title": "MB76",
+      "text": "Celebrity DUI violations",
+      "epoch": "1.297161252E9",
+      "querytweettime": "34922941233762304",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Celebrity"
+        },
+        {
+          "weight": 1.0,
+          "feature": "DUI"
+        },
+        {
+          "weight": 1.0,
+          "feature": "violations"
+        }
+      ]
+    },
+    {
+      "title": "MB77",
+      "text": "NCIS",
+      "epoch": "1.297079585E9",
+      "querytweettime": "34580405671698432",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "NCIS"
+        }
+      ]
+    },
+    {
+      "title": "MB78",
+      "text": "McDonalds food",
+      "epoch": "1.297195592E9",
+      "querytweettime": "35066972253192192",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "McDonalds"
+        },
+        {
+          "weight": 1.0,
+          "feature": "food"
+        }
+      ]
+    },
+    {
+      "title": "MB79",
+      "text": "Saleh Yemen overthrow",
+      "epoch": "1.296849805E9",
+      "querytweettime": "33616636950880256",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Saleh"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Yemen"
+        },
+        {
+          "weight": 1.0,
+          "feature": "overthrow"
+        }
+      ]
+    },
+    {
+      "title": "MB80",
+      "text": "Chipotle raid",
+      "epoch": "1.297195621E9",
+      "querytweettime": "35067092726185984",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Chipotle"
+        },
+        {
+          "weight": 1.0,
+          "feature": "raid"
+        }
+      ]
+    },
+    {
+      "title": "MB81",
+      "text": "smartphone success",
+      "epoch": "1.29714295E9",
+      "querytweettime": "34846177434275840",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "smartphone"
+        },
+        {
+          "weight": 1.0,
+          "feature": "success"
+        }
+      ]
+    },
+    {
+      "title": "MB82",
+      "text": "illegal immigrant laws",
+      "epoch": "1.296748191E9",
+      "querytweettime": "33190436147306496",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "illegal"
+        },
+        {
+          "weight": 1.0,
+          "feature": "immigrant"
+        },
+        {
+          "weight": 1.0,
+          "feature": "laws"
+        }
+      ]
+    },
+    {
+      "title": "MB83",
+      "text": "Stuxnet Worm effects",
+      "epoch": "1.297159024E9",
+      "querytweettime": "34913594311311361",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Stuxnet"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Worm"
+        },
+        {
+          "weight": 1.0,
+          "feature": "effects"
+        }
+      ]
+    },
+    {
+      "title": "MB84",
+      "text": "Athlete concussions",
+      "epoch": "1.297193984E9",
+      "querytweettime": "35060229741744128",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Athlete"
+        },
+        {
+          "weight": 1.0,
+          "feature": "concussions"
+        }
+      ]
+    },
+    {
+      "title": "MB85",
+      "text": "Best Buy improve sales",
+      "epoch": "1.297123556E9",
+      "querytweettime": "34764832553041920",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Best"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Buy"
+        },
+        {
+          "weight": 1.0,
+          "feature": "improve"
+        },
+        {
+          "weight": 1.0,
+          "feature": "sales"
+        }
+      ]
+    },
+    {
+      "title": "MB86",
+      "text": "Joanna Yeates murder",
+      "epoch": "1.296482476E9",
+      "querytweettime": "32075949373652992",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Joanna"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Yeates"
+        },
+        {
+          "weight": 1.0,
+          "feature": "murder"
+        }
+      ]
+    },
+    {
+      "title": "MB87",
+      "text": "chicken recipes",
+      "epoch": "1.297206977E9",
+      "querytweettime": "35114725998215168",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "chicken"
+        },
+        {
+          "weight": 1.0,
+          "feature": "recipes"
+        }
+      ]
+    },
+    {
+      "title": "MB88",
+      "text": "Kings Speech awards",
+      "epoch": "1.297126104E9",
+      "querytweettime": "34775520600129536",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Kings"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Speech"
+        },
+        {
+          "weight": 1.0,
+          "feature": "awards"
+        }
+      ]
+    },
+    {
+      "title": "MB89",
+      "text": "Supreme Court cases",
+      "epoch": "1.296699914E9",
+      "querytweettime": "32987948139941888",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Supreme"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Court"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cases"
+        }
+      ]
+    },
+    {
+      "title": "MB90",
+      "text": "anti-bullying",
+      "epoch": "1.297160859E9",
+      "querytweettime": "34921291089711104",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "anti-bullying"
+        }
+      ]
+    },
+    {
+      "title": "MB91",
+      "text": "Michelle Obama fashion",
+      "epoch": "1.296343262E9",
+      "querytweettime": "31492039682039808",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Michelle"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Obama"
+        },
+        {
+          "weight": 1.0,
+          "feature": "fashion"
+        }
+      ]
+    },
+    {
+      "title": "MB92",
+      "text": "stock market tutorial",
+      "epoch": "1.297127354E9",
+      "querytweettime": "34780760116305920",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "stock"
+        },
+        {
+          "weight": 1.0,
+          "feature": "market"
+        },
+        {
+          "weight": 1.0,
+          "feature": "tutorial"
+        }
+      ]
+    },
+    {
+      "title": "MB93",
+      "text": "fashion week in NYC",
+      "epoch": "1.297164372E9",
+      "querytweettime": "34936026753404928",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "fashion"
+        },
+        {
+          "weight": 1.0,
+          "feature": "week"
+        },
+        {
+          "weight": 1.0,
+          "feature": "in"
+        },
+        {
+          "weight": 1.0,
+          "feature": "NYC"
+        }
+      ]
+    },
+    {
+      "title": "MB94",
+      "text": "horse race betting",
+      "epoch": "1.297172796E9",
+      "querytweettime": "34971360627261440",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "horse"
+        },
+        {
+          "weight": 1.0,
+          "feature": "race"
+        },
+        {
+          "weight": 1.0,
+          "feature": "betting"
+        }
+      ]
+    },
+    {
+      "title": "MB95",
+      "text": "Facebook privacy",
+      "epoch": "1.297201765E9",
+      "querytweettime": "35092866069962752",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Facebook"
+        },
+        {
+          "weight": 1.0,
+          "feature": "privacy"
+        }
+      ]
+    },
+    {
+      "title": "MB96",
+      "text": "Sundance attendees",
+      "epoch": "1.296260988E9",
+      "querytweettime": "31146959217631232",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Sundance"
+        },
+        {
+          "weight": 1.0,
+          "feature": "attendees"
+        }
+      ]
+    },
+    {
+      "title": "MB97",
+      "text": "college student aid",
+      "epoch": "1.297203537E9",
+      "querytweettime": "35100296694861824",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "college"
+        },
+        {
+          "weight": 1.0,
+          "feature": "student"
+        },
+        {
+          "weight": 1.0,
+          "feature": "aid"
+        }
+      ]
+    },
+    {
+      "title": "MB98",
+      "text": "Australian floods",
+      "epoch": "1.297145334E9",
+      "querytweettime": "34856175732264960",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Australian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "floods"
+        }
+      ]
+    },
+    {
+      "title": "MB99",
+      "text": "Superbowl commercials",
+      "epoch": "1.297204895E9",
+      "querytweettime": "35105993557807104",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Superbowl"
+        },
+        {
+          "weight": 1.0,
+          "feature": "commercials"
+        }
+      ]
+    },
+    {
+      "title": "MB100",
+      "text": "Republican National Committee",
+      "epoch": "1.297117099E9",
+      "querytweettime": "34737748464115712",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Republican"
+        },
+        {
+          "weight": 1.0,
+          "feature": "National"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Committee"
+        }
+      ]
+    },
+    {
+      "title": "MB101",
+      "text": "Natalie Portman in Black Swan",
+      "epoch": "1.297183756E9",
+      "querytweettime": "35017330933108736",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Natalie"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Portman"
+        },
+        {
+          "weight": 1.0,
+          "feature": "in"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Black"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Swan"
+        }
+      ]
+    },
+    {
+      "title": "MB102",
+      "text": "school lunches",
+      "epoch": "1.297192008E9",
+      "querytweettime": "35051942250020864",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "school"
+        },
+        {
+          "weight": 1.0,
+          "feature": "lunches"
+        }
+      ]
+    },
+    {
+      "title": "MB103",
+      "text": "Tea Party caucus",
+      "epoch": "1.297123136E9",
+      "querytweettime": "34763068797886464",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Tea"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Party"
+        },
+        {
+          "weight": 1.0,
+          "feature": "caucus"
+        }
+      ]
+    },
+    {
+      "title": "MB104",
+      "text": "texting and driving",
+      "epoch": "1.29709321E9",
+      "querytweettime": "34637550534529026",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "texting"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "driving"
+        }
+      ]
+    },
+    {
+      "title": "MB105",
+      "text": "The Avengers",
+      "epoch": "1.297132768E9",
+      "querytweettime": "34803471081275392",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "The"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Avengers"
+        }
+      ]
+    },
+    {
+      "title": "MB106",
+      "text": "Steve Jobs health",
+      "epoch": "1.29715951E9",
+      "querytweettime": "34915635595059201",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Steve"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Jobs"
+        },
+        {
+          "weight": 1.0,
+          "feature": "health"
+        }
+      ]
+    },
+    {
+      "title": "MB107",
+      "text": "Somalian piracy",
+      "epoch": "1.297165726E9",
+      "querytweettime": "34941706969288704",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Somalian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "piracy"
+        }
+      ]
+    },
+    {
+      "title": "MB108",
+      "text": "identity theft protection",
+      "epoch": "1.296899203E9",
+      "querytweettime": "33823828090036224",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "identity"
+        },
+        {
+          "weight": 1.0,
+          "feature": "theft"
+        },
+        {
+          "weight": 1.0,
+          "feature": "protection"
+        }
+      ]
+    },
+    {
+      "title": "MB109",
+      "text": "Gasland",
+      "epoch": "1.297034202E9",
+      "querytweettime": "34390055866859520",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Gasland"
+        }
+      ]
+    },
+    {
+      "title": "MB110",
+      "text": "economic trade sanctions",
+      "epoch": "1.297141133E9",
+      "querytweettime": "34838554811043840",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "economic"
+        },
+        {
+          "weight": 1.0,
+          "feature": "trade"
+        },
+        {
+          "weight": 1.0,
+          "feature": "sanctions"
+        }
+      ]
+    }
+  ]
+}

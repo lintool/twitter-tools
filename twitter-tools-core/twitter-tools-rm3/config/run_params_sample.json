@@ -1,0 +1,12 @@
+{
+"queries"      :  "./data/topics.microblog2011.json",
+"stopper"      :  "./data/stoplist.twitter",
+"fb_docs"      :  50,
+"fb_terms"     :  20,
+"host"         :  "<host name>",
+"port"         :  9090,
+"num_results"  :  1000,
+"group"        :  "<group id>",
+"token"        :  "<group token>",
+"runtag"       :  "<run tag>"
+}

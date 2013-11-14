@@ -1,0 +1,1068 @@
+{
+  "queries": [
+    {
+      "title": "MB01",
+      "text": "BBC World Service staff cuts",
+      "epoch": "1.297168227E9",
+      "querytweettime": "34952194402811904",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "BBC"
+        },
+        {
+          "weight": 1.0,
+          "feature": "World"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Service"
+        },
+        {
+          "weight": 1.0,
+          "feature": "staff"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cuts"
+        }
+      ]
+    },
+    {
+      "title": "MB02",
+      "text": "2022 FIFA soccer",
+      "epoch": "1.297191104E9",
+      "querytweettime": "35048150574039040",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "2022"
+        },
+        {
+          "weight": 1.0,
+          "feature": "FIFA"
+        },
+        {
+          "weight": 1.0,
+          "feature": "soccer"
+        }
+      ]
+    },
+    {
+      "title": "MB03",
+      "text": "Haiti Aristide return",
+      "epoch": "1.297200733E9",
+      "querytweettime": "35088534306033665",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Haiti"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Aristide"
+        },
+        {
+          "weight": 1.0,
+          "feature": "return"
+        }
+      ]
+    },
+    {
+      "title": "MB04",
+      "text": "Mexico drug war",
+      "epoch": "1.296667334E9",
+      "querytweettime": "32851298193768448",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Mexico"
+        },
+        {
+          "weight": 1.0,
+          "feature": "drug"
+        },
+        {
+          "weight": 1.0,
+          "feature": "war"
+        }
+      ]
+    },
+    {
+      "title": "MB05",
+      "text": "NIST computer security",
+      "epoch": "1.296841449E9",
+      "querytweettime": "33581589627666432",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "NIST"
+        },
+        {
+          "weight": 1.0,
+          "feature": "computer"
+        },
+        {
+          "weight": 1.0,
+          "feature": "security"
+        }
+      ]
+    },
+    {
+      "title": "MB06",
+      "text": "NSA",
+      "epoch": "1.297180859E9",
+      "querytweettime": "35005178885181441",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "NSA"
+        }
+      ]
+    },
+    {
+      "title": "MB07",
+      "text": "Pakistan diplomat arrest murder",
+      "epoch": "1.297205793E9",
+      "querytweettime": "35109758973255680",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Pakistan"
+        },
+        {
+          "weight": 1.0,
+          "feature": "diplomat"
+        },
+        {
+          "weight": 1.0,
+          "feature": "arrest"
+        },
+        {
+          "weight": 1.0,
+          "feature": "murder"
+        }
+      ]
+    },
+    {
+      "title": "MB08",
+      "text": "phone hacking British politicians",
+      "epoch": "1.297100579E9",
+      "querytweettime": "34668458591395840",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "phone"
+        },
+        {
+          "weight": 1.0,
+          "feature": "hacking"
+        },
+        {
+          "weight": 1.0,
+          "feature": "British"
+        },
+        {
+          "weight": 1.0,
+          "feature": "politicians"
+        }
+      ]
+    },
+    {
+      "title": "MB09",
+      "text": "Toyota Recall",
+      "epoch": "1.297201286E9",
+      "querytweettime": "35090855064764416",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Toyota"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Recall"
+        }
+      ]
+    },
+    {
+      "title": "MB10",
+      "text": "Egyptian protesters attack museum",
+      "epoch": "1.296331595E9",
+      "querytweettime": "31443107291598848",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Egyptian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "protesters"
+        },
+        {
+          "weight": 1.0,
+          "feature": "attack"
+        },
+        {
+          "weight": 1.0,
+          "feature": "museum"
+        }
+      ]
+    },
+    {
+      "title": "MB11",
+      "text": "Kubica crash",
+      "epoch": "1.296988723E9",
+      "querytweettime": "34199299428581376",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Kubica"
+        },
+        {
+          "weight": 1.0,
+          "feature": "crash"
+        }
+      ]
+    },
+    {
+      "title": "MB12",
+      "text": "Assange Nobel peace nomination",
+      "epoch": "1.296507753E9",
+      "querytweettime": "32181966761631744",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Assange"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Nobel"
+        },
+        {
+          "weight": 1.0,
+          "feature": "peace"
+        },
+        {
+          "weight": 1.0,
+          "feature": "nomination"
+        }
+      ]
+    },
+    {
+      "title": "MB13",
+      "text": "Oprah Winfrey half-sister",
+      "epoch": "1.295883821E9",
+      "querytweettime": "29565006546735104",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Oprah"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Winfrey"
+        },
+        {
+          "weight": 1.0,
+          "feature": "half-sister"
+        }
+      ]
+    },
+    {
+      "title": "MB14",
+      "text": "release of The Rite",
+      "epoch": "1.296649862E9",
+      "querytweettime": "32778015167479808",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "release"
+        },
+        {
+          "weight": 1.0,
+          "feature": "of"
+        },
+        {
+          "weight": 1.0,
+          "feature": "The"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Rite"
+        }
+      ]
+    },
+    {
+      "title": "MB15",
+      "text": "Thorpe return in 2012 Olympics",
+      "epoch": "1.296390025E9",
+      "querytweettime": "31688182005235712",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Thorpe"
+        },
+        {
+          "weight": 1.0,
+          "feature": "return"
+        },
+        {
+          "weight": 1.0,
+          "feature": "in"
+        },
+        {
+          "weight": 1.0,
+          "feature": "2012"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Olympics"
+        }
+      ]
+    },
+    {
+      "title": "MB16",
+      "text": "release of Known and Unknown",
+      "epoch": "1.295888632E9",
+      "querytweettime": "29585186899365888",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "release"
+        },
+        {
+          "weight": 1.0,
+          "feature": "of"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Known"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Unknown"
+        }
+      ]
+    },
+    {
+      "title": "MB17",
+      "text": "White Stripes breakup",
+      "epoch": "1.29667402E9",
+      "querytweettime": "32879343399084032",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "White"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Stripes"
+        },
+        {
+          "weight": 1.0,
+          "feature": "breakup"
+        }
+      ]
+    },
+    {
+      "title": "MB18",
+      "text": "William and Kate fax save the date",
+      "epoch": "1.296032372E9",
+      "querytweettime": "30188073790742528",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "William"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Kate"
+        },
+        {
+          "weight": 1.0,
+          "feature": "fax"
+        },
+        {
+          "weight": 1.0,
+          "feature": "save"
+        },
+        {
+          "weight": 1.0,
+          "feature": "the"
+        },
+        {
+          "weight": 1.0,
+          "feature": "date"
+        }
+      ]
+    },
+    {
+      "title": "MB19",
+      "text": "Cuomo budget cuts",
+      "epoch": "1.297121102E9",
+      "querytweettime": "34754540519563264",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Cuomo"
+        },
+        {
+          "weight": 1.0,
+          "feature": "budget"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cuts"
+        }
+      ]
+    },
+    {
+      "title": "MB20",
+      "text": "Taco Bell filling lawsuit",
+      "epoch": "1.29697616E9",
+      "querytweettime": "34146608102772736",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Taco"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Bell"
+        },
+        {
+          "weight": 1.0,
+          "feature": "filling"
+        },
+        {
+          "weight": 1.0,
+          "feature": "lawsuit"
+        }
+      ]
+    },
+    {
+      "title": "MB21",
+      "text": "Emanuel residency court rulings",
+      "epoch": "1.29627021E9",
+      "querytweettime": "31185639047172097",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Emanuel"
+        },
+        {
+          "weight": 1.0,
+          "feature": "residency"
+        },
+        {
+          "weight": 1.0,
+          "feature": "court"
+        },
+        {
+          "weight": 1.0,
+          "feature": "rulings"
+        }
+      ]
+    },
+    {
+      "title": "MB22",
+      "text": "healthcare law unconstitutional",
+      "epoch": "1.296598654E9",
+      "querytweettime": "32563233118224385",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "healthcare"
+        },
+        {
+          "weight": 1.0,
+          "feature": "law"
+        },
+        {
+          "weight": 1.0,
+          "feature": "unconstitutional"
+        }
+      ]
+    },
+    {
+      "title": "MB23",
+      "text": "Amtrak train service",
+      "epoch": "1.297195465E9",
+      "querytweettime": "35066441501900800",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Amtrak"
+        },
+        {
+          "weight": 1.0,
+          "feature": "train"
+        },
+        {
+          "weight": 1.0,
+          "feature": "service"
+        }
+      ]
+    },
+    {
+      "title": "MB24",
+      "text": "Super Bowl seats",
+      "epoch": "1.297185064E9",
+      "querytweettime": "35022813232373760",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Super"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Bowl"
+        },
+        {
+          "weight": 1.0,
+          "feature": "seats"
+        }
+      ]
+    },
+    {
+      "title": "MB25",
+      "text": "TSA airport screening",
+      "epoch": "1.296762729E9",
+      "querytweettime": "33251413001764864",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "TSA"
+        },
+        {
+          "weight": 1.0,
+          "feature": "airport"
+        },
+        {
+          "weight": 1.0,
+          "feature": "screening"
+        }
+      ]
+    },
+    {
+      "title": "MB26",
+      "text": "US unemployment",
+      "epoch": "1.296828651E9",
+      "querytweettime": "33527910379814912",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "US"
+        },
+        {
+          "weight": 1.0,
+          "feature": "unemployment"
+        }
+      ]
+    },
+    {
+      "title": "MB27",
+      "text": "reduce energy consumption",
+      "epoch": "1.296793198E9",
+      "querytweettime": "33379210437337088",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "reduce"
+        },
+        {
+          "weight": 1.0,
+          "feature": "energy"
+        },
+        {
+          "weight": 1.0,
+          "feature": "consumption"
+        }
+      ]
+    },
+    {
+      "title": "MB28",
+      "text": "Detroit Auto Show",
+      "epoch": "1.296081972E9",
+      "querytweettime": "30396111764066304",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Detroit"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Auto"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Show"
+        }
+      ]
+    },
+    {
+      "title": "MB29",
+      "text": "global warming and weather",
+      "epoch": "1.297127157E9",
+      "querytweettime": "34779934836785152",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "global"
+        },
+        {
+          "weight": 1.0,
+          "feature": "warming"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "weather"
+        }
+      ]
+    },
+    {
+      "title": "MB30",
+      "text": "Keith Olbermann new job",
+      "epoch": "1.297205461E9",
+      "querytweettime": "35108366829232128",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Keith"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Olbermann"
+        },
+        {
+          "weight": 1.0,
+          "feature": "new"
+        },
+        {
+          "weight": 1.0,
+          "feature": "job"
+        }
+      ]
+    },
+    {
+      "title": "MB31",
+      "text": "Special Olympics athletes",
+      "epoch": "1.296809042E9",
+      "querytweettime": "33445664922800129",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Special"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Olympics"
+        },
+        {
+          "weight": 1.0,
+          "feature": "athletes"
+        }
+      ]
+    },
+    {
+      "title": "MB32",
+      "text": "State of the Union  and jobs",
+      "epoch": "1.296785302E9",
+      "querytweettime": "33346093525762048",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "State"
+        },
+        {
+          "weight": 1.0,
+          "feature": "of"
+        },
+        {
+          "weight": 1.0,
+          "feature": "the"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Union"
+        },
+        {
+          "weight": 1.0,
+          "feature": ""
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "jobs"
+        }
+      ]
+    },
+    {
+      "title": "MB33",
+      "text": "Dog Whisperer Cesar Millan techniques",
+      "epoch": "1.296156474E9",
+      "querytweettime": "30708594202648576",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Dog"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Whisperer"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Cesar"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Millan"
+        },
+        {
+          "weight": 1.0,
+          "feature": "techniques"
+        }
+      ]
+    },
+    {
+      "title": "MB34",
+      "text": "MSNBC Rachel Maddow",
+      "epoch": "1.29685934E9",
+      "querytweettime": "33656631187210241",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "MSNBC"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Rachel"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Maddow"
+        }
+      ]
+    },
+    {
+      "title": "MB35",
+      "text": "Sargent Shriver tributes",
+      "epoch": "1.295853497E9",
+      "querytweettime": "29437816727404544",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Sargent"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Shriver"
+        },
+        {
+          "weight": 1.0,
+          "feature": "tributes"
+        }
+      ]
+    },
+    {
+      "title": "MB36",
+      "text": "Moscow airport bombing",
+      "epoch": "1.295910035E9",
+      "querytweettime": "29674954899333120",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Moscow"
+        },
+        {
+          "weight": 1.0,
+          "feature": "airport"
+        },
+        {
+          "weight": 1.0,
+          "feature": "bombing"
+        }
+      ]
+    },
+    {
+      "title": "MB37",
+      "text": "Giffords recovery",
+      "epoch": "1.296756303E9",
+      "querytweettime": "33224462191038464",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Giffords"
+        },
+        {
+          "weight": 1.0,
+          "feature": "recovery"
+        }
+      ]
+    },
+    {
+      "title": "MB38",
+      "text": "protests in Jordan",
+      "epoch": "1.2965644E9",
+      "querytweettime": "32419560749531136",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "protests"
+        },
+        {
+          "weight": 1.0,
+          "feature": "in"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Jordan"
+        }
+      ]
+    },
+    {
+      "title": "MB39",
+      "text": "Egyptian curfew",
+      "epoch": "1.296238449E9",
+      "querytweettime": "31052423128686592",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Egyptian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "curfew"
+        }
+      ]
+    },
+    {
+      "title": "MB40",
+      "text": "Beck attacks Piven",
+      "epoch": "1.296506017E9",
+      "querytweettime": "32174687102435328",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Beck"
+        },
+        {
+          "weight": 1.0,
+          "feature": "attacks"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Piven"
+        }
+      ]
+    },
+    {
+      "title": "MB41",
+      "text": "Obama birth certificate",
+      "epoch": "1.296496554E9",
+      "querytweettime": "32134993337647104",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Obama"
+        },
+        {
+          "weight": 1.0,
+          "feature": "birth"
+        },
+        {
+          "weight": 1.0,
+          "feature": "certificate"
+        }
+      ]
+    },
+    {
+      "title": "MB42",
+      "text": "Holland Iran envoy recall",
+      "epoch": "1.297111633E9",
+      "querytweettime": "34714824982134784",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Holland"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Iran"
+        },
+        {
+          "weight": 1.0,
+          "feature": "envoy"
+        },
+        {
+          "weight": 1.0,
+          "feature": "recall"
+        }
+      ]
+    },
+    {
+      "title": "MB43",
+      "text": "Kucinich olive pit lawsuit",
+      "epoch": "1.296288365E9",
+      "querytweettime": "31261786745339904",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Kucinich"
+        },
+        {
+          "weight": 1.0,
+          "feature": "olive"
+        },
+        {
+          "weight": 1.0,
+          "feature": "pit"
+        },
+        {
+          "weight": 1.0,
+          "feature": "lawsuit"
+        }
+      ]
+    },
+    {
+      "title": "MB44",
+      "text": "White House spokesman replaced",
+      "epoch": "1.296221745E9",
+      "querytweettime": "30982361281728512",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "White"
+        },
+        {
+          "weight": 1.0,
+          "feature": "House"
+        },
+        {
+          "weight": 1.0,
+          "feature": "spokesman"
+        },
+        {
+          "weight": 1.0,
+          "feature": "replaced"
+        }
+      ]
+    },
+    {
+      "title": "MB45",
+      "text": "political campaigns and social media",
+      "epoch": "1.296564749E9",
+      "querytweettime": "32421023961841667",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "political"
+        },
+        {
+          "weight": 1.0,
+          "feature": "campaigns"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "social"
+        },
+        {
+          "weight": 1.0,
+          "feature": "media"
+        }
+      ]
+    },
+    {
+      "title": "MB46",
+      "text": "Bottega Veneta",
+      "epoch": "1.297204499E9",
+      "querytweettime": "35104330025541632",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Bottega"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Veneta"
+        }
+      ]
+    },
+    {
+      "title": "MB47",
+      "text": "organic farming requirements",
+      "epoch": "1.297123967E9",
+      "querytweettime": "34766556445540352",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "organic"
+        },
+        {
+          "weight": 1.0,
+          "feature": "farming"
+        },
+        {
+          "weight": 1.0,
+          "feature": "requirements"
+        }
+      ]
+    },
+    {
+      "title": "MB48",
+      "text": "Egyptian evacuation",
+      "epoch": "1.296466617E9",
+      "querytweettime": "32009428471386112",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Egyptian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "evacuation"
+        }
+      ]
+    },
+    {
+      "title": "MB49",
+      "text": "carbon monoxide law",
+      "epoch": "1.296600263E9",
+      "querytweettime": "32569981321347074",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "carbon"
+        },
+        {
+          "weight": 1.0,
+          "feature": "monoxide"
+        },
+        {
+          "weight": 1.0,
+          "feature": "law"
+        }
+      ]
+    }
+  ]
+}
