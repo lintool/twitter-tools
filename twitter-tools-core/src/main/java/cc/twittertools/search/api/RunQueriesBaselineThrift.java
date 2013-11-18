@@ -19,8 +19,8 @@ package cc.twittertools.search.api;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -33,7 +33,6 @@ import org.apache.commons.cli.ParseException;
 
 import cc.twittertools.search.TrecTopicSet;
 import cc.twittertools.thrift.gen.TResult;
-import cc.twittertools.thrift.gen.TResultComparator;
 
 public class RunQueriesBaselineThrift {
   private static final String DEFAULT_RUNTAG = "lucene4lm";
@@ -119,49 +118,34 @@ public class RunQueriesBaselineThrift {
     for(cc.twittertools.search.TrecTopic query : topicsFile) {
       List<TResult> results = client.search(query.getQuery(),
           query.getQueryTweetTime(), numResults);
-      int i = 1;
-      double rsv = 0;
-      List<TResultComparator> tempResultsComparator = new ArrayList<TResultComparator>();
-	  ArrayList<TResultComparator> tempList = new ArrayList<TResultComparator>();
+      SortedSet<TResultComparable> sortedResults = new TreeSet<TResultComparable>();
       for (TResult result : results) {
         if (result.getRetweeted_status_id() == 0) {
-		  boolean insert = true;
-		  for (TResultComparator tresult : tempList) {
-		    if (new TResultComparator(result).equals(tresult)) {
-		      insert = false;
-			  break;
-			}
-		  }
-		  if (insert) {
-            if (Math.abs(result.rsv - rsv) > 0.000001) {
-              i = printTResults(tempResultsComparator, query, runtag, i, verbose, out);
-              tempResultsComparator.clear();
-              tempResultsComparator.add(new TResultComparator(result));
-              rsv = result.rsv;
-            } else {
-              tempResultsComparator.add(new TResultComparator(result));
-		    }
-			tempList.add(new TResultComparator(result));
-          }
+          // breaking ties by ids
+          sortedResults.add(new TResultComparable(result));
         }
       }
-      printTResults(tempResultsComparator, query, runtag, i, verbose, out);
+      int i = 1;
+      int dupliCount = 0;
+      double rsvPrev = 0;
+      for (TResultComparable sortedResult : sortedResults) {
+        TResult result = sortedResult.getTResult();
+        double rsvCurr = result.rsv;
+        if (Math.abs(rsvCurr - rsvPrev) > 0.0000001) {
+          dupliCount = 0;
+        } else {
+          dupliCount ++;
+          rsvCurr = rsvCurr - 0.000001 / numResults * dupliCount;
+        }
+        out.println(String.format("%s Q0 %d %d %." + (int) (6 + Math.ceil(Math.log10(numResults))) + "f %s", query.getId(), result.id, i, rsvCurr, runtag));
+        if (verbose) {
+          out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
+        }
+        i++;
+        rsvPrev = result.rsv;
+      }
+
     }
     out.close();
-  }
-  public static int printTResults(List<TResultComparator> tempResultsComparator, cc.twittertools.search.TrecTopic query, String runtag, int i, boolean verbose, PrintStream out) {
-    Collections.sort(tempResultsComparator);
-    int index = 0;
-    for (TResultComparator tempResultComparator : tempResultsComparator) {
-      TResult tempTResult = tempResultComparator.getTResult();
-      double adjust = 0.000001 / tempResultsComparator.size();
-      out.println(String.format("%s Q0 %d %d %.9f %s", query.getId(), tempTResult.id, i, tempTResult.rsv + adjust * index, runtag));
-      if (verbose) {
-        out.println("# " + tempTResult.toString().replaceAll("[\\n\\r]+", " "));
-      }
-      i++;
-      index++;
-    }
-    return i;
   }
 }

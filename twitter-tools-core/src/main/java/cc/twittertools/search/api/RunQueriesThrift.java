@@ -19,7 +19,8 @@ package cc.twittertools.search.api;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -32,7 +33,6 @@ import org.apache.commons.cli.ParseException;
 
 import cc.twittertools.search.TrecTopicSet;
 import cc.twittertools.thrift.gen.TResult;
-import cc.twittertools.thrift.gen.TResultComparator;
 
 public class RunQueriesThrift {
   private static final String DEFAULT_RUNTAG = "lucene4lm";
@@ -115,27 +115,20 @@ public class RunQueriesThrift {
     TrecSearchThriftClient client = new TrecSearchThriftClient(cmdline.getOptionValue(HOST_OPTION),
         Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)), group, token);
 
-    for(cc.twittertools.search.TrecTopic query : topicsFile) {
+    for (cc.twittertools.search.TrecTopic query : topicsFile) {
       List<TResult> results = client.search(query.getQuery(),
           query.getQueryTweetTime(), numResults);
       int i = 1;
-	  ArrayList<TResultComparator> tempList = new ArrayList<TResultComparator>();
+      Set<Long> tweetIds = new HashSet<Long>();
       for (TResult result : results) {
-		boolean insert = true;
-		for (TResultComparator tresult : tempList) {
-	 	   if (new TResultComparator(result).equals(tresult)) {
-			   insert = false;
-			   break;
-		   }
-	    }
-		if (insert) {
-	       out.println(String.format("%s Q0 %d %d %f %s", query.getId(), result.id, i, result.rsv, runtag));
-	       if ( verbose) {
-	         out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
-	       }
-	       i++;
-		   tempList.add(new TResultComparator(result));
-		}
+        if (!tweetIds.contains(result.id)) {
+          tweetIds.add(result.id);
+          out.println(String.format("%s Q0 %d %d %f %s", query.getId(), result.id, i, result.rsv, runtag));
+          if (verbose) {
+            out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
+          }
+          i++; 
+        }
       }
     }
     out.close();
