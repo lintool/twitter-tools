@@ -100,6 +100,10 @@
               <mainClass>cc.twittertools.corpus.demo.SampleStatuses</mainClass>
               <name>SampleStatuses</name>
             </program>
+            <program>
+              <mainClass>cc.twittertools.corpus.demo.TokenizeTopics</mainClass>
+              <name>TokenizeTopics</name>
+            </program>
           </programs>
         </configuration>
       </plugin>
