@@ -96,6 +96,10 @@
                 <maxMemorySize>4g</maxMemorySize>
               </jvmSettings>
             </program>
+            <program>
+              <mainClass>cc.twittertools.corpus.demo.SampleStatuses</mainClass>
+              <name>SampleStatuses</name>
+            </program>
           </programs>
         </configuration>
       </plugin>
