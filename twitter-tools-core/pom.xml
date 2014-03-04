@@ -104,6 +104,14 @@
               <mainClass>cc.twittertools.corpus.demo.TokenizeTopics</mainClass>
               <name>TokenizeTopics</name>
             </program>
+            <program>
+              <mainClass>cc.twittertools.index.IndexStatusesSubcollection</mainClass>
+              <name>IndexStatusesSubcollection</name>
+            </program>
+            <program>
+              <mainClass>cc.twittertools.search.local.RunQueriesConjunctive</mainClass>
+              <name>RunQueriesConjunctive</name>
+            </program>
           </programs>
         </configuration>
       </plugin>
