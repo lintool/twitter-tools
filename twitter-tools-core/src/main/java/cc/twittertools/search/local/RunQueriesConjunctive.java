@@ -27,13 +27,11 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.LMDirichletSimilarity;
@@ -94,9 +92,6 @@ public class RunQueriesConjunctive {
       System.exit(-1);
     }
 
-    String runtag = cmdline.hasOption(RUNTAG_OPTION) ?
-        cmdline.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
-
     String topicsFile = cmdline.getOptionValue(QUERIES_OPTION);
     
     int numResults = 20;
@@ -113,8 +108,6 @@ public class RunQueriesConjunctive {
     if (cmdline.hasOption(SIMILARITY_OPTION)) {
       similarity = cmdline.getOptionValue(SIMILARITY_OPTION);
     }
-
-    boolean verbose = cmdline.hasOption(VERBOSE_OPTION);
 
     PrintStream out = new PrintStream(System.out, true, "UTF-8");
 
@@ -138,10 +131,10 @@ public class RunQueriesConjunctive {
       cnt++;
       Query query = p.parse("+" + topic.getQuery());
 
-      long startTime = System.currentTimeMillis();
+      long startTime = System.nanoTime();
       TopDocs rs = searcher.search(query, numResults);
-      long dur = System.currentTimeMillis() - startTime;
-      out.println(topic.getQuery() + ": " + dur + "ms");
+      long dur = System.nanoTime() - startTime;
+      out.println(topic.getQuery() + ": " + ( (float) dur/1e6) + "ms");
       
 //      int i = 1;
 //      for (ScoreDoc scoreDoc : rs.scoreDocs) {
