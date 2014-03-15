@@ -9,6 +9,7 @@ etc/trec_eval.9.0/
 etc/trec_eval
 twitter-tools-core/data/qrels.microblog2011.txt
 twitter-tools-core/data/qrels.microblog2012.txt
+twitter-tools-core/data/qrels.microblog2013.txt
 twitter-tools-core/data/queries.trec2005efficiency.txt
 *~
 .DS_Store

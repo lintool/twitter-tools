@@ -19,8 +19,8 @@ package cc.twittertools.search.api;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -34,7 +34,7 @@ import org.apache.commons.cli.ParseException;
 import cc.twittertools.search.TrecTopicSet;
 import cc.twittertools.thrift.gen.TResult;
 
-public class RunQueriesThrift {
+public class RunQueriesBaselineThrift {
   private static final String DEFAULT_RUNTAG = "lucene4lm";
 
   private static final String HOST_OPTION = "host";
@@ -46,7 +46,7 @@ public class RunQueriesThrift {
   private static final String RUNTAG_OPTION = "runtag";
   private static final String VERBOSE_OPTION = "verbose";
 
-  private RunQueriesThrift() {}
+  private RunQueriesBaselineThrift() {}
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
@@ -115,21 +115,39 @@ public class RunQueriesThrift {
     TrecSearchThriftClient client = new TrecSearchThriftClient(cmdline.getOptionValue(HOST_OPTION),
         Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)), group, token);
 
-    for (cc.twittertools.search.TrecTopic query : topicsFile) {
+    for(cc.twittertools.search.TrecTopic query : topicsFile) {
       List<TResult> results = client.search(query.getQuery(),
           query.getQueryTweetTime(), numResults);
-      int i = 1;
-      Set<Long> tweetIds = new HashSet<Long>();
+
+      SortedSet<TResultComparable> sortedResults = new TreeSet<TResultComparable>();
       for (TResult result : results) {
-        if (!tweetIds.contains(result.id)) {
-          tweetIds.add(result.id);
-          out.println(String.format("%s Q0 %d %d %f %s", query.getId(), result.id, i, result.rsv, runtag));
-          if (verbose) {
-            out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
-          }
-          i++;
+        // Throw away retweets.
+        if (result.getRetweeted_status_id() == 0) {
+          sortedResults.add(new TResultComparable(result));
         }
       }
+
+      int i = 1;
+      int dupliCount = 0;
+      double rsvPrev = 0;
+      for (TResultComparable sortedResult : sortedResults) {
+        TResult result = sortedResult.getTResult();
+        double rsvCurr = result.rsv;
+        if (Math.abs(rsvCurr - rsvPrev) > 0.0000001) {
+          dupliCount = 0;
+        } else {
+          dupliCount ++;
+          rsvCurr = rsvCurr - 0.000001 / numResults * dupliCount;
+        }
+        out.println(String.format("%s Q0 %d %d %." + (int) (6 + Math.ceil(Math.log10(numResults))) + "f %s",
+            query.getId(), result.id, i, rsvCurr, runtag));
+        if (verbose) {
+          out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
+        }
+        i++;
+        rsvPrev = result.rsv;
+      }
+
     }
     out.close();
   }
