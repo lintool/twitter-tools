@@ -118,13 +118,15 @@ public class RunQueriesBaselineThrift {
     for(cc.twittertools.search.TrecTopic query : topicsFile) {
       List<TResult> results = client.search(query.getQuery(),
           query.getQueryTweetTime(), numResults);
+
       SortedSet<TResultComparable> sortedResults = new TreeSet<TResultComparable>();
       for (TResult result : results) {
+        // Throw away retweets.
         if (result.getRetweeted_status_id() == 0) {
-          // breaking ties by ids
           sortedResults.add(new TResultComparable(result));
         }
       }
+
       int i = 1;
       int dupliCount = 0;
       double rsvPrev = 0;
@@ -137,7 +139,8 @@ public class RunQueriesBaselineThrift {
           dupliCount ++;
           rsvCurr = rsvCurr - 0.000001 / numResults * dupliCount;
         }
-        out.println(String.format("%s Q0 %d %d %." + (int) (6 + Math.ceil(Math.log10(numResults))) + "f %s", query.getId(), result.id, i, rsvCurr, runtag));
+        out.println(String.format("%s Q0 %d %d %." + (int) (6 + Math.ceil(Math.log10(numResults))) + "f %s",
+            query.getId(), result.id, i, rsvCurr, runtag));
         if (verbose) {
           out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
         }

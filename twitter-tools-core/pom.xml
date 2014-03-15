@@ -71,7 +71,7 @@
             </program>
             <program>
               <mainClass>cc.twittertools.search.api.RunQueriesBaselineThrift</mainClass>
-              <name>RunQueriesBaelineThrift</name>
+              <name>RunQueriesBaselineThrift</name>
             </program>
             <program>
               <mainClass>cc.twittertools.search.local.RunQueries</mainClass>
