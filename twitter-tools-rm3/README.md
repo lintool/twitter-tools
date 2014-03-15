@@ -31,7 +31,7 @@ Invoking Sample Runs
 After building, you can run the sample programs via somthing like this:
 
 ```
-$ ./target/appassembler/bin/RunQueries ./config/params_run.json 
+$ sh ./target/appassembler/bin/RunQueries ./config/params_run.json
 ```
 
 which will run a simple baseline query likelihood retrieval.  All runnable programs are in ./target/appassembler/bin/ .  Also, all programs take a single argument: a JSON-formatted file that will look something like this:
