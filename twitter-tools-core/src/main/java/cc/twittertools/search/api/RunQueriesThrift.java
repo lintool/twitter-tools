@@ -127,7 +127,7 @@ public class RunQueriesThrift {
           if (verbose) {
             out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
           }
-          i++; 
+          i++;
         }
       }
     }
