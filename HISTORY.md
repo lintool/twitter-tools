@@ -1,3 +1,11 @@
+Version 1.4.2
+=============
+March 15, 2014
+
++ Added code to generate Thrift baseline runs
++ Added code to extract subcollection and term statistics
++ Added topics and qrels for TREC 2013
+
 Version 1.4.1
 =============
 July 7, 2013

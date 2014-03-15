@@ -18,7 +18,7 @@ Once you've cloned the repository, change directory into `twitter-tools-core` an
 
 ```
 $ cd twitter-tools-core
-$ mvn clean package
+$ mvn clean package appassembler:assemble
 ```
 
 To automatically generate project files for Eclipse:
