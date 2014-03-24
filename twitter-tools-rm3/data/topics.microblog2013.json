@@ -1,0 +1,1184 @@
+{
+  "queries": [
+    {
+      "title": "MB111",
+      "text": "water shortages",
+      "epoch": "1.364583362E9",
+      "querytweettime": "317711766815653888",
+      "constraint": "#band( #between(epoch 1363609761 1364583363) #syn(#band(water shortages) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "water"
+        },
+        {
+          "weight": "1",
+          "feature": "shortages"
+        }
+      ]
+    },
+    {
+      "title": "MB112",
+      "text": "Florida Derby 2013",
+      "epoch": "1.364660489E9",
+      "querytweettime": "318035260900265985",
+      "constraint": "#band( #between(epoch 1361201661 1364660490) #syn(#band(florida derby) #band(florida 2013) #band(derby 2013) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "2013"
+        },
+        {
+          "weight": "1",
+          "feature": "florida"
+        },
+        {
+          "weight": "1",
+          "feature": "derby"
+        }
+      ]
+    },
+    {
+      "title": "MB114",
+      "text": "Detroit EFM Undemocratic",
+      "epoch": "1.364317776E9",
+      "querytweettime": "316597818372538369",
+      "constraint": "#band( #between(epoch 1362162638 1364317777) #syn(#band(detroit efm) #band(detroit undemocratic) #band(efm undemocratic) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "efm"
+        },
+        {
+          "weight": "1",
+          "feature": "detroit"
+        },
+        {
+          "weight": "1",
+          "feature": "undemocratic"
+        }
+      ]
+    },
+    {
+      "title": "MB115",
+      "text": "memories of Mr Rogers",
+      "epoch": "1.364621401E9",
+      "querytweettime": "317871313932935168",
+      "constraint": "#band( #between(epoch 0 1364621402) #syn(#band(memories mr) #band(memories rogers) #band(mr rogers) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "mr"
+        },
+        {
+          "weight": "1",
+          "feature": "memories"
+        },
+        {
+          "weight": "1",
+          "feature": "rogers"
+        }
+      ]
+    },
+    {
+      "title": "MB116",
+      "text": "Chinese Computer Attacks",
+      "epoch": "1.362105172E9",
+      "querytweettime": "307317484577497090",
+      "constraint": "#band( #between(epoch 1359681008 1362105173) #syn(#band(chinese computer) #band(chinese attacks) #band(computer attacks) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "computer"
+        },
+        {
+          "weight": "1",
+          "feature": "attacks"
+        },
+        {
+          "weight": "1",
+          "feature": "chinese"
+        }
+      ]
+    },
+    {
+      "title": "MB117",
+      "text": "marshmallow Peeps dioramas",
+      "epoch": "1.364455175E9",
+      "querytweettime": "317174111543648256",
+      "constraint": "#band( #between(epoch 1362136920 1364455176) #syn(#band(marshmallow peeps) #band(marshmallow dioramas) #band(peeps dioramas) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "marshmallow"
+        },
+        {
+          "weight": "1",
+          "feature": "dioramas"
+        },
+        {
+          "weight": "1",
+          "feature": "peeps"
+        }
+      ]
+    },
+    {
+      "title": "MB118",
+      "text": "Israel and Turkey reconcile",
+      "epoch": "1.364240788E9",
+      "querytweettime": "316274907300392960",
+      "constraint": "#band( #between(epoch 1363963927 1364240789) #syn(#band(israel turkey) #band(israel reconcile) #band(turkey reconcile) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "reconcile"
+        },
+        {
+          "weight": "1",
+          "feature": "turkey"
+        },
+        {
+          "weight": "1",
+          "feature": "israel"
+        }
+      ]
+    },
+    {
+      "title": "MB119",
+      "text": "colony collapse disorder",
+      "epoch": "1.364598122E9",
+      "querytweettime": "317773674709131265",
+      "constraint": "#band( #between(epoch 1362312991 1364598123) #syn(#band(colony collapse) #band(colony disorder) #band(collapse disorder) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "disorder"
+        },
+        {
+          "weight": "1",
+          "feature": "colony"
+        },
+        {
+          "weight": "1",
+          "feature": "collapse"
+        }
+      ]
+    },
+    {
+      "title": "MB120",
+      "text": "Argentina Inflation",
+      "epoch": "1.363707468E9",
+      "querytweettime": "314038001112076290",
+      "constraint": "#band( #between(epoch 1359755627 1363707469) #syn(#band(argentina inflation) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "argentina"
+        },
+        {
+          "weight": "1",
+          "feature": "inflation"
+        }
+      ]
+    },
+    {
+      "title": "MB121",
+      "text": "Future of MOOCs",
+      "epoch": "1.364394518E9",
+      "querytweettime": "316919697658503169",
+      "constraint": "#band( #between(epoch 1360043652 1364394519) #syn(#band(future moocs) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "moocs"
+        },
+        {
+          "weight": "1",
+          "feature": "future"
+        }
+      ]
+    },
+    {
+      "title": "MB122",
+      "text": "unsuccessful kickstarter applicants",
+      "epoch": "1.364578065E9",
+      "querytweettime": "317689549570596865",
+      "constraint": "#band( #between(epoch 0 1364578066) #syn(#band(unsuccessful kickstarter) #band(unsuccessful applicants) #band(kickstarter applicants) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "applicants"
+        },
+        {
+          "weight": "1",
+          "feature": "unsuccessful"
+        },
+        {
+          "weight": "1",
+          "feature": "kickstarter"
+        }
+      ]
+    },
+    {
+      "title": "MB123",
+      "text": "solar flare",
+      "epoch": "1.364366329E9",
+      "querytweettime": "316801464427229185",
+      "constraint": "#band( #between(epoch 1360172632 1364366330) #syn(#band(solar flare) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "solar"
+        },
+        {
+          "weight": "1",
+          "feature": "flare"
+        }
+      ]
+    },
+    {
+      "title": "MB124",
+      "text": "celebrity DUI",
+      "epoch": "1.364625951E9",
+      "querytweettime": "317890398028701696",
+      "constraint": "#band( #between(epoch 1363597205 1364625952) #syn(#band(celebrity dui) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "celebrity"
+        },
+        {
+          "weight": "1",
+          "feature": "dui"
+        }
+      ]
+    },
+    {
+      "title": "MB126",
+      "text": "Pitbull rapper",
+      "epoch": "1.363861257E9",
+      "querytweettime": "314683038921523200",
+      "constraint": "#band( #between(epoch 1361487871 1363861258) #syn(#band(pitbull rapper) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "rapper"
+        },
+        {
+          "weight": "1",
+          "feature": "pitbull"
+        }
+      ]
+    },
+    {
+      "title": "MB127",
+      "text": "Hagel nomination filibustered",
+      "epoch": "1.362445722E9",
+      "querytweettime": "308745854808883200",
+      "constraint": "#band( #between(epoch 1359679379 1362445723) #syn(#band(hagel nomination) #band(hagel filibustered) #band(nomination filibustered) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "filibustered"
+        },
+        {
+          "weight": "1",
+          "feature": "hagel"
+        },
+        {
+          "weight": "1",
+          "feature": "nomination"
+        }
+      ]
+    },
+    {
+      "title": "MB129",
+      "text": "Angry Birds cartoon",
+      "epoch": "1.364615053E9",
+      "querytweettime": "317844688482754560",
+      "constraint": "#band( #between(epoch 1360100196 1364615054) #syn(#band(angry birds) #band(angry cartoon) #band(birds cartoon) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "cartoon"
+        },
+        {
+          "weight": "1",
+          "feature": "angry"
+        },
+        {
+          "weight": "1",
+          "feature": "birds"
+        }
+      ]
+    },
+    {
+      "title": "MB130",
+      "text": "Lawyer jokes",
+      "epoch": "1.363986572E9",
+      "querytweettime": "315208648123101184",
+      "constraint": "#band( #between(epoch 1359767342 1363986573) #syn(#band(lawyer jokes) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "jokes"
+        },
+        {
+          "weight": "1",
+          "feature": "lawyer"
+        }
+      ]
+    },
+    {
+      "title": "MB131",
+      "text": "trash the dress",
+      "epoch": "1.364355907E9",
+      "querytweettime": "316757751386759168",
+      "constraint": "#band( #between(epoch 1360090961 1364355908) #syn(#band(trash dress) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "dress"
+        },
+        {
+          "weight": "1",
+          "feature": "trash"
+        }
+      ]
+    },
+    {
+      "title": "MB132",
+      "text": "asteroid hits Russia",
+      "epoch": "1.36132364E9",
+      "querytweettime": "304039501779574785",
+      "constraint": "#band( #between(epoch 1360909177 1361323641) #syn(#band(asteroid hits) #band(asteroid russia) #band(hits russia) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "hits"
+        },
+        {
+          "weight": "1",
+          "feature": "russia"
+        },
+        {
+          "weight": "1",
+          "feature": "asteroid"
+        }
+      ]
+    },
+    {
+      "title": "MB133",
+      "text": "cruise ship safety",
+      "epoch": "1.363379677E9",
+      "querytweettime": "312663145997033474",
+      "constraint": "#band( #between(epoch 1360773662 1363379678) #syn(#band(cruise ship) #band(cruise safety) #band(ship safety) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "safety"
+        },
+        {
+          "weight": "1",
+          "feature": "ship"
+        },
+        {
+          "weight": "1",
+          "feature": "cruise"
+        }
+      ]
+    },
+    {
+      "title": "MB134",
+      "text": "The Middle TV show",
+      "epoch": "1.36442979E9",
+      "querytweettime": "317067639165964288",
+      "constraint": "#band( #between(epoch 1359997501 1364429791) #syn(#band(middle tv) #band(middle show) #band(tv show) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "tv"
+        },
+        {
+          "weight": "1",
+          "feature": "show"
+        },
+        {
+          "weight": "1",
+          "feature": "middle"
+        }
+      ]
+    },
+    {
+      "title": "MB135",
+      "text": "Big Dog terminator robot",
+      "epoch": "1.364602694E9",
+      "querytweettime": "317792851100590080",
+      "constraint": "#band( #between(epoch 1359734619 1364602695) #syn(#band(big dog) #band(big terminator) #band(big robot) #band(dog terminator) #band(dog robot) #band(terminator robot) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "terminator"
+        },
+        {
+          "weight": "1",
+          "feature": "robot"
+        },
+        {
+          "weight": "1",
+          "feature": "dog"
+        },
+        {
+          "weight": "1",
+          "feature": "big"
+        }
+      ]
+    },
+    {
+      "title": "MB136",
+      "text": "Gone Girl reviews",
+      "epoch": "1.36469287E9",
+      "querytweettime": "318171076645502976",
+      "constraint": "#band( #between(epoch 1360296784 1364692871) #syn(#band(gone girl) #band(gone reviews) #band(girl reviews) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "reviews"
+        },
+        {
+          "weight": "1",
+          "feature": "girl"
+        },
+        {
+          "weight": "1",
+          "feature": "gone"
+        }
+      ]
+    },
+    {
+      "title": "MB137",
+      "text": "cause of the Super Bowl blackout",
+      "epoch": "1.360082738E9",
+      "querytweettime": "298834781561581569",
+      "constraint": "#band( #between(epoch 1359943279 1360082739) #syn(#band(cause super) #band(cause bowl) #band(cause blackout) #band(super bowl) #band(super blackout) #band(bowl blackout) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "super"
+        },
+        {
+          "weight": "1",
+          "feature": "blackout"
+        },
+        {
+          "weight": "1",
+          "feature": "bowl"
+        },
+        {
+          "weight": "1",
+          "feature": "cause"
+        }
+      ]
+    },
+    {
+      "title": "MB138",
+      "text": "New York City soda ban blocked",
+      "epoch": "1.363256418E9",
+      "querytweettime": "312146160284471296",
+      "constraint": "#band( #between(epoch 1363023407 1363256419) #syn(#band(new york) #band(new city) #band(new soda) #band(new ban) #band(new blocked) #band(york city) #band(york soda) #band(york ban) #band(york blocked) #band(city soda) #band(city ban) #band(city blocked) #band(soda ban) #band(soda blocked) #band(ban blocked) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "ban"
+        },
+        {
+          "weight": "1",
+          "feature": "new"
+        },
+        {
+          "weight": "1",
+          "feature": "blocked"
+        },
+        {
+          "weight": "1",
+          "feature": "york"
+        },
+        {
+          "weight": "1",
+          "feature": "soda"
+        },
+        {
+          "weight": "1",
+          "feature": "city"
+        }
+      ]
+    },
+    {
+      "title": "MB139",
+      "text": "Artists Against Fracking",
+      "epoch": "1.364129947E9",
+      "querytweettime": "315810006450724866",
+      "constraint": "#band( #between(epoch 1360001202 1364129948) #syn(#band(artists fracking) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "artists"
+        },
+        {
+          "weight": "1",
+          "feature": "fracking"
+        }
+      ]
+    },
+    {
+      "title": "MB140",
+      "text": "Richard III burial dispute",
+      "epoch": "1.364394043E9",
+      "querytweettime": "316917705368293376",
+      "constraint": "#band( #between(epoch 1359922628 1364394044) #syn(#band(richard iii) #band(richard burial) #band(richard dispute) #band(iii burial) #band(iii dispute) #band(burial dispute) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "dispute"
+        },
+        {
+          "weight": "1",
+          "feature": "richard"
+        },
+        {
+          "weight": "1",
+          "feature": "iii"
+        },
+        {
+          "weight": "1",
+          "feature": "burial"
+        }
+      ]
+    },
+    {
+      "title": "MB141",
+      "text": "Mila Kunis in Oz movie",
+      "epoch": "1.364612761E9",
+      "querytweettime": "317835075158941697",
+      "constraint": "#band( #between(epoch 1359772520 1364612762) #syn(#band(mila kunis) #band(mila oz) #band(mila movie) #band(kunis oz) #band(kunis movie) #band(oz movie) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "kunis"
+        },
+        {
+          "weight": "1",
+          "feature": "movie"
+        },
+        {
+          "weight": "1",
+          "feature": "mila"
+        },
+        {
+          "weight": "1",
+          "feature": "oz"
+        }
+      ]
+    },
+    {
+      "title": "MB142",
+      "text": "Iranian weapons to Syria",
+      "epoch": "1.36415802E9",
+      "querytweettime": "315927753138511872",
+      "constraint": "#band( #between(epoch 1359839607 1364158021) #syn(#band(iranian weapons) #band(iranian syria) #band(weapons syria) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "iranian"
+        },
+        {
+          "weight": "1",
+          "feature": "weapons"
+        },
+        {
+          "weight": "1",
+          "feature": "syria"
+        }
+      ]
+    },
+    {
+      "title": "MB143",
+      "text": "Maracana Stadium problems",
+      "epoch": "1.364656736E9",
+      "querytweettime": "318019519664758785",
+      "constraint": "#band( #between(epoch 1361268410 1364656737) #syn(#band(maracana stadium) #band(maracana problems) #band(stadium problems) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "maracana"
+        },
+        {
+          "weight": "1",
+          "feature": "problems"
+        },
+        {
+          "weight": "1",
+          "feature": "stadium"
+        }
+      ]
+    },
+    {
+      "title": "MB144",
+      "text": "Downton Abbey actor turnover",
+      "epoch": "1.362608003E9",
+      "querytweettime": "309426510643748866",
+      "constraint": "#band( #between(epoch 1359816492 1362608004) #syn(#band(downton abbey) #band(downton actor) #band(downton turnover) #band(abbey actor) #band(abbey turnover) #band(actor turnover) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "downton"
+        },
+        {
+          "weight": "1",
+          "feature": "turnover"
+        },
+        {
+          "weight": "1",
+          "feature": "actor"
+        },
+        {
+          "weight": "1",
+          "feature": "abbey"
+        }
+      ]
+    },
+    {
+      "title": "MB145",
+      "text": "National Parks sequestered",
+      "epoch": "1.363902468E9",
+      "querytweettime": "314855890383687681",
+      "constraint": "#band( #between(epoch 1359678422 1363902469) #syn(#band(national parks) #band(national sequestered) #band(parks sequestered) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "national"
+        },
+        {
+          "weight": "1",
+          "feature": "parks"
+        },
+        {
+          "weight": "1",
+          "feature": "sequestered"
+        }
+      ]
+    },
+    {
+      "title": "MB146",
+      "text": "GMO labeling",
+      "epoch": "1.364183749E9",
+      "querytweettime": "316035668402909185",
+      "constraint": "#band( #between(epoch 1362765066 1364183750) #syn(#band(gmo labeling) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "labeling"
+        },
+        {
+          "weight": "1",
+          "feature": "gmo"
+        }
+      ]
+    },
+    {
+      "title": "MB147",
+      "text": "Victoria Secret commercial",
+      "epoch": "1.364735642E9",
+      "querytweettime": "318350475424567296",
+      "constraint": "#band( #between(epoch 1359697518 1364735643) #syn(#band(victoria secret) #band(victoria commercial) #band(secret commercial) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "victoria"
+        },
+        {
+          "weight": "1",
+          "feature": "secret"
+        },
+        {
+          "weight": "1",
+          "feature": "commercial"
+        }
+      ]
+    },
+    {
+      "title": "MB148",
+      "text": "Cyprus Bailout Protests",
+      "epoch": "1.364753448E9",
+      "querytweettime": "318425159210004480",
+      "constraint": "#band( #between(epoch 1364298171 1364753449) #syn(#band(cyprus bailout) #band(cyprus protests) #band(bailout protests) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "protests"
+        },
+        {
+          "weight": "1",
+          "feature": "cyprus"
+        },
+        {
+          "weight": "1",
+          "feature": "bailout"
+        }
+      ]
+    },
+    {
+      "title": "MB150",
+      "text": "UK wine industry",
+      "epoch": "1.364742709E9",
+      "querytweettime": "318380116566749184",
+      "constraint": "#band( #between(epoch 0 1364742710) #syn(#band(uk wine) #band(uk industry) #band(wine industry) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "wine"
+        },
+        {
+          "weight": "1",
+          "feature": "uk"
+        },
+        {
+          "weight": "1",
+          "feature": "industry"
+        }
+      ]
+    },
+    {
+      "title": "MB151",
+      "text": "gun advocates are corrupt",
+      "epoch": "1.36141055E9",
+      "querytweettime": "304404028731846657",
+      "constraint": "#band( #between(epoch 1361155412 1361410551) #syn(#band(gun advocates) #band(gun corrupt) #band(advocates corrupt) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "advocates"
+        },
+        {
+          "weight": "1",
+          "feature": "corrupt"
+        },
+        {
+          "weight": "1",
+          "feature": "gun"
+        }
+      ]
+    },
+    {
+      "title": "MB152",
+      "text": "Iceland FBI Wikileaks",
+      "epoch": "1.362646821E9",
+      "querytweettime": "309589325128028160",
+      "constraint": "#band( #between(epoch 1359686964 1362646822) #syn(#band(iceland fbi) #band(iceland wikileaks) #band(fbi wikileaks) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "fbi"
+        },
+        {
+          "weight": "1",
+          "feature": "iceland"
+        },
+        {
+          "weight": "1",
+          "feature": "wikileaks"
+        }
+      ]
+    },
+    {
+      "title": "MB153",
+      "text": "lighter bail for Pistorius",
+      "epoch": "1.364468122E9",
+      "querytweettime": "317228415197519872",
+      "constraint": "#band( #between(epoch 1362762098 1364468123) #syn(#band(lighter bail) #band(lighter pistorius) #band(bail pistorius) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "bail"
+        },
+        {
+          "weight": "1",
+          "feature": "pistorius"
+        },
+        {
+          "weight": "1",
+          "feature": "lighter"
+        }
+      ]
+    },
+    {
+      "title": "MB154",
+      "text": "anti-aging resveratrol",
+      "epoch": "1.362763742E9",
+      "querytweettime": "310079727366967297",
+      "constraint": "#band( #between(epoch 0 1362763743) #syn(#band(anti-aging resveratrol) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "anti"
+        },
+        {
+          "weight": "1",
+          "feature": "resveratrol"
+        },
+        {
+          "weight": "1",
+          "feature": "aging"
+        }
+      ]
+    },
+    {
+      "title": "MB155",
+      "text": "Obama reaction to Syrian chemical weapons",
+      "epoch": "1.363814624E9",
+      "querytweettime": "314487445926334464",
+      "constraint": "#band( #between(epoch 1363796453 1363814625) #syn(#band(obama reaction) #band(obama syrian) #band(obama chemical) #band(obama weapons) #band(reaction syrian) #band(reaction chemical) #band(reaction weapons) #band(syrian chemical) #band(syrian weapons) #band(chemical weapons) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "reaction"
+        },
+        {
+          "weight": "1",
+          "feature": "syrian"
+        },
+        {
+          "weight": "1",
+          "feature": "chemical"
+        },
+        {
+          "weight": "1",
+          "feature": "weapons"
+        },
+        {
+          "weight": "1",
+          "feature": "obama"
+        }
+      ]
+    },
+    {
+      "title": "MB156",
+      "text": "Bush dog dies",
+      "epoch": "1.360286405E9",
+      "querytweettime": "299689022853365760",
+      "constraint": "#band( #between(epoch 1359758236 1360286406) #syn(#band(bush dog) #band(bush dies) #band(dog dies) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "dies"
+        },
+        {
+          "weight": "1",
+          "feature": "bush"
+        },
+        {
+          "weight": "1",
+          "feature": "dog"
+        }
+      ]
+    },
+    {
+      "title": "MB157",
+      "text": "Kardashian maternity style",
+      "epoch": "1.364694426E9",
+      "querytweettime": "318177602995122176",
+      "constraint": "#band( #between(epoch 1360621144 1364694427) #syn(#band(kardashian maternity) #band(kardashian style) #band(maternity style) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "maternity"
+        },
+        {
+          "weight": "1",
+          "feature": "style"
+        },
+        {
+          "weight": "1",
+          "feature": "kardashian"
+        }
+      ]
+    },
+    {
+      "title": "MB158",
+      "text": "hush puppies meal",
+      "epoch": "1.364087509E9",
+      "querytweettime": "315632008560775168",
+      "constraint": "#band( #between(epoch 1359930004 1364087510) #syn(#band(hush puppies) #band(hush meal) #band(puppies meal) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "puppies"
+        },
+        {
+          "weight": "1",
+          "feature": "hush"
+        },
+        {
+          "weight": "1",
+          "feature": "meal"
+        }
+      ]
+    },
+    {
+      "title": "MB159",
+      "text": "circular economy initiatives",
+      "epoch": "1.364118956E9",
+      "querytweettime": "315763906851250176",
+      "constraint": "#band( #between(epoch 1359901307 1364118957) #syn(#band(circular economy) #band(circular initiatives) #band(economy initiatives) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "circular"
+        },
+        {
+          "weight": "1",
+          "feature": "initiatives"
+        },
+        {
+          "weight": "1",
+          "feature": "economy"
+        }
+      ]
+    },
+    {
+      "title": "MB160",
+      "text": "social media as educational tool",
+      "epoch": "1.364354055E9",
+      "querytweettime": "316749983514771457",
+      "constraint": "#band( #between(epoch 1359898560 1364354056) #syn(#band(social media) #band(social educational) #band(social tool) #band(media educational) #band(media tool) #band(educational tool) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "social"
+        },
+        {
+          "weight": "1",
+          "feature": "tool"
+        },
+        {
+          "weight": "1",
+          "feature": "educational"
+        },
+        {
+          "weight": "1",
+          "feature": "media"
+        }
+      ]
+    },
+    {
+      "title": "MB161",
+      "text": "3D printing for science",
+      "epoch": "1.363113512E9",
+      "querytweettime": "311546769064464384",
+      "constraint": "#band( #between(epoch 1360054168 1363113513) #syn(#band(3d printing) #band(3d science) #band(printing science) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "3d"
+        },
+        {
+          "weight": "1",
+          "feature": "printing"
+        },
+        {
+          "weight": "1",
+          "feature": "science"
+        }
+      ]
+    },
+    {
+      "title": "MB162",
+      "text": "DPRK Nuclear Test",
+      "epoch": "1.362701869E9",
+      "querytweettime": "309820213183008768",
+      "constraint": "#band( #between(epoch 1360655388 1362701870) #syn(#band(dprk nuclear) #band(dprk test) #band(nuclear test) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "nuclear"
+        },
+        {
+          "weight": "1",
+          "feature": "test"
+        },
+        {
+          "weight": "1",
+          "feature": "dprk"
+        }
+      ]
+    },
+    {
+      "title": "MB163",
+      "text": "virtual currencies regulation",
+      "epoch": "1.364604366E9",
+      "querytweettime": "317889374605950976",
+      "constraint": "#band( #between(epoch 1359837689 1364604367) #syn(#band(virtual currencies) #band(virtual regulation) #band(currencies regulation) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "virtual"
+        },
+        {
+          "weight": "1",
+          "feature": "currencies"
+        },
+        {
+          "weight": "1",
+          "feature": "regulation"
+        }
+      ]
+    },
+    {
+      "title": "MB164",
+      "text": "Lindsey Vonn sidelined",
+      "epoch": "1.364687337E9",
+      "querytweettime": "318147869565652992",
+      "constraint": "#band( #between(epoch 1360083665 1364687338) #syn(#band(lindsey vonn) #band(lindsey sidelined) #band(vonn sidelined) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "lindsey"
+        },
+        {
+          "weight": "1",
+          "feature": "sidelined"
+        },
+        {
+          "weight": "1",
+          "feature": "vonn"
+        }
+      ]
+    },
+    {
+      "title": "MB165",
+      "text": "ACPT Crossword Tournament",
+      "epoch": "1.363297783E9",
+      "querytweettime": "312319657644285952",
+      "constraint": "#band( #between(epoch 1363297782 1363297784) #syn(#band(acpt crossword) #band(acpt tournament) #band(crossword tournament) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "tournament"
+        },
+        {
+          "weight": "1",
+          "feature": "acpt"
+        },
+        {
+          "weight": "1",
+          "feature": "crossword"
+        }
+      ]
+    },
+    {
+      "title": "MB166",
+      "text": "Maryland casino table games",
+      "epoch": "1.364128795E9",
+      "querytweettime": "315805174633492481",
+      "constraint": "#band( #between(epoch 1361912239 1364128796) #syn(#band(maryland casino) #band(maryland table) #band(maryland games) #band(casino table) #band(casino games) #band(table games) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "games"
+        },
+        {
+          "weight": "1",
+          "feature": "maryland"
+        },
+        {
+          "weight": "1",
+          "feature": "casino"
+        },
+        {
+          "weight": "1",
+          "feature": "table"
+        }
+      ]
+    },
+    {
+      "title": "MB167",
+      "text": "sequestration opinions",
+      "epoch": "1.364230131E9",
+      "querytweettime": "316230208585871361",
+      "constraint": "#band( #between(epoch 0 1364230132) #syn(#syn(sequester sequestration) #band(sequestration opinions) #band(sequester) opinions #band(sequester opinion) #band(sequestration opinion) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "sequestration"
+        },
+        {
+          "weight": "1",
+          "feature": "opinions"
+        }
+      ]
+    },
+    {
+      "title": "MB168",
+      "text": "US behind Chaevez cancer",
+      "epoch": "1.363543905E9",
+      "querytweettime": "313351968166928385",
+      "constraint": "#band( #between(epoch 1360013545 1363543906) #syn(#band(chaevez cancer) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "cancer"
+        },
+        {
+          "weight": "1",
+          "feature": "chaevez"
+        }
+      ]
+    },
+    {
+      "title": "MB169",
+      "text": "Honey Boo Boo Girl Scout cookies",
+      "epoch": "1.362890952E9",
+      "querytweettime": "310613284749447168",
+      "constraint": "#band( #between(epoch 1362001112 1362890953) #syn(#band(honey boo) #band(honey boo) #band(honey girl) #band(honey scout) #band(honey cookies) #band(boo boo) #band(boo girl) #band(boo scout) #band(boo cookies) #band(boo girl) #band(boo scout) #band(boo cookies) #band(girl scout) #band(girl cookies) #band(scout cookies) ))",
+      "model": [
+        {
+          "weight": "2",
+          "feature": "boo"
+        },
+        {
+          "weight": "1",
+          "feature": "scout"
+        },
+        {
+          "weight": "1",
+          "feature": "girl"
+        },
+        {
+          "weight": "1",
+          "feature": "cookies"
+        },
+        {
+          "weight": "1",
+          "feature": "honey"
+        }
+      ]
+    },
+    {
+      "title": "MB170",
+      "text": "Tony Mendez",
+      "epoch": "1.364739172E9",
+      "querytweettime": "318365281321881600",
+      "constraint": "#band( #between(epoch 1360277542 1364739173) #syn(#band(tony mendez) ))",
+      "model": [
+        {
+          "weight": "1",
+          "feature": "tony"
+        },
+        {
+          "weight": "1",
+          "feature": "mendez"
+        }
+      ]
+    }
+  ]
+}

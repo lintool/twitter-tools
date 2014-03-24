@@ -1,6 +1,9 @@
 twitter-tools-core/.classpath
 twitter-tools-core/.project
 twitter-tools-core/target/
+twitter-tools-rm3/.classpath
+twitter-tools-rm3/.project
+twitter-tools-rm3/target/
 etc/run.sh
 etc/trec_eval.9.0/
 etc/trec_eval
