@@ -86,7 +86,6 @@
               <name>SearchStatuses</name>
             </program>
             <program>
-<<<<<<< HEAD
               <mainClass>cc.twittertools.index.ExtractTermStatisticsFromIndex</mainClass>
               <name>ExtractTermStatisticsFromIndex</name>
             </program>
@@ -101,7 +100,7 @@
                 <maxMemorySize>4g</maxMemorySize>
               </jvmSettings>
             </program>
-=======
+            <program>
               <mainClass>cc.twittertools.index.ExtractTweetidsFromCollection</mainClass>
               <name>ExtractTweetidsFromCollection</name>
             </program>
@@ -113,7 +112,6 @@
 	      <mainClass>cc.twittertools.download.AsyncHTMLStatusBlockCrawler</mainClass>
 	      <name>AsyncHTMLStatusBlockCrawler</name>
 	    </program>
->>>>>>> html-scraper
           </programs>
         </configuration>
       </plugin>
