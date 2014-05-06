@@ -39,9 +39,9 @@ public class HTMLStatusExtractor {
 	JsonObject status = new JsonObject();
 
 	Document doc = Jsoup.parse(html);
-	Element tweet_div = doc.select("div.tweet").first();
+	Element tweet_div = doc.select("div.permalink-tweet").first();
 
-	String tweet_text = doc.select("p.tweet-text").first().text();
+	String tweet_text = tweet_div.select("p.tweet-text").first().text();
 	status.addProperty("text", tweet_text);
 
 	String tweet_id = tweet_div.attr("data-tweet-id");
