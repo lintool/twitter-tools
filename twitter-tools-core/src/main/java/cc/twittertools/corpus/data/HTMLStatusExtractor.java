@@ -1,11 +1,14 @@
 package cc.twittertools.corpus.data;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -35,7 +38,21 @@ public class HTMLStatusExtractor {
 	date_fmt.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
-    public JsonObject extractTweet(String html) {
+    public static Map<String, String> splitQuery(URL url) 
+	throws java.io.UnsupportedEncodingException {
+	Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+	String query = url.getQuery();
+	String[] pairs = query.split("&");
+	for (String pair : pairs) {
+	    int idx = pair.indexOf("=");
+	    query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
+			    URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+	}
+	return query_pairs;
+    }
+
+    public JsonObject extractTweet(String html) 
+	throws java.net.MalformedURLException, java.io.UnsupportedEncodingException {
 	JsonObject status = new JsonObject();
 
 	Document doc = Jsoup.parse(html);
@@ -77,6 +94,32 @@ public class HTMLStatusExtractor {
 	user.addProperty("name", user_name);
 	
 	status.add("user", user);
+	
+	// Geo information
+	Elements tweet_loc = doc.select("a.tweet-geo-text");
+	if (!tweet_loc.isEmpty()) {
+	    JsonObject location = new JsonObject();
+	    Element loc = tweet_loc.first();
+	    // Adding http to avoid malformed URL exception
+	    URL url = new URL("http:" + loc.attr("href"));
+	    Map<String, String> query_params = HTMLStatusExtractor.splitQuery(url);
+	    // Loop over possible query parameters
+	    // http://asnsblues.blogspot.ch/2011/11/google-maps-query-string-parameters.html
+	    String lat_and_long = null;
+	    if ((lat_and_long = query_params.get("ll")) != null
+		|| (lat_and_long = query_params.get("sll")) != null
+		|| (lat_and_long = query_params.get("cbll")) != null
+		|| (lat_and_long = query_params.get("q")) != null) {
+		String[] coordinates = lat_and_long.split(",");
+		double latitude = Double.parseDouble(coordinates[0]);
+		double longitude = Double.parseDouble(coordinates[1]);
+		location.addProperty("latitude", latitude);
+		location.addProperty("longitude", longitude);
+	    }
+	    location.addProperty("location_text", loc.text());
+	    status.add("location", location);
+	}
+
 	return status;
     }
 
