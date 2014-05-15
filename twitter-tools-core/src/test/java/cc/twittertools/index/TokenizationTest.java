@@ -55,6 +55,11 @@ public class TokenizationTest {
       {"this][is[lots[(of)words+with-lots=of-strange!characters?$in-fact=it&has&Every&Single:one;of<them>in_here_B&N_test_test?test\\test^testing`testing{testing}testing…testing¬testing·testing what?",
        new String[] {"thi", "is", "lot", "of", "word", "with", "lot", "of", "strang", "charact", "in", "fact", "it", "ha", "everi", "singl", "on", "of", "them", "in", "here", "bn", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "what"}},
   };
+
+  Object[][] nbspExamples = new Object[][] {
+      {"@Porsche : 2014 is already here #zebracar #LM24 http://bit.ly/18RUczp\u00a0 pic.twitter.com/cQ7z0c2hMg",
+       new String[] {"@porsche", "2014", "is", "alreadi", "here", "#zebracar", "#lm24", "http://bit.ly/18RUczp", "pic.twitter.com/cQ7z0c2hMg"}},
+  };
   
   @Test
   public void basic() throws Exception {
@@ -62,6 +67,15 @@ public class TokenizationTest {
 
     for (int i = 0; i < examples.length; i++) {
       verify((String[]) examples[i][1], parseKeywords(analyzer, (String) examples[i][0]));
+    }
+  }
+
+  @Test
+  public void nbsp() throws Exception {
+    Analyzer analyzer = new TweetAnalyzer(Version.LUCENE_43);
+
+    for (int i = 0; i < nbspExamples.length; i++) {
+      verify((String[]) nbspExamples[i][1], parseKeywords(analyzer, (String) nbspExamples[i][0]));
     }
   }
 

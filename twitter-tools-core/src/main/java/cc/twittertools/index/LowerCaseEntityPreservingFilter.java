@@ -62,6 +62,17 @@ public final class LowerCaseEntityPreservingFilter extends TokenFilter {
       tailBufferSaved = null;
     }
 
+    // Check for additional whitespace chars
+    for (int i = 0; i < termAtt.length(); i++) {
+      if (isWhiteSpace(i)) {
+        // Remove the tail of the string from the buffer and save it
+        // for the next iteration
+        tailBuffer = Arrays.copyOfRange(buffer, i + 1, termAtt.length());
+        termAtt.setLength(i);
+        break;
+      }
+    }
+
     int entityType = isEntity(termAtt.toString());
     if (entityType == VALID_URL) {
       keywordAttr.setKeyword(true);
@@ -240,6 +251,19 @@ public final class LowerCaseEntityPreservingFilter extends TokenFilter {
     case '\uFF03': // Unicode #
     case '_':
       return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check if the character at position i in the buffer is a whitespace
+   * which Character.isWhitespace skips over (e.g: nbsp)
+   */
+  public boolean isWhiteSpace(int i) {
+    final char[] buffer = termAtt.buffer();
+    switch (buffer[i]) {
+      case '\u00A0': // Unicode nbsp
+        return true;
     }
     return false;
   }
