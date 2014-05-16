@@ -256,13 +256,15 @@ public final class LowerCaseEntityPreservingFilter extends TokenFilter {
   }
 
   /**
-   * Check if the character at position i in the buffer is a whitespace
-   * which Character.isWhitespace skips over (e.g: nbsp)
+   * Check if the character at position i in the buffer is whitespace,
+   * which Character.isWhitespace does not define (i.e: non-breaking spaces)
    */
   public boolean isWhiteSpace(int i) {
     final char[] buffer = termAtt.buffer();
     switch (buffer[i]) {
       case '\u00A0': // Unicode nbsp
+      case '\u2007':
+      case '\u202f':
         return true;
     }
     return false;
