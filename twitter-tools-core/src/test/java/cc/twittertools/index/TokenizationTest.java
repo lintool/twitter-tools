@@ -59,6 +59,8 @@ public class TokenizationTest {
   Object[][] nbspExamples = new Object[][] {
       {"@Porsche : 2014 is already here #zebracar #LM24 http://bit.ly/18RUczp\u00a0 pic.twitter.com/cQ7z0c2hMg",
        new String[] {"@porsche", "2014", "is", "alreadi", "here", "#zebracar", "#lm24", "http://bit.ly/18RUczp", "pic.twitter.com/cQ7z0c2hMg"}},
+      {"Some cars are in the river #NBC4NY http://t.co/WmK9Hc…",
+       new String[] {"some", "car", "ar", "in", "the", "river", "#nbc4ny", "http://t.co/WmK9Hc"}}
   };
   
   @Test
