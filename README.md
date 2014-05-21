@@ -1,12 +1,28 @@
 Twitter Tools
 =============
 
-This is a collection of tools for the TREC Microblog Track, which contains the official search API for TREC 2013. Please join the mailing list for discussion at [trec-microblog@googlegroups.com](http://groups.google.com/group/trec-microblog).
+This is a collection of tools for the TREC Microblog Track, which contains the official search API for TREC 2014 (which was also used in TREC 2013). Please join the mailing list for discussion at [trec-microblog@googlegroups.com](http://groups.google.com/group/trec-microblog).
 
-Currently, the project has a single Maven artifact `twitter-tools-core`. The latest releases of Maven artifacts are available at [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Ccc.twittertools).
+Participating in TREC 2014
+--------------------------
+
+In order to participate in the TREC 2014 Microblog track, you need to register to participate in TREC. See the [call for participation](http://trec.nist.gov/pubs/call2014.html). The call will close in late May.
+
+The Microblog track in 2014 will use the "evaluation-as-a-service" (EaaS) design, where teams interact with the official corpus via a common API. Thus, you need to request access to the API via the following steps:
+
+**NOTE**: If you participated in TREC 2013 and already have access to the API, you do not need to do anything.
+
+1. Fill out the [API usage agreement](http://lintool.github.io/twitter-tools/API-agreement.pdf).
+2. Email the usage agreement to `microblog-request@nist.gov`.
+3. After NIST receives your request, you will receive an access token from NIST.
+4. The code for accessing the API can be found in this repository. The endpoint of API itself (i.e., hostname, port) can be found at [this location](http://www.umiacs.umd.edu/~jimmylin/trec2014microblog/servers.txt).
+
+Note that the file is password protected with the same username/password combination as the TREC 2014 Active Participants site: you should have received the username/password when you signed up for TREC 2014. Please do not publicize this information. 
 
 Getting Stated
 --------------
+
+The main Maven artifact for the TREC Microblog API is `twitter-tools-core`. The latest releases of Maven artifacts are available at [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Ccc.twittertools).
 
 You can clone the repo with the following command:
 
