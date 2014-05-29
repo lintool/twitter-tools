@@ -1,6 +1,7 @@
 package cc.twittertools.hbase;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,24 +18,31 @@ public class LoadWordCount {
 		if(args.length!=1){
 			System.out.println("invalid argument");
 		}
-		BufferedReader bf = new BufferedReader(new FileReader(args[0]));
-		// each line in wordcount file is like : 1 twitter 100
 		HashMap<String,WordCountDAO.WordCount> wordcounts = new HashMap<String,WordCountDAO.WordCount>();
-		String line;
-		while((line=bf.readLine())!=null){
-			String[] groups = line.split("\\s+");
-			if(groups.length != 3) 
-				continue;
-			String interval = groups[0];
-			String word = groups[1];
-			String count = groups[2];
-			if(!wordcounts.containsKey(word)){
-				WordCountDAO.WordCount w = new WordCountDAO.WordCount(word);
-				wordcounts.put(word, w);
+		File folder = new File(args[0]);
+		if(folder.isDirectory()){
+			for (File file : folder.listFiles()) {
+				if(!file.getName().startsWith("part"))
+					continue;
+				BufferedReader bf = new BufferedReader(new FileReader(args[0]+'/'+file.getName()));
+				// each line in wordcount file is like : 1 twitter 100
+				String line;
+				while((line=bf.readLine())!=null){
+					String[] groups = line.split("\\s+");
+					if(groups.length != 3) 
+						continue;
+					String interval = groups[0];
+					String word = groups[1];
+					String count = groups[2];
+					if(!wordcounts.containsKey(word)){
+						WordCountDAO.WordCount w = new WordCountDAO.WordCount(word);
+						wordcounts.put(word, w);
+					}
+					WordCountDAO.WordCount w = wordcounts.get(word);
+					w.setCount(Integer.valueOf(interval.substring(4))-1, count);
+					wordcounts.put(word, w);
+				}
 			}
-			WordCountDAO.WordCount w = wordcounts.get(word);
-			w.setCount(Integer.valueOf(interval), count);
-			wordcounts.put(word, w);
 		}
 		
 		HTablePool pool = new HTablePool();
