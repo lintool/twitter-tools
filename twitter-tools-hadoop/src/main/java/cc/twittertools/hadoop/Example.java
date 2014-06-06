@@ -14,13 +14,16 @@ import cc.twittertools.index.LowerCaseEntityPreservingFilter;
 public class Example {
 	
 	public static void main(String[] args) throws IOException{
-		String o = "I have a dream@lijia http://www.google.com/trends?pm=2";
-		Tokenizer source = new WhitespaceTokenizer(Version.LUCENE_43, new StringReader((String)o));
-        TokenStream tokenstream = new LowerCaseEntityPreservingFilter(source);
-        tokenstream.reset();
-        while (tokenstream.incrementToken()){
-        	String token = tokenstream.getAttribute(CharTermAttribute.class).toString();
-        	System.out.println(token);
-        }
+		//Test GetInterval Correctness
+		try{
+			String str = "Tue Oct 01 00:07:43 +0000 2011";
+			String[] groups = str.split("\\s+");
+			String time = groups[3];
+			String[] timeGroups= time.split(":");
+			int interval = (Integer.valueOf(timeGroups[0]))*12 + (Integer.valueOf(timeGroups[1])/5) + 1;
+			System.out.println(interval);
+		}catch(Exception e){
+			throw new IOException("caught exception",e);
+		}
 	}
 }

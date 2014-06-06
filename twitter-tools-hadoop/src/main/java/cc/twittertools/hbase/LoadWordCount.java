@@ -6,10 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.hadoop.hbase.client.HTablePool;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 
 public class LoadWordCount {
 
@@ -18,38 +23,47 @@ public class LoadWordCount {
 		if(args.length!=1){
 			System.out.println("invalid argument");
 		}
-		HashMap<String,WordCountDAO.WordCount> wordcounts = new HashMap<String,WordCountDAO.WordCount>();
+		Table<String, String, WordCountDAO.WordCount> wordCountMap = HashBasedTable.create();
+		Set familySet = new HashSet<String>();
 		File folder = new File(args[0]);
 		if(folder.isDirectory()){
 			for (File file : folder.listFiles()) {
 				if(!file.getName().startsWith("part"))
 					continue;
-				BufferedReader bf = new BufferedReader(new FileReader(args[0]+'/'+file.getName()));
+				System.out.println("Processing "+args[0]+file.getName());
+				BufferedReader bf = new BufferedReader(new FileReader(args[0]+file.getName()));
 				// each line in wordcount file is like : 1 twitter 100
 				String line;
 				while((line=bf.readLine())!=null){
-					String[] groups = line.split("\\s+");
-					if(groups.length != 3) 
+					String[] groups = line.split("\\t");
+					if(groups.length != 4) 
 						continue;
-					String interval = groups[0];
-					String word = groups[1];
-					String count = groups[2];
-					if(!wordcounts.containsKey(word)){
-						WordCountDAO.WordCount w = new WordCountDAO.WordCount(word);
-						wordcounts.put(word, w);
+					String day = groups[0]; // each day is viewed as a column family in underlying HBase
+					String interval = groups[1];
+					String word = groups[2];
+					String count = groups[3];
+					familySet.add(day);
+					if(!wordCountMap.contains(word, day)){
+						WordCountDAO.WordCount w = new WordCountDAO.WordCount(word,day);
+						wordCountMap.put(word, day, w);
 					}
-					WordCountDAO.WordCount w = wordcounts.get(word);
-					w.setCount(Integer.valueOf(interval.substring(4))-1, count);
-					wordcounts.put(word, w);
+					WordCountDAO.WordCount w = wordCountMap.get(word,day);
+					w.setCount(interval, count);
+					wordCountMap.put(word, day, w);
 				}
 			}
 		}
 		
+		System.out.println("Total "+wordCountMap.size()+" words");
 		HTablePool pool = new HTablePool();
 		WordCountDAO DAO = new WordCountDAO(pool);
-		for(Map.Entry<String, WordCountDAO.WordCount> e: wordcounts.entrySet()){
-			WordCountDAO.WordCount w = e.getValue();
+		DAO.CreateTable(familySet);
+		int count = 0;
+		for(WordCountDAO.WordCount w: wordCountMap.values()){
 			DAO.addWordCount(w);
+			if(++count % 50000==0){
+				System.out.println("Loading "+count+" words");
+			}
 		}
 		pool.closeTablePool(DAO.TABLE_NAME);
 	}

@@ -11,8 +11,8 @@ register 'jar/twitter-text-1.9.0.jar';
 raw = load '/shared/collections/Tweets2011/20110208-099.json.gz' using com.twitter.elephantbird.pig.load.JsonLoader('-nestedLoad');
 
 a = foreach raw generate $0#'created_at',$0#'text';
-b = foreach a generate cc.twittertools.udf.TimeDim($0), flatten(cc.twittertools.udf.LuceneTokenizer($1));
-c = group b by ($0,$1);
+b = foreach a generate cc.twittertools.udf.GetDate($0), cc.twittertools.udf.GetInterval($0), flatten(cc.twittertools.udf.LuceneTokenizer($1));
+c = group b by ($0,$1,$2);
 d = foreach c generate flatten(group),COUNT(b);
 
 store d into 'wordcount';
