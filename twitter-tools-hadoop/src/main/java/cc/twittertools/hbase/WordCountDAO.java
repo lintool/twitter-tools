@@ -29,10 +29,9 @@ import org.apache.log4j.Logger;
 public class WordCountDAO {
 	 private final static int DAY = 60*24;
 	 private final static int INTERVAL = 5;
-	 private static int NUM_INTERVALS = DAY/INTERVAL;
+	 public static int NUM_INTERVALS = DAY/INTERVAL;
 	 public static final byte[] TABLE_NAME = Bytes.toBytes("wordcount");
-	 
-	 public static final byte[][] COUNT_COLS = new byte[NUM_INTERVALS][Integer.SIZE];
+	 public static final byte[] COLUMN_FAMILY = Bytes.toBytes("count");
 	 
 	 private static final Logger log = Logger.getLogger(WordCountDAO.class);
 
@@ -40,19 +39,16 @@ public class WordCountDAO {
 	 
 	 public WordCountDAO(HTablePool pool) {
 		 this.pool = pool;
-		 for(int i=0; i<NUM_INTERVALS; i++){
-			 COUNT_COLS[i] = Bytes.toBytes("i"+i);
-		 }
 	 }
 	 
-	 public void CreateTable(Set<String> familySet) throws IOException, ZooKeeperConnectionException{
+	 public void CreateTable() throws IOException, ZooKeeperConnectionException{
 		 Configuration conf = HBaseConfiguration.create();
 		  
 		 HBaseAdmin hbase = new HBaseAdmin(conf);
 		 HTableDescriptor[] wordcounts = hbase.listTables("wordcount");
 		  
 		 if(wordcounts.length != 0){ //Drop Table if Exists
-			 hbase.disableTable(TABLE_NAME);
+		 	 hbase.disableTable(TABLE_NAME);
 			 hbase.deleteTable(TABLE_NAME);
 		 }
 		 
@@ -60,10 +56,8 @@ public class WordCountDAO {
 		 hbase.createTable(wordcount);
 		 // Cannot edit a stucture on an active table.
 		 hbase.disableTable(TABLE_NAME);
-		 for(String family : familySet){
-			 HColumnDescriptor columnFamily = new HColumnDescriptor(family.getBytes());
-			 hbase.addColumn(TABLE_NAME, columnFamily);
-		 }
+		 HColumnDescriptor columnFamily = new HColumnDescriptor(COLUMN_FAMILY);
+		 hbase.addColumn(TABLE_NAME, columnFamily);
 		 hbase.enableTable(TABLE_NAME);
 		 
 		 hbase.close();
@@ -73,14 +67,7 @@ public class WordCountDAO {
 		 log.debug(String.format("Creating Get for %s", word));
 
 		 Get g = new Get(Bytes.toBytes(word));
-		 return g;
-	 }
-	 
-	 private static Get mkGetByFamily(String word, String family_id) throws IOException {
-		 log.debug(String.format("Creating Get for %s", word));
-
-		 Get g = new Get(Bytes.toBytes(word));
-		 g.addFamily(Bytes.toBytes(family_id));
+		 g.addFamily(COLUMN_FAMILY);
 		 return g;
 	 }
 	 
@@ -88,10 +75,16 @@ public class WordCountDAO {
 		 log.debug(String.format("Creating Put for %s", w.word));
 
 		 Put p = new Put(w.word);
-		 byte[] time_family = w.family_id;
-		 for(byte[] column : w.countMap.keySet()){
-			 p.add(time_family, column, w.countMap.get(column));
+		 // add integer compression here
+		 // convert 2-d byte array to 1-d byte array
+		 byte[] storage = new byte[NUM_INTERVALS*Integer.SIZE/Byte.SIZE];
+		 for(int i=0; i< NUM_INTERVALS; i++){
+			 for(int j=0; j<Integer.SIZE/Byte.SIZE; j++){
+				storage[i*Integer.SIZE/Byte.SIZE+j] = w.count[i][j]; 
+			 }
 		 }
+		 p.add(COLUMN_FAMILY, w.column_id, storage);
+		 
 		 return p;
 	 }
 	 
@@ -104,12 +97,7 @@ public class WordCountDAO {
 
 	 private static Scan mkScan() {
 		 Scan s = new Scan();
-		 return s;
-	 }
-	 
-	 private static Scan mkScanByFamily(String family_id) {
-		 Scan s = new Scan();
-		 s.addFamily(Bytes.toBytes(family_id));
+		 s.addFamily(COLUMN_FAMILY);
 		 return s;
 	 }
 	 
@@ -145,54 +133,55 @@ public class WordCountDAO {
 	 
 	 public static class WordCount{
 		 public byte[] word;
-		 public byte[] family_id;
-		 public NavigableMap<byte[],byte[]> countMap;
-		 private static Comparator<byte[]> comparator = new Comparator<byte[]>(){
-			 @Override
-			 public int compare(byte[] b1, byte[] b2){
-				return b1.toString().compareTo(b2.toString()); 
+		 public byte[] column_id;
+		 public byte[][] count;
+		 
+		 public WordCount(byte[] word, byte[] column_id){
+			 this.word = word;
+			 this.column_id = column_id;
+			 this.count = new byte[NUM_INTERVALS][];
+			 for(int i=0; i < NUM_INTERVALS; i++){
+				 this.count[i] = Bytes.toBytes(0);
 			 }
-		 };
-		 
-		 public WordCount(byte[] word, byte[] family_id){
-			 this.word = word;
-			 this.family_id = family_id;
-			 this.countMap = new TreeMap<byte[],byte[]>(comparator);
-			 
 		 }
 		 
-		 public WordCount(String word, String family_id){
+		 public WordCount(String word, String column_id){
 			 this.word = Bytes.toBytes(word);
-			 this.family_id = Bytes.toBytes(family_id);
-			 this.countMap = new TreeMap<byte[],byte[]>(comparator);
+			 this.column_id = Bytes.toBytes(column_id);
+			 this.count = new byte[NUM_INTERVALS][];
+			 for(int i=0; i < NUM_INTERVALS; i++){
+				 this.count[i] = Bytes.toBytes(0);
+			 }
 		 }
 		 
-		 private WordCount(String word, String family_id, NavigableMap<byte[], byte[]> countMap) {
-			this.word = Bytes.toBytes(word);
-			this.family_id = Bytes.toBytes(family_id);
-			this.countMap = countMap;
-		 }
-		 
-		 private WordCount(byte[] word, byte[] family_id, NavigableMap<byte[], byte[]> countMap){
+		 private WordCount(byte[] word, byte[] column_id, byte[][] count){
 			 this.word = word;
-			 this.family_id = family_id;
-			 this.countMap = countMap;
+			 this.column_id = column_id;
+			 this.count = count;
 		 }
 		 
 		 public static List<WordCount> GetWordCountFromResults(Result r){
 			 List<WordCount> wordCounts = new ArrayList<WordCount>();
 			 byte[] word = r.getRow();
-			 NavigableMap<byte[],NavigableMap<byte[],byte[]>> familyMaps = r.getNoVersionMap();
-			 for(byte[] family: familyMaps.keySet()){
-				 NavigableMap map = familyMaps.get(family);
-				 WordCount w = new WordCount(word, family, map);
+			 // Map from column qualifiers to values
+			 NavigableMap<byte[],byte[]> familyMap = r.getFamilyMap(COLUMN_FAMILY);
+			 for(byte[] column: familyMap.keySet()){
+				 byte[] value = familyMap.get(column);
+				 // decompression
+				 byte[][] count = new byte[NUM_INTERVALS][Integer.SIZE/Byte.SIZE];
+				 for(int i=0; i<NUM_INTERVALS; i++){
+					 for(int j=0; j<Integer.SIZE/Byte.SIZE; j++){
+						 count[i][j] = value[i*Integer.SIZE/Byte.SIZE+j];
+					 }
+				 }
+				 WordCount w = new WordCount(word, column, count);
 				 wordCounts.add(w);
 			 }
 			 return wordCounts;
 		 }
 		 
-		 public void setCount(String column, String count){
-			 this.countMap.put(Bytes.toBytes(column), Bytes.toBytes(count));
+		 public void setCount(int interval, int count){
+			 this.count[interval] = Bytes.toBytes(count);
 		 }
 	 }
 }

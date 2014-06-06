@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.hadoop.hbase.client.HTablePool;
+import org.apache.hadoop.hbase.util.Bytes;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -24,7 +25,6 @@ public class LoadWordCount {
 			System.out.println("invalid argument");
 		}
 		Table<String, String, WordCountDAO.WordCount> wordCountMap = HashBasedTable.create();
-		Set familySet = new HashSet<String>();
 		File folder = new File(args[0]);
 		if(folder.isDirectory()){
 			for (File file : folder.listFiles()) {
@@ -38,18 +38,18 @@ public class LoadWordCount {
 					String[] groups = line.split("\\t");
 					if(groups.length != 4) 
 						continue;
-					String day = groups[0]; // each day is viewed as a column family in underlying HBase
+					String day = groups[0]; // each day is viewed as a column in underlying HBase
 					String interval = groups[1];
 					String word = groups[2];
 					String count = groups[3];
-					familySet.add(day);
 					if(!wordCountMap.contains(word, day)){
-						WordCountDAO.WordCount w = new WordCountDAO.WordCount(word,day);
+						WordCountDAO.WordCount w = new WordCountDAO.WordCount(word, day);
 						wordCountMap.put(word, day, w);
 					}
-					WordCountDAO.WordCount w = wordCountMap.get(word,day);
-					w.setCount(interval, count);
+					WordCountDAO.WordCount w = wordCountMap.get(word, day);
+					w.setCount(Integer.valueOf(interval), Integer.valueOf(count));
 					wordCountMap.put(word, day, w);
+					
 				}
 			}
 		}
@@ -57,7 +57,7 @@ public class LoadWordCount {
 		System.out.println("Total "+wordCountMap.size()+" words");
 		HTablePool pool = new HTablePool();
 		WordCountDAO DAO = new WordCountDAO(pool);
-		DAO.CreateTable(familySet);
+		DAO.CreateTable();
 		int count = 0;
 		for(WordCountDAO.WordCount w: wordCountMap.values()){
 			DAO.addWordCount(w);
