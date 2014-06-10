@@ -8,7 +8,7 @@ Participating in TREC 2014
 
 In order to participate in the TREC 2014 Microblog track, you need to register to participate in TREC. See the [call for participation](http://trec.nist.gov/pubs/call2014.html). The call will close in late May.
 
-The Microblog track in 2014 will use the "evaluation-as-a-service" (EaaS) design, where teams interact with the official corpus via a common API. Thus, you need to request access to the API via the following steps:
+The Microblog track in 2014 will use the "evaluation as a service" (EaaS) model (more below), where teams interact with the official corpus via a common API. Thus, you need to request access to the API via the following steps:
 
 **NOTE**: If you participated in TREC 2013 and already have access to the API, you do not need to do anything.
 
