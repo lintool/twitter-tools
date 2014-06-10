@@ -122,8 +122,11 @@ public class RunQueriesThrift {
       Set<Long> tweetIds = new HashSet<Long>();
       for (TResult result : results) {
         if (!tweetIds.contains(result.id)) {
+          // The TREC official qrels don't have the "MB" prefix and trailing zeros, so we perform
+          // this transformation so that trec_eval doesn't complain.
+          String qid = query.getId().replaceFirst("^MB0*", "");
           tweetIds.add(result.id);
-          out.println(String.format("%s Q0 %d %d %f %s", query.getId(), result.id, i, result.rsv, runtag));
+          out.println(String.format("%s Q0 %d %d %f %s", qid, result.id, i, result.rsv, runtag));
           if (verbose) {
             out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
           }
