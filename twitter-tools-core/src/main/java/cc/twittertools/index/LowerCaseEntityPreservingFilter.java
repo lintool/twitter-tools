@@ -265,7 +265,6 @@ public final class LowerCaseEntityPreservingFilter extends TokenFilter {
       case '\u00A0': // Unicode nbsp
       case '\u2007':
       case '\u202f':
-      case '…':
         return true;
     }
     return false;
