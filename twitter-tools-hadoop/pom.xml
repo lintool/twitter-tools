@@ -41,19 +41,23 @@
           <program>
             <mainClass>cc.twittertools.hbase.LoadWordCount</mainClass>
             <name>LoadWordCount</name>
-          </program>              
+          </program>   
+          <program>
+            <mainClass>cc.twittertools.hbase.TestStorage</mainClass>
+            <name>TestStorage</name>
+          </program>            
          </programs>
-       </configuration>                                                              </plugin>
+       </configuration>                                                              
+       </plugin>
     </plugins>
   </build>
 
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
+	  <groupId>junit</groupId>
+	  <artifactId>junit</artifactId>
+	  <version>4.8.2</version>
+	</dependency>
     <dependency>
       <groupId>cc.twittertools</groupId>
       <artifactId>twitter-tools-core</artifactId>
@@ -97,5 +101,10 @@
 		<artifactId>guava</artifactId>
 		<version>17.0</version>
 	</dependency>
+	<dependency>
+      <groupId>me.lemire.integercompression</groupId>
+      <artifactId>JavaFastPFOR</artifactId>
+       <version>0.0.3</version>
+    </dependency>
   </dependencies>
 </project>

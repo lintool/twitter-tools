@@ -18,20 +18,16 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 public class LoadWordCount {
-
-	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		if(args.length!=1){
-			System.out.println("invalid argument");
-		}
+	
+	public static Table<String, String, WordCountDAO.WordCount> LoadWordCountMap(String path) throws IOException{
 		Table<String, String, WordCountDAO.WordCount> wordCountMap = HashBasedTable.create();
-		File folder = new File(args[0]);
+		File folder = new File(path);
 		if(folder.isDirectory()){
 			for (File file : folder.listFiles()) {
 				if(!file.getName().startsWith("part"))
 					continue;
-				System.out.println("Processing "+args[0]+file.getName());
-				BufferedReader bf = new BufferedReader(new FileReader(args[0]+file.getName()));
+				System.out.println("Processing "+path+file.getName());
+				BufferedReader bf = new BufferedReader(new FileReader(path+file.getName()));
 				// each line in wordcount file is like : 1 twitter 100
 				String line;
 				while((line=bf.readLine())!=null){
@@ -53,7 +49,16 @@ public class LoadWordCount {
 				}
 			}
 		}
+		return wordCountMap;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		if(args.length!=1){
+			System.out.println("invalid argument");
+		}
 		
+		Table<String, String, WordCountDAO.WordCount> wordCountMap = LoadWordCountMap(args[0]);
 		System.out.println("Total "+wordCountMap.size()+" words");
 		HTablePool pool = new HTablePool();
 		WordCountDAO DAO = new WordCountDAO(pool);
