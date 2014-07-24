@@ -1,0 +1,208 @@
+{
+	"queries": [
+		{
+		  "title": "MB03",
+		  "text": "Haiti Aristide return",
+		  "epoch": "1.297200733E9",
+		  "querytweettime": "35088534306033665",
+		  "model": [
+			{
+			  "weight": 1.0,
+			  "feature": "Haiti"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "Aristide"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "return"
+			}
+		  ]
+		},
+		{
+		  "title": "MB21",
+		  "text": "Emanuel residency court rulings",
+		  "epoch": "1.29627021E9",
+		  "querytweettime": "31185639047172097",
+		  "model": [
+			{
+			  "weight": 1.0,
+			  "feature": "Emanuel"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "residency"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "court"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "rulings"
+			}
+		  ]
+		},
+		{
+		  "title": "MB22",
+		  "text": "healthcare law unconstitutional",
+		  "epoch": "1.296598654E9",
+		  "querytweettime": "32563233118224385",
+		  "model": [
+			{
+			  "weight": 1.0,
+			  "feature": "healthcare"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "law"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "unconstitutional"
+			}
+		  ]
+		},
+		{
+		  "title": "MB26",
+		  "text": "US unemployment",
+		  "epoch": "1.296828651E9",
+		  "querytweettime": "33527910379814912",
+		  "model": [
+			{
+			  "weight": 1.0,
+			  "feature": "US"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "unemployment"
+			}
+		  ]
+		},
+		{
+		  "title": "MB42",
+		  "text": "Holland Iran envoy recall",
+		  "epoch": "1.297111633E9",
+		  "querytweettime": "34714824982134784",
+		  "model": [
+			{
+			  "weight": 1.0,
+			  "feature": "Holland"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "Iran"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "envoy"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "recall"
+			}
+		  ]
+		},
+		{
+		  "title": "MB51",
+		  "text": "British Government cuts",
+		  "epoch": "1.297209406E9",
+		  "querytweettime": "35124912364457984",
+		  "model": [
+			{
+			  "weight": 1.0,
+			  "feature": "British"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "Government"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "cuts"
+			}
+		  ]
+		},
+		{
+		  "title": "MB57",
+		  "text": "Chicago blizzard",
+		  "epoch": "1.296683586E9",
+		  "querytweettime": "32919462151720960",
+		  "model": [
+			{
+			  "weight": 1.0,
+			  "feature": "Chicago"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "blizzard"
+			}
+		  ]
+		},
+		{
+		  "title": "MB66",
+		  "text": "Journalists treatment in Egypt",
+		  "epoch": "1.296865923E9",
+		  "querytweettime": "33684239400566784",
+		  "model": [
+			{
+			  "weight": 1.0,
+			  "feature": "Journalists"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "treatment"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "in"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "Egypt"
+			}
+		  ]
+		},
+		{
+		  "title": "MB68",
+		  "text": "Charlie Sheen rehab",
+		  "epoch": "1.296591293E9",
+		  "querytweettime": "32532358276063232",
+		  "model": [
+			{
+			  "weight": 1.0,
+			  "feature": "Charlie"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "Sheen"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "rehab"
+			}
+		  ]
+		},
+		{
+		  "title": "MB88",
+		  "text": "Kings Speech awards",
+		  "epoch": "1.297126104E9",
+		  "querytweettime": "34775520600129536",
+		  "model": [
+			{
+			  "weight": 1.0,
+			  "feature": "Kings"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "Speech"
+			},
+			{
+			  "weight": 1.0,
+			  "feature": "awards"
+			}
+		  ]
+		}
+	]
+}
