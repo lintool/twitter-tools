@@ -9,6 +9,9 @@ twitter-tools-ttgbaseline/.project
 twitter-tools-ttgbaseline/.settings/
 twitter-tools-ttgbaseline/target/
 twitter-tools-ttgbaseline/output.txt
+twitter-tools-hadoop/.classpath
+twitter-tools-hadoop/.project
+twitter-tools-hadoop/target/
 etc/run.sh
 etc/trec_eval.9.0/
 etc/trec_eval
