@@ -256,7 +256,7 @@ public class RunTTGBaseline {
 					maxF1Threshold = j;
 				}
 			}
-			thresholds.add(maxF1);
+			thresholds.add(maxF1Threshold);
 			err.println("F1: "+df.format(maxF1)+"; Jaccard: "+df.format(maxF1Threshold));
 			
 		}
