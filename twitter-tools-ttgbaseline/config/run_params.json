@@ -1,0 +1,17 @@
+{
+"queries"		:  "./topics/topics.microblog-2013.json",
+"host"         		:  HOST_NAME_HERE,
+"training_port"		:  9090,
+"testing_port"		:  9091,
+"num_results"  		:  1000,
+"group"        		:  YOUR_GROUP_HERE,
+"token"        		:  YOUR_TOKEN_HERE,
+"runtag"       		:  "baseline",
+"jaccard_step" 		:  0.1,
+"training_queries"	:  "./topics/topics.ttg-training.json",
+"training_clusters"	:  
+"../data/clusters.training.microblog2011-2012.json",
+"qrels"			:  
+"../data/qrels.microblog2011-2012.txt",
+"evaluation_type"	:  "unweighted"
+}
