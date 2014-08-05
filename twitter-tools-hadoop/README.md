@@ -17,7 +17,7 @@ register 'elephant-bird-pig-4.5.jar';
 register 'elephant-bird-hadoop-compat-4.5.jar';
 register 'json-simple-1.1.1.jar';
 
--- raw = load '/path/to/tweets' using com.twitter.elephantbird.pig.load.JsonLoader('-nestedLoad');
+raw = load '/path/to/tweets' using com.twitter.elephantbird.pig.load.JsonLoader('-nestedLoad');
 
 a = foreach raw generate (chararray) $0#'text' as text;
 b = foreach a generate flatten(TOKENIZE(text)) as word;
