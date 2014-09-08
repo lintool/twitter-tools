@@ -1,4 +1,6 @@
-package cc.twittertools.compression;
+package cc.twittertools.encoding;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -13,7 +15,7 @@ import static java.lang.Math.log;
  * Time: PM10:48
  */
 
-public class VariableByteCode {
+public class VariableByteEncoding {
 
     private static byte[] encodeNumber(int n) {
         if (n == 0) {
@@ -31,9 +33,13 @@ public class VariableByteCode {
     }
 
     public static byte[] encode(int[] numbers) {
-        ByteBuffer buf = ByteBuffer.allocate(numbers.length * (Integer.SIZE / Byte.SIZE));
-        for (int number : numbers) {
-            buf.put(encodeNumber(number));
+        ByteBuffer buf = ByteBuffer.allocate(numbers.length * (Integer.SIZE / Byte.SIZE + 1));
+        try{
+	        for (int number : numbers) {
+	            buf.put(encodeNumber(number));
+	        }
+        }catch(Exception e){
+        	e.printStackTrace();
         }
         buf.flip();
         byte[] rv = new byte[buf.limit()];
@@ -41,19 +47,26 @@ public class VariableByteCode {
         return rv;
     }
 
-    public static List<Integer> decode(byte[] byteStream) {
-        List<Integer> numbers = new ArrayList<Integer>();
-        int n = 0;
+    public static int[] decode(byte[] byteStream) {
+        IntArrayList numbers = new IntArrayList();
+        int n = 0; 
+        boolean flag = true;
         for (byte b : byteStream) {
             if ((b & 0xff) < 128) {
                 n = 128 * n + b;
+                if((b & 0xff) == 0 && flag == true){ 
+                	numbers.add(0);
+                }else{
+                	flag = false;
+                }
             } else {
                 int num = (128 * n + ((b - 128) & 0xff));
                 numbers.add(num);
                 n = 0;
+                flag = true;
             }
         }
-        return numbers;
+        return numbers.toIntArray();
     }
 
     /**

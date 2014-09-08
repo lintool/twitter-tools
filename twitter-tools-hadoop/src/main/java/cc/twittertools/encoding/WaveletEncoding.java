@@ -1,9 +1,9 @@
-package cc.twittertools.compression;
+package cc.twittertools.encoding;
 
 import org.junit.Assert;
 
 
-public class WaveletTransformation {
+public class WaveletEncoding {
 
 	private static boolean isPowerOfTwo(int x) {
 		while (((x % 2) == 0) && x > 1) { /* While x is even and > 1 */
@@ -14,6 +14,8 @@ public class WaveletTransformation {
 
 	public static int[] encode(int[] input) {
 		Assert.assertTrue(isPowerOfTwo(input.length));
+		
+		if (input.length == 1) return input;
 		
 		int[] delta = new int[input.length];
 		int[] average = new int[input.length];
@@ -34,9 +36,12 @@ public class WaveletTransformation {
 				delta[basisPos + (i - beginPos) / 2] = input[i] - input[i + 1];
 				average[basisPos + (i - beginPos) / 2] = (int) ((input[i] + input[i + 1]) / 2);
 			}
-			if (basisPos == 1) {
+			if (basisPos == 1 && input.length >= 4) {
 				delta[0] = (int) ((input[2] + input[3]) / 2);
 				delta[1] = input[2] - input[3];
+			} else if (basisPos == 1 && input.length == 2) {
+				delta[0] = (int) ((input[0] + input[1]) / 2);
+				delta[1] = input[0] - input[1];
 			}
 			input = average;
 			iterations /= 2;
@@ -48,7 +53,7 @@ public class WaveletTransformation {
 
 	public static int[] decode(int[] delta) {
 		Assert.assertTrue(isPowerOfTwo(delta.length));
-
+		
 		int[] original = new int[delta.length];
 		int iterations = delta.length;
 		int level = 1;

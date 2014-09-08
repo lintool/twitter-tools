@@ -36,9 +36,7 @@ import antlr.ByteBuffer;
 
 
 public class WordCountDAO {
-	 private final static int DAY = 60*24;
-	 private final static int INTERVAL = 5;
-	 public static int NUM_INTERVALS = DAY/INTERVAL;
+	 public static int NUM_INTERVALS = 288;
 	 public static final byte[] TABLE_NAME = Bytes.toBytes("wordcount");
 	 public static final byte[] COLUMN_FAMILY = Bytes.toBytes("count");
 	 
@@ -156,10 +154,21 @@ public class WordCountDAO {
 		 public String word;
 		 public String column_id;
 		 public int[] count;
+		 public int sum;
+		 
+		 public WordCount(String word){
+			 this.word = word;
+			 this.sum = 0;
+			 this.count = new int[NUM_INTERVALS];
+			 for(int i=0; i < NUM_INTERVALS; i++){
+				 this.count[i] = 0;
+			 }
+		 }
 		 
 		 public WordCount(byte[] word, byte[] column_id){
 			 this.word = new String(word);
 			 this.column_id = new String(column_id);
+			 this.sum = 0;
 			 this.count = new int[NUM_INTERVALS];
 			 for(int i=0; i < NUM_INTERVALS; i++){
 				 this.count[i] = 0;
@@ -169,16 +178,22 @@ public class WordCountDAO {
 		 public WordCount(String word, String column_id){
 			 this.word = word;
 			 this.column_id = column_id;
+			 this.sum = 0;
 			 this.count = new int[NUM_INTERVALS];
 			 for(int i=0; i < NUM_INTERVALS; i++){
 				 this.count[i] = 0;
 			 }
 		 }
 		 
-		 private WordCount(String word, String column_id, int[] count){
+		 public WordCount(String word, String column_id, int[] count){
 			 this.word = word;
 			 this.column_id = column_id;
-			 this.count = count;
+			 this.sum = 0;
+			 this.count = new int[count.length];
+			 for(int i=0; i < count.length; i++){
+				 this.count[i] = count[i];
+				 sum += this.count[i];
+			 }
 		 }
 		 
 		 public static List<WordCount> GetWordCountFromResults(Result r){
@@ -210,6 +225,11 @@ public class WordCountDAO {
 		 
 		 public void setCount(int interval, int count){
 			 this.count[interval] = count;
+			 this.sum += count;
+		 }
+		 
+		 public int getSum(){
+			 return sum;
 		 }
 		 
 		 @Override

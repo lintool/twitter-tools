@@ -20,7 +20,7 @@ import org.apache.pig.data.TupleFactory;
 
 import cc.twittertools.index.LowerCaseEntityPreservingFilter;
 
-public class LuceneTokenizer extends EvalFunc<DataBag>{
+public class LuceneBigramTokenizer extends EvalFunc<DataBag>{
 	TupleFactory mTupleFactory = TupleFactory.getInstance();
     BagFactory mBagFactory = BagFactory.getInstance();
     
@@ -34,10 +34,15 @@ public class LuceneTokenizer extends EvalFunc<DataBag>{
 	        Tokenizer source = new WhitespaceTokenizer(Version.LUCENE_43, new StringReader((String)o));
 	        TokenStream tokenstream = new LowerCaseEntityPreservingFilter(source);
 	        tokenstream.reset();
+	        String bigram, lastToken = "";
 	        while (tokenstream.incrementToken()){
 	        	String token = tokenstream.getAttribute(CharTermAttribute.class).toString();
+	        	if (token.length() > 0 && lastToken.length() > 0) {
+	        		bigram = lastToken + " " + token;
+	        		output.add(mTupleFactory.newTuple(bigram));
+	        	}
 	        	if (token.length() > 0) {
-	        		output.add(mTupleFactory.newTuple(token));
+	        		lastToken = token;
 	        	}
 	        }
 	        return output;

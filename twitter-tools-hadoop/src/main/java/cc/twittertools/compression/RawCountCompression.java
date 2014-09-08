@@ -1,18 +1,23 @@
 package cc.twittertools.compression;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.io.File;
 
 import org.jcodings.util.ArrayCopy;
 
-import cc.twittertools.hbase.LoadWordCount;
+import cc.twittertools.encoding.Simple16Encoding;
+import cc.twittertools.encoding.VariableByteEncoding;
 import cc.twittertools.hbase.WordCountDAO;
 import cc.twittertools.hbase.WordCountDAO.WordCount;
+import cc.twittertools.wordcount.UnigramComparison;
 
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.primitives.Ints;
 
@@ -21,21 +26,21 @@ import me.lemire.integercompression.IntWrapper;
 
 public class RawCountCompression {
 
-	public static int NUM_INTERVALS = 288;
 	public static int BLOCK_SIZE = 128;
 	// FastPFor compression initialization
 	private static FastPFOR p4 = new FastPFOR();
-	// block number of FastPFor compression
-	private static int blocks = NUM_INTERVALS / BLOCK_SIZE; 
-	// left number compressed by Variable Byte encoding.
-	private static int left = NUM_INTERVALS % BLOCK_SIZE;
 
-	public static byte[] PForDeltaCompression(int[] data) {
+	public static byte[] PForDeltaCompression(int[] data) throws IOException {
 		// add integer compression here
 		// the first blocks*128 integers are compressed using PForDelta
-		// encoding,
-		// while the left integers using VB encode.
+		// encoding, while the left integers using VB encode.
+		int blocks = data.length / BLOCK_SIZE;
+		int left = data.length % BLOCK_SIZE;
 		int[] out = new int[blocks * BLOCK_SIZE];
+		
+		if (blocks == 0) {
+			return Simple16Encoding.encode(data);
+		}
 
 		IntWrapper inPos = new IntWrapper(0);
 		IntWrapper outPos = new IntWrapper(0);
@@ -47,78 +52,68 @@ public class RawCountCompression {
 
 		int[] leftData = new int[left];
 		System.arraycopy(data, blocks * BLOCK_SIZE, leftData, 0, left);
-		byte[] leftCompression = VariableByteCode.encode(leftData);
+		byte[] leftCompression = Simple16Encoding.encode(leftData);
 
 		// combine
-		byte[] compression = new byte[blockCompression.length + leftCompression.length + 2];
-		// The first two bytes store the boundary of block part and left part
-		compression[0] = (byte) (blockCompression.length >> 8);
-		compression[1] = (byte) (blockCompression.length);
-		System.arraycopy(blockCompression, 0, compression, 2,
+		byte[] compression = new byte[blockCompression.length + leftCompression.length + 4];
+		compression[0] = (byte) (data.length >> 8);
+		compression[1] = (byte) (data.length);
+		// The second two bytes store the boundary of block part and left part
+		compression[2] = (byte) (blockCompression.length >> 8);
+		compression[3] = (byte) (blockCompression.length);
+		System.arraycopy(blockCompression, 0, compression, 4,
 				blockCompression.length);
 		System.arraycopy(leftCompression, 0, compression,
-				blockCompression.length + 2, leftCompression.length);
+				blockCompression.length + 4, leftCompression.length);
 
 		return compression;
 	}
 
-	public static int[] PForDeltaDecompression(byte[] compressData) {
-		int boundary = (int) compressData[0] & 0xff;
+	public static int[] PForDeltaDecompression(byte[] compressData) throws IOException {
+		int origLength = (int) compressData[0] & 0xff;
+		origLength <<= 8;
+		origLength |= (int) compressData[1] & 0xff;
+		if (origLength < BLOCK_SIZE){
+			return Simple16Encoding.decode(compressData);
+		}
+		
+		int boundary = (int) compressData[2] & 0xff;
 		boundary <<= 8;
-		boundary |= (int) compressData[1] & 0xff;
+		boundary |= (int) compressData[3] & 0xff;
+		
 		byte[] compressPart1 = new byte[boundary];
-		byte[] compressPart2 = new byte[compressData.length - boundary - 2];
-		System.arraycopy(compressData, 2, compressPart1, 0, boundary);
-		System.arraycopy(compressData, boundary + 2, compressPart2, 0,
+		byte[] compressPart2 = new byte[compressData.length - boundary - 4];
+		System.arraycopy(compressData, 4, compressPart1, 0, boundary);
+		System.arraycopy(compressData, boundary + 4, compressPart2, 0,
 				compressPart2.length);
 
 		IntBuffer intBuffer = java.nio.ByteBuffer.wrap(compressPart1)
 				.order(ByteOrder.LITTLE_ENDIAN).asIntBuffer();
 		int[] rawInts = new int[intBuffer.remaining()];
 		intBuffer.get(rawInts);
-
-		int[] originalData = new int[NUM_INTERVALS];
+		
+		int blocks = origLength / BLOCK_SIZE;
+		int left = origLength % BLOCK_SIZE;
+		int[] originalData = new int[origLength];
 		IntWrapper inPos = new IntWrapper(0);
 		IntWrapper outPos = new IntWrapper(0);
 		p4.uncompress(rawInts, inPos, rawInts.length, originalData, outPos);
 
 		int count = 0;
-		for (Integer i : VariableByteCode.decode(compressPart2)) {
-			originalData[BLOCK_SIZE * blocks + count++] = i;
-		}
+		int[] leftData = Simple16Encoding.decode(compressPart2);
+		System.arraycopy(leftData, 0, originalData, blocks*BLOCK_SIZE, leftData.length);
 		return originalData;
-	}
-
-	public static byte[] variableByteCompression(int[] data) {
-		return VariableByteCode.encode(data);
-	}
-
-	public static int[] variableByteDecompression(byte[] compressData) {
-		List<Integer> data = VariableByteCode.decode(compressData);
-		return Ints.toArray(data);
 	}
 
 	public static byte[] integerNoCompression(int[] data) {
 		return ArrayCopy.int2byte(data);
 	}
-
-	public static void main(String[] args) throws IOException {
-		if (args.length != 1) {
-			System.out.println("invalid argument");
+	
+	private static int average(int[] data) {
+		int sum = 0;
+		for(int i: data) {
+			sum += i;
 		}
-
-		long PForBytes = 0;
-		long VBBytes = 0;
-		long integerBytes = 0;
-		Table<String, String, WordCountDAO.WordCount> wordCountMap = LoadWordCount
-				.LoadWordCountMap(args[0]);
-		for (WordCountDAO.WordCount w : wordCountMap.values()) {
-			PForBytes += PForDeltaCompression(w.count).length;
-			VBBytes += variableByteCompression(w.count).length;
-			integerBytes += integerNoCompression(w.count).length;
-		}
-		System.out.println("Bytes After PForDelta Compression: " + PForBytes);
-		System.out.println("Bytes After VariableBytes Compression: " + VBBytes);
-		System.out.println("Integer Bytes With No Compression: " + integerBytes);
+		return sum/data.length;
 	}
 }

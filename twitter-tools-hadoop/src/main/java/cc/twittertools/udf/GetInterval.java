@@ -17,6 +17,7 @@ public class GetInterval extends EvalFunc<String>{
 			String time = groups[3];
 			String[] timeGroups= time.split(":");
 			int interval = (Integer.valueOf(timeGroups[0]))*12 + (Integer.valueOf(timeGroups[1])/5);
+			//int interval = Integer.valueOf(timeGroups[0]);
 			return String.valueOf(interval);
 		}catch(Exception e){
 			throw new IOException("caught exception",e);

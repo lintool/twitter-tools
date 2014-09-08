@@ -37,15 +37,52 @@
       <artifactId>appassembler-maven-plugin</artifactId>
       <version>1.3.1</version>
       <configuration>
+      	<extraJvmArguments>-Xms512M -Xmx100000M</extraJvmArguments>
         <programs>
           <program>
-            <mainClass>cc.twittertools.hbase.LoadWordCount</mainClass>
-            <name>LoadWordCount</name>
+            <mainClass>cc.twittertools.entropy.Entropy</mainClass>
+            <name>Entropy</name>
+          </program> 
+          <program>
+            <mainClass>cc.twittertools.entropy.WordEntropy</mainClass>
+            <name>WordEntropy</name>
+          </program> 	
+          <program>
+            <mainClass>cc.twittertools.wordcount.UnigramComparison</mainClass>
+            <name>UnigramComparison</name>
           </program>   
           <program>
-            <mainClass>cc.twittertools.hbase.TestStorage</mainClass>
-            <name>TestStorage</name>
-          </program>            
+            <mainClass>cc.twittertools.wordcount.BigramComparison</mainClass>
+            <name>BigramComparison</name>
+          </program> 
+          <program>
+            <mainClass>cc.twittertools.wordcount.BuildUnigramHuffmanTree</mainClass>
+            <name>BuildUnigramHuffmanTree</name>
+          </program>
+          <program>
+            <mainClass>cc.twittertools.wordcount.BuildBigramHuffmanTree</mainClass>
+            <name>BuildBigramHuffmanTree</name>
+          </program>
+          <program>
+            <mainClass>cc.twittertools.wordcount.LoadUnigramCount</mainClass>
+            <name>LoadUnigramCount</name>
+          </program>
+          <program>
+            <mainClass>cc.twittertools.wordcount.LoadBigramCount</mainClass>
+            <name>LoadBigramCount</name>
+          </program>
+          <program>
+            <mainClass>cc.twittertools.preprocessing.GenerateIDMapping</mainClass>
+            <name>GenerateIDMapping</name>
+          </program>
+          <program>
+            <mainClass>cc.twittertools.wordcount.WordTrendVis</mainClass>
+            <name>WordTrendVis</name>
+          </program>  
+          <program>
+            <mainClass>cc.twittertools.wordcount.WordTrendVisFromCounts</mainClass>
+            <name>WordTrendVisFromCounts</name>
+          </program>        
          </programs>
        </configuration>                                                              
        </plugin>
@@ -57,6 +94,17 @@
 	  <groupId>junit</groupId>
 	  <artifactId>junit</artifactId>
 	  <version>4.8.2</version>
+	</dependency>
+    <!--  Gson dependency -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.2.4</version>
+    </dependency>
+	<dependency>
+		<groupId>trove</groupId>
+		<artifactId>trove</artifactId>
+		<version>1.0.2</version>
 	</dependency>
     <dependency>
       <groupId>cc.twittertools</groupId>
