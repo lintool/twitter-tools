@@ -139,8 +139,11 @@ public class RunQueriesBaselineThrift {
           dupliCount ++;
           rsvCurr = rsvCurr - 0.000001 / numResults * dupliCount;
         }
+        // The TREC official qrels don't have the "MB" prefix and trailing zeros, so we perform
+        // this transformation so that trec_eval doesn't complain.
+        String qid = query.getId().replaceFirst("^MB0*", "");
         out.println(String.format("%s Q0 %d %d %." + (int) (6 + Math.ceil(Math.log10(numResults))) + "f %s",
-            query.getId(), result.id, i, rsvCurr, runtag));
+            qid, result.id, i, rsvCurr, runtag));
         if (verbose) {
           out.println("# " + result.toString().replaceAll("[\\n\\r]+", " "));
         }

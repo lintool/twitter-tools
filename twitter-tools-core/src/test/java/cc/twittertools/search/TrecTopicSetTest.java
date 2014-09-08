@@ -16,20 +16,20 @@ public class TrecTopicSetTest {
 
   @Test
   public void topics2011() throws Exception {
-    File f = new File("data/topics.microblog2011.txt");
+    File f = new File("../data/topics.microblog2011.txt");
     assertTrue(f.exists());
 
     TrecTopicSet topics = TrecTopicSet.fromFile(f);
     List<TrecTopic> t = Lists.newArrayList(topics.iterator());
 
-    assertEquals(49, t.size());
+    assertEquals(50, t.size());
     assertEquals("MB01", t.get(0).getId());
-    assertEquals("MB49", t.get(t.size()-1).getId());
+    assertEquals("MB50", t.get(t.size()-1).getId());
   }
 
   @Test
   public void topics2012() throws Exception {
-    File f = new File("data/topics.microblog2012.txt");
+    File f = new File("../data/topics.microblog2012.txt");
     assertTrue(f.exists());
 
     TrecTopicSet topics = TrecTopicSet.fromFile(f);
