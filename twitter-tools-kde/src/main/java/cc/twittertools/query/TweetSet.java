@@ -59,6 +59,17 @@ public class TweetSet implements Iterable<Tweet>{
 		Collections.sort(tweets, comparator);
 	}
 	
+	public void sortByTMscore() {
+		Comparator<Tweet> comparator = new Comparator<Tweet>() {
+			@Override
+			public int compare(Tweet t1, Tweet t2) {
+				double diff = t1.getTMScore() - t2.getTMScore();
+				return (diff == 0) ? 0 : (diff > 0) ? -1 : 1;
+			}
+		};
+		Collections.sort(tweets, comparator);
+	}
+	
 	public MinMaxPriorityQueue<Tweet> topTweets(int rank) {
 		Comparator<Tweet> comparator = new Comparator<Tweet>() {
 			@Override

@@ -131,15 +131,19 @@ public class RunQueriesThrift {
 			// The TREC official qrels don't have the "MB" prefix and
 			// trailing zeros, so we perform
 			// this transformation so that trec_eval doesn't complain.
-			Integer qid = Integer.parseInt(query.getId().replaceFirst("^MB0*", ""));
+			Integer qid = query.getId();
 			long queryTime = query.getQueryTime();
 			TweetSet tweetSet = new TweetSet(query.getQuery(), qid);
 			List<TResult> results = client.search(query.getQuery(), query.getQueryTweetTime(), numResults);
-			qlModel.setCorpus(results);
+			qlModel.setCorpus(results); // query likelihood model set corpus.
 			Set<Long> tweetIds = new HashSet<Long>();
 			for (TResult result : results) {
 				if (!tweetIds.contains(result.id)) {
+					if (result.retweeted_status_id != 0) {
+						continue; // filter all retweets
+					}
 					tweetIds.add(result.id);
+					// compute query likelihood score
 					double score = qlModel.computeScore(query.getQuery(), result.text);
 					Tweet tweet = new Tweet(result.id, result.epoch, queryTime - result.epoch, score);
 					if (verbose) tweet.setText(result.text);

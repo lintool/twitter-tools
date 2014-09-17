@@ -16,7 +16,9 @@
 
 package cc.twittertools.query;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,10 +36,14 @@ import com.google.common.io.Files;
 public class TrecTopicSet implements Iterable<TrecTopic>{
   private List<TrecTopic> queries = Lists.newArrayList();
 
-  private TrecTopicSet() {}
+  public TrecTopicSet() {}
 
-  private void add(TrecTopic q) {
+  public void add(TrecTopic q) {
     queries.add(q);
+  }
+  
+  public void addAll(TrecTopicSet set) {
+  	queries.addAll(set.queries);
   }
 
   @Override
@@ -46,7 +52,7 @@ public class TrecTopicSet implements Iterable<TrecTopic>{
   }
 
   private static final Pattern TOP_PATTERN = Pattern.compile("<top(.*?)</top>", Pattern.DOTALL);
-  private static final Pattern NUM_PATTERN = Pattern.compile("<num> Number: (MB\\d+) </num>", Pattern.DOTALL);
+  private static final Pattern NUM_PATTERN = Pattern.compile("<num> Number: MB(\\d+) </num>", Pattern.DOTALL);
 
   // TREC 2011 topics uses <title> tag
   private static final Pattern TITLE_PATTERN = Pattern.compile("<title>\\s*(.*?)\\s*</title>", Pattern.DOTALL);
@@ -74,12 +80,7 @@ public class TrecTopicSet implements Iterable<TrecTopic>{
       if (!m.find()) {
         throw new IOException("Error parsing " + f);
       }
-      String id = m.group(1);
-      // Topics from 2012 are inconsistently numbered,
-      // e.g., MB051 should match the qrels, which has MB51
-      if (id.matches("MB0\\d\\d")) {
-        id = id.replace("MB0", "MB");
-      }
+      int id = Integer.parseInt(m.group(1));
 
       m = TITLE_PATTERN.matcher(top);
       if (!m.find()) {
@@ -104,5 +105,18 @@ public class TrecTopicSet implements Iterable<TrecTopic>{
       queries.add(new TrecTopic(id, text, topictime, tweettime));
     }
     return queries;
+  }
+  
+  public static void writeBack(File outfile, TrecTopicSet outSet) throws IOException {
+  	BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
+  	for (TrecTopic topic : outSet) {
+  		bw.write("<top>\n");
+  		bw.write("<num> Number: MB" + topic.getId() + " </num>\n");
+  		bw.write("<query> " + topic.getQuery() + " </query>\n");
+  		bw.write("<querytime> " + topic.getQueryTime() + " </querytime>\n");
+  		bw.write("<querytweettime> " + topic.getQueryTweetTime() + " </querytweettime>\n");
+  		bw.write("</top>\n\n");
+  	}
+  	bw.close();
   }
 }

@@ -9,6 +9,11 @@ public class Tweet {
 	private double tmScore; // temporal model score
 	private String text; // tweet contents
 	
+	public Tweet(long id, double qlscore) {
+		this.id = id;
+		this.qlScore = qlscore;
+	}
+	
 	public Tweet(long id, long epoch, long timeDiff, double qlscore) {
 		this.id = id;
 		this.epoch = epoch;

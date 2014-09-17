@@ -32,7 +32,7 @@ public class WeightEstimation {
 		DoubleArrayList weights = new DoubleArrayList();
 		double mean = 0;
 		for (Tweet tweet: tweetset) {
-			mean += tweet.getRank() / tweetset.size();
+			mean += tweet.getRank() * 1.0 / tweetset.size();
 		}
 		double lambda = 1/mean;
 		double totalRank = 0;

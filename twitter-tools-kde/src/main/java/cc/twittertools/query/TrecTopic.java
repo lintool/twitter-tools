@@ -20,20 +20,29 @@ import com.google.common.base.Preconditions;
 
 public class TrecTopic {
   private String query;
-  private String id;
+  private int id;
   private long epoch; // Unix timestamp of topic
   private long tweettime; // the tweet id with closest post time before topic time
 
-  public TrecTopic(String id, String query, long epoch, long tweettime) {
-    this.id = Preconditions.checkNotNull(id);
+  public TrecTopic(int id, String query, long epoch, long tweettime) {
+  	Preconditions.checkArgument(id > 0);
+    this.id = id;
     this.query = Preconditions.checkNotNull(query);
     Preconditions.checkArgument(epoch > 0);
     Preconditions.checkArgument(tweettime > 0);
     this.epoch = epoch;
     this.tweettime = tweettime;
   }
-
-  public String getId() {
+  
+  public TrecTopic(TrecTopic t) {
+  	Preconditions.checkNotNull(t);
+  	this.query = t.query;
+  	this.id = t.id;
+  	this.epoch = t.epoch;
+  	this.tweettime = t.tweettime;
+  }
+  
+  public int getId() {
     return id;
   }
 

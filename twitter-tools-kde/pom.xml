@@ -31,6 +31,10 @@
             <name>RunQueriesThrift</name>
           </program> 
           <program>
+            <mainClass>cc.twittertools.data.TrainingTestingSplit</mainClass>
+            <name>DataSplit</name>
+          </program> 
+          <program>
             <mainClass>cc.twittertools.lm.TemporalLanguageModel</mainClass>
             <name>TemporalLanguageModel</name>
           </program> 

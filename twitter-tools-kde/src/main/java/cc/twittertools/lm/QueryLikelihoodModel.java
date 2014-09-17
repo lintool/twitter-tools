@@ -18,7 +18,7 @@ import cc.twittertools.thrift.gen.TResult;
 
 public class QueryLikelihoodModel {
 	
-	private static final double MU = 2500;
+	private static final double MU = 25;
 	private static Map<String, Integer> corpus; // word2freq map
 	private static int corpusTermCounter; // number of terms in corpus
 	
@@ -89,8 +89,10 @@ public class QueryLikelihoodModel {
 			if (corpus.containsKey(term)) {
 				corpusScore = corpus.get(term) * 1.0 / corpusTermCounter;
 			} else {
-				corpusScore = 0;
+				corpusScore = 1.0 / corpusTermCounter;
 			}
+			//double lambda = 0.9;
+			//score += Math.log(lambda*docFreq/docTermNum + (1-lambda)*corpusScore);
 			score += Math.log((docFreq + MU * corpusScore) / (docTermNum + MU));
 		}
 		return score;
