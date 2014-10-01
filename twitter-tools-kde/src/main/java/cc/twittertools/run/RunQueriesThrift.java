@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cc.twittertools.query;
+package cc.twittertools.run;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -33,7 +33,11 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import cc.twittertools.lm.QueryLikelihoodModel;
+import cc.twittertools.data.TrecTopic;
+import cc.twittertools.data.TrecTopicSet;
+import cc.twittertools.data.Tweet;
+import cc.twittertools.data.TweetSet;
+import cc.twittertools.model.QueryLikelihoodModel;
 import cc.twittertools.search.api.TrecSearchThriftClient;
 import cc.twittertools.thrift.gen.TResult;
 
@@ -48,6 +52,7 @@ public class RunQueriesThrift {
 	private static final String TOKEN_OPTION = "token";
 	private static final String RUNTAG_OPTION = "runtag";
 	private static final String VERBOSE_OPTION = "verbose";
+	private static final String MU_OPTION = "mu";
 	
 	private static QueryLikelihoodModel qlModel = new QueryLikelihoodModel();
 	
@@ -74,6 +79,8 @@ public class RunQueriesThrift {
 				.withDescription("access token").create(TOKEN_OPTION));
 		options.addOption(OptionBuilder.withArgName("string").hasArg()
 				.withDescription("runtag").create(RUNTAG_OPTION));
+		options.addOption(OptionBuilder.withArgName("para").hasArg()
+				.withDescription("ql parameter").create(MU_OPTION));
 		options.addOption(new Option(VERBOSE_OPTION, "print out complete document"));
 
 		CommandLine cmdline = null;
@@ -97,7 +104,7 @@ public class RunQueriesThrift {
 			System.err.println("Error: " + queryFile + " doesn't exist!");
 			System.exit(-1);
 		}
-
+		
 		String runtag = cmdline.hasOption(RUNTAG_OPTION) ? cmdline
 				.getOptionValue(RUNTAG_OPTION) : DEFAULT_RUNTAG;
 
@@ -108,6 +115,9 @@ public class RunQueriesThrift {
 			if (cmdline.hasOption(NUM_RESULTS_OPTION)) {
 				numResults = Integer.parseInt(cmdline
 						.getOptionValue(NUM_RESULTS_OPTION));
+			}
+			if (cmdline.hasOption(MU_OPTION)) {
+				QueryLikelihoodModel.MU = Double.parseDouble(cmdline.getOptionValue(MU_OPTION));
 			}
 		} catch (NumberFormatException e) {
 			System.err.println("Invalid " + NUM_RESULTS_OPTION + ": "

@@ -1,4 +1,4 @@
-package cc.twittertools.data;
+package cc.twittertools.utils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.twittertools.data.TrecTopic;
+import cc.twittertools.data.TrecTopicSet;
+
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-
-import cc.twittertools.query.TrecTopic;
-import cc.twittertools.query.TrecTopicSet;
 
 public class TrainingTestingSplit {
 	public static void topicSplit(String file1, String file2) throws Exception {
@@ -23,7 +23,7 @@ public class TrainingTestingSplit {
 		TrecTopicSet trainingTopicSet = new TrecTopicSet();
 		TrecTopicSet testingTopicSet = new TrecTopicSet();
 		for (TrecTopic topic : topics) {
-			if (topic.getId() % 2 == 1) {
+			if (topic.getId() % 2 == 0) {
 				trainingTopicSet.add(new TrecTopic(topic));
 			} else {
 				testingTopicSet.add(new TrecTopic(topic));
@@ -44,7 +44,7 @@ public class TrainingTestingSplit {
 		for (String line : qrels) {
 			String[] groups = line.split("\\s+");
 			int topicId = Integer.parseInt(groups[0]);
-			if (topicId % 2 == 1) {
+			if (topicId % 2 == 0) {
 				trainingWriter.write(line+"\n");
 			} else {
 				testingWriter.write(line+"\n");
@@ -58,7 +58,7 @@ public class TrainingTestingSplit {
 	
 	
 	public static void main(String[] args) throws Exception {
-		//topicSplit("../data/topics.microblog2011.txt", "../data/topics.microblog2012.txt");
+		//qrelsSplit("../data/qrels.microblog2013.txt", "../data/qrels.microblog2014.txt");
 		qrelsSplit(args[0], args[1]);
 	}
 }

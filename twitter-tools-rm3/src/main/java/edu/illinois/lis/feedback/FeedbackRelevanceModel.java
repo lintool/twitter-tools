@@ -60,7 +60,8 @@ public class FeedbackRelevanceModel extends FeedbackModel {
 					if(docWeights != null)
 						docWeight = docWeights[k];
 					FeatureVector docVector = docIT.next();
-					double docProb = docVector.getFeaturetWeight(term) / docVector.getLength();
+					double length = Math.max(docVector.getLength(), 1);
+					double docProb = docVector.getFeaturetWeight(term) / length;
 					docProb *= rsvs[k++] * docWeight;
 
 					fbWeight += docProb;

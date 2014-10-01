@@ -1,4 +1,4 @@
-package cc.twittertools.query;
+package cc.twittertools.data;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,10 +10,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cc.twittertools.thrift.gen.TResult;
+
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MinMaxPriorityQueue;
+import com.google.common.collect.Table;
 import com.google.common.io.Files;
 
 public class TweetSet implements Iterable<Tweet>{
@@ -112,6 +115,37 @@ public class TweetSet implements Iterable<Tweet>{
 		}
 		
 		return query2TweetSet;
+	}
+	
+	public static Map<Integer, TweetSet> getOracleSet(Map<Integer, TweetSet> query2TweetSet, 
+			Table<Integer, Long, Integer> qrels) {
+		Map<Integer, TweetSet> oracleMap = new HashMap<Integer, TweetSet>();
+		for (int qid : query2TweetSet.keySet()) {
+			int counter = 0;
+			TweetSet tweetSet = query2TweetSet.get(qid);
+			TweetSet oracleSet = new TweetSet(qid);
+			for (Tweet tweet : tweetSet) {
+				if (qrels.contains(qid, tweet.getId())) {
+					oracleSet.add(new Tweet(tweet));
+					if (++counter == 10) break;
+				}
+			}
+			oracleMap.put(qid, oracleSet);
+		}
+		return oracleMap;
+	}
+	
+	public static TweetSet getOracleSet(int qid, TweetSet tweetSet, 
+			Table<Integer, Long, Integer> qrels) {
+		int counter = 0;
+		TweetSet oracleSet = new TweetSet(qid);
+		for (Tweet tweet : tweetSet) {
+			if (qrels.contains(qid, tweet.getId())) {
+				oracleSet.add(new Tweet(tweet));
+				if (++counter == 10) break;
+			}
+		}
+		return oracleSet;
 	}
 	
 	public int size() {

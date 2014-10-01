@@ -2,8 +2,8 @@ package cc.twittertools.kde;
 
 import umontreal.iro.lecuyer.probdist.PowerDist;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import cc.twittertools.query.Tweet;
-import cc.twittertools.query.TweetSet;
+import cc.twittertools.data.Tweet;
+import cc.twittertools.data.TweetSet;
 
 public class WeightEstimation {
 	
@@ -54,7 +54,7 @@ public class WeightEstimation {
 			if (feedbackSet.contains(tweet)) {
 				totalScore += 1.0;
 			} else {
-				totalScore += tweet.getQlScore();
+				totalScore += Math.pow(Math.E, tweet.getQlScore());
 			}
 		}
 		
@@ -62,7 +62,7 @@ public class WeightEstimation {
 			if (feedbackSet.contains(tweet)) {
 				weights.add(1.0/totalScore);
 			} else {
-				weights.add(tweet.getQlScore()/totalScore);
+				weights.add(Math.pow(Math.E, tweet.getQlScore())/totalScore);
 			}
 		}
 		return weights;

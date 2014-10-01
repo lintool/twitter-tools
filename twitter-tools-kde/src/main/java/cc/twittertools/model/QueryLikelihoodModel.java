@@ -1,4 +1,4 @@
-package cc.twittertools.lm;
+package cc.twittertools.model;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -18,7 +18,7 @@ import cc.twittertools.thrift.gen.TResult;
 
 public class QueryLikelihoodModel {
 	
-	private static final double MU = 25;
+	public static double MU = 100;
 	private static Map<String, Integer> corpus; // word2freq map
 	private static int corpusTermCounter; // number of terms in corpus
 	
@@ -91,8 +91,6 @@ public class QueryLikelihoodModel {
 			} else {
 				corpusScore = 1.0 / corpusTermCounter;
 			}
-			//double lambda = 0.9;
-			//score += Math.log(lambda*docFreq/docTermNum + (1-lambda)*corpusScore);
 			score += Math.log((docFreq + MU * corpusScore) / (docTermNum + MU));
 		}
 		return score;

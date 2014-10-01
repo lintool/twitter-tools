@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cc.twittertools.query;
+package cc.twittertools.data;
 
 import com.google.common.base.Preconditions;
 

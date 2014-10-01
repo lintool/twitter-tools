@@ -1,8 +1,11 @@
-package cc.twittertools.query;
+package cc.twittertools.data;
+
+import cc.twittertools.thrift.gen.TResult;
 
 public class Tweet {
 	private long id; // tweet id
 	private int rank; // rank by query likelihood score
+	private double rsv;
 	private long epoch; // timestamp
 	private long timeDiff; // difference with query time
 	private double qlScore; // query likelihood score 
@@ -29,6 +32,16 @@ public class Tweet {
 		this.qlScore = qlScore;
 	}
 	
+	public Tweet(Tweet other) {
+		this.id = other.id;
+		this.rank = other.rank;
+		this.epoch = other.epoch;
+		this.timeDiff = other.timeDiff;
+		this.qlScore = other.qlScore;
+		this.tmScore = other.tmScore;
+		this.text = other.text;
+	}
+	
 	@Override
 	public boolean equals(Object other) {
 		if (other == null) return false;
@@ -38,6 +51,15 @@ public class Tweet {
     return id == tweet.id;
 	}
 	
+	public TResult toResult() {
+		TResult result = new TResult();
+		result.setId(id);
+		result.setEpoch(epoch);
+		result.setRsv(rsv);
+		result.setText(text);
+		return result;
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -45,7 +67,11 @@ public class Tweet {
 	public int getRank() {
 		return rank;
 	}
-
+	
+	public double getRsv() {
+		return rsv;
+	}
+	
 	public long getEpoch() {
 		return epoch;
 	}
@@ -73,7 +99,11 @@ public class Tweet {
 	public void setRank(int rank) {
 		this.rank = rank;
 	}
-
+	
+	public void setRsv(double rsv) {
+		this.rsv = rsv;
+	}
+	
 	public void setEpoch(long epoch) {
 		this.epoch = epoch;
 	}
@@ -93,5 +123,5 @@ public class Tweet {
 	public void setText(String text) {
 		this.text = text;
 	}
-	
+
 }
