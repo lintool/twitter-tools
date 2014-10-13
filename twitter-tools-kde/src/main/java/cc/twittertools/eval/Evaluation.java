@@ -8,13 +8,12 @@ import cc.twittertools.data.Tweet;
 import cc.twittertools.data.TweetSet;
 
 public class Evaluation {
-	private static final int RANK = 30;
 	
-	public static double P30 (int qid, TweetSet tweetSet, 
-			Table<Integer, Long, Integer> qrels) {
+	public static double P_RANK (int qid, TweetSet tweetSet, 
+			Table<Integer, Long, Integer> qrels, int rank) {
 		// Compute Precision by query
 		double P30 = 0;
-		int rank = Math.min(RANK, tweetSet.size());
+		rank = Math.min(rank, tweetSet.size());
 		for (int i = 0; i < rank; i++) {
 			Tweet tweet = tweetSet.getTweet(i);
 			if (qrels.contains(qid, tweet.getId())) {

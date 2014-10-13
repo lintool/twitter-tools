@@ -137,7 +137,7 @@ public class WINModel extends Model{
 				computeTMScore(query2TweetSet.get(qid), lambda);
 				query2TweetSet.get(qid).sortByTMscore();
 				map[iter] += Evaluation.MAP(qid, query2TweetSet.get(qid), qrels, numrels);
-				p30[iter] += Evaluation.P30(qid, query2TweetSet.get(qid), qrels);
+				p30[iter] += Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 30);
 			}
 			
 			if (debug) {
@@ -191,7 +191,7 @@ public class WINModel extends Model{
 			map_per_query[counter] = Evaluation.MAP(qid, query2TweetSet.get(qid), qrels, numrels);
 			computeTMScore(query2TweetSet.get(qid), P30_LAMBDA);
 			query2TweetSet.get(qid).sortByTMscore();
-			p30_per_query[counter] = Evaluation.P30(qid, query2TweetSet.get(qid), qrels);
+			p30_per_query[counter] = Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 30);
 			EVAL_MAP += map_per_query[counter];
 			EVAL_P30 += p30_per_query[counter];
 			counter++;

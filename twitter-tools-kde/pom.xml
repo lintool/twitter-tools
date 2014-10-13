@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>cc.twittertools.kde</groupId>
-  <artifactId>my-app</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>twitter-tools-kde</artifactId>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <name>my-app</name>
@@ -27,7 +27,7 @@
       <configuration>
         <programs>
           <program>
-            <mainClass>cc.twittertools.query.RunQueriesThrift</mainClass>
+            <mainClass>cc.twittertools.run.RunQueriesThrift</mainClass>
             <name>RunQueriesThrift</name>
           </program> 
           <program>
@@ -35,8 +35,8 @@
             <name>DataSplit</name>
           </program> 
           <program>
-            <mainClass>cc.twittertools.lm.TemporalLanguageModel</mainClass>
-            <name>TemporalLanguageModel</name>
+            <mainClass>cc.twittertools.run.RunTemporalModel</mainClass>
+            <name>RunTemporalModel</name>
           </program> 
          </programs>
        </configuration>                                                              

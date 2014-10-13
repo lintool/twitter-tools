@@ -163,7 +163,7 @@ public class RunTemporalModel {
     
     RunTemporalModel instance = new RunTemporalModel();
 		//instance.train(trainInputFile, trainQrelsFile);
-		//instance.test(testInputFile, testQrelsFile);
-		instance.randomTest(trainInputFile, trainQrelsFile);
+		instance.test(testInputFile, testQrelsFile);
+		//instance.randomTest(trainInputFile, trainQrelsFile);
 	}
 }

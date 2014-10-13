@@ -112,7 +112,7 @@ public class KDEModel extends Model {
 					computeTMScore(query2TweetSet.get(qid), oracleSet.get(qid), woption, alpha);
 					query2TweetSet.get(qid).sortByTMscore();
 					map[woption.ordinal()][iter] += Evaluation.MAP(qid, query2TweetSet.get(qid), qrels, numrels);
-					p30[woption.ordinal()][iter] += Evaluation.P30(qid, query2TweetSet.get(qid), qrels);
+					p30[woption.ordinal()][iter] += Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 30);
 				}
 			}
 			
@@ -166,9 +166,10 @@ public class KDEModel extends Model {
 		out.println("Testing.");
 		double[][] map_per_query = new double[5][numOfquerys];
 		double[][] p30_per_query = new double[5][numOfquerys];
+		double[][] p5_per_query = new double[5][numOfquerys];
 		EVAL_MAP = new double[]{0, 0, 0, 0, 0};
 		EVAL_P30 = new double[]{0, 0, 0, 0, 0};
-		P30_ALPHA = MAP_ALPHA ;//= new double[]{0.32, 0.38, 0.08, 0.40};
+		P30_ALPHA = MAP_ALPHA = new double[]{0.32, 0.34, 0.08, 0.44};
 		for (int woption = 4; woption >= 0; woption--){ // woption is weight option
 			int counter = 0;
 			for (int qid : query2TweetSet.keySet()) {
@@ -179,16 +180,15 @@ public class KDEModel extends Model {
 					computeTMScore(query2TweetSet.get(qid), null, WeightEnum.UniformWeight, 0);
 					query2TweetSet.get(qid).sortByTMscore();
 					map_per_query[woption][counter] = Evaluation.MAP(qid, query2TweetSet.get(qid), qrels, numrels);
-					p30_per_query[woption][counter] = Evaluation.P30(qid, query2TweetSet.get(qid), qrels);
+					p30_per_query[woption][counter] = Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 30);
+					p5_per_query[woption][counter] = Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 5);
 				} else {
 					computeTMScore(query2TweetSet.get(qid), 
 							oracleSet.get(qid), WeightEnum.values()[woption], MAP_ALPHA[woption]);
 					query2TweetSet.get(qid).sortByTMscore();
 					map_per_query[woption][counter] = Evaluation.MAP(qid, query2TweetSet.get(qid), qrels, numrels);
-					computeTMScore(query2TweetSet.get(qid), 
-							oracleSet.get(qid), WeightEnum.values()[woption], MAP_ALPHA[woption]);
-					query2TweetSet.get(qid).sortByTMscore();
-					p30_per_query[woption][counter] = Evaluation.P30(qid, query2TweetSet.get(qid), qrels);
+					p30_per_query[woption][counter] = Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 30);
+					p5_per_query[woption][counter] = Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 5);
 				}
 				EVAL_MAP[woption] += map_per_query[woption][counter];
 				EVAL_P30[woption] += p30_per_query[woption][counter];
@@ -206,6 +206,7 @@ public class KDEModel extends Model {
 		
 		if (per_query) {
 			writeQueryResults(map_per_query, p30_per_query);
+			writeP5Results(map_per_query, p5_per_query);
 		}
 	}
 	
@@ -221,6 +222,23 @@ public class KDEModel extends Model {
 			}
 			bw.close();
 		}
+	}
+	
+	public void writeP5Results(double[][] map_per_query, double[][] p5_per_query) throws IOException {
+		String fileName1 = outputDir + "Score_P5_MAP.txt";
+		String fileName2 = outputDir + "Rank_P5_MAP.txt";
+		BufferedWriter bw1 = new BufferedWriter(new FileWriter(fileName1));
+		BufferedWriter bw2 = new BufferedWriter(new FileWriter(fileName2));
+		for (int qcnt = 0; qcnt < map_per_query[0].length; qcnt++) {
+			double oracleImprove = map_per_query[3][qcnt] - map_per_query[4][qcnt];
+			if (oracleImprove <= 0) continue;
+			double scoreImprove = map_per_query[1][qcnt] - map_per_query[4][qcnt];
+			double rankImprove = map_per_query[2][qcnt] - map_per_query[4][qcnt];
+			bw1.write(String.format("%.4f %.4f\n", p5_per_query[1][qcnt], scoreImprove/oracleImprove));
+			bw2.write(String.format("%.4f %.4f\n", p5_per_query[2][qcnt], rankImprove/oracleImprove));
+		}
+		bw1.close();
+		bw2.close();
 	}
 	
 	@Override
