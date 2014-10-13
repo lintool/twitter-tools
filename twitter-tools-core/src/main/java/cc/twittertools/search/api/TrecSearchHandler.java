@@ -18,15 +18,22 @@ package cc.twittertools.search.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
 import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.core.WhitespaceTokenizer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
@@ -39,11 +46,13 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import cc.twittertools.index.IndexStatuses;
+import cc.twittertools.index.LowerCaseEntityPreservingFilter;
 import cc.twittertools.index.IndexStatuses.StatusField;
 import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
 import cc.twittertools.thrift.gen.TrecSearch;
 import cc.twittertools.thrift.gen.TrecSearchException;
+import cc.twittertools.util.QueryLikelihoodModel;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -55,7 +64,9 @@ public class TrecSearchHandler implements TrecSearch.Iface {
       new QueryParser(Version.LUCENE_43, StatusField.TEXT.name, IndexStatuses.ANALYZER);
 
   private final IndexSearcher searcher;
+  private final QueryLikelihoodModel qlModel;;
   private final Map<String, String> credentials;
+  public static boolean qlflag = false;
 
   public TrecSearchHandler(File indexPath, @Nullable Map<String, String> credentials)
       throws IOException {
@@ -68,8 +79,9 @@ public class TrecSearchHandler implements TrecSearch.Iface {
     IndexReader reader = DirectoryReader.open(FSDirectory.open(indexPath));
     searcher = new IndexSearcher(reader);
     searcher.setSimilarity(new LMDirichletSimilarity(2500.0f));
+    qlModel = new QueryLikelihoodModel(reader);
   }
-
+  
   public List<TResult> search(TQuery query) throws TrecSearchException {
     Preconditions.checkNotNull(query);
 
@@ -98,7 +110,11 @@ public class TrecSearchHandler implements TrecSearch.Iface {
         p.screen_name = hit.get(StatusField.SCREEN_NAME.name);
         p.epoch = (Long) hit.getField(StatusField.EPOCH.name).numericValue();
         p.text = hit.get(StatusField.TEXT.name);
-        p.rsv = scoreDoc.score;
+        if (qlflag) {
+          p.rsv = qlModel.computeQLScore(query.text, p.text);
+        } else {
+          p.rsv = scoreDoc.score;
+        }
 
         p.followers_count = (Integer) hit.getField(StatusField.FOLLOWERS_COUNT.name).numericValue();
         p.statuses_count = (Integer) hit.getField(StatusField.STATUSES_COUNT.name).numericValue();

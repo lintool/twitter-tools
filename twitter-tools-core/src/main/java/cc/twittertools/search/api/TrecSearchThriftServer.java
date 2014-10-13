@@ -81,6 +81,7 @@ public class TrecSearchThriftServer {
         Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)) : DEFAULT_PORT;
     int maxThreads = cmdline.hasOption(MAX_THREADS_OPTION) ?
         Integer.parseInt(cmdline.getOptionValue(MAX_THREADS_OPTION)) : DEFAULT_MAX_THREADS;
+    
     File index = new File(cmdline.getOptionValue(INDEX_OPTION));
 
     Map<String, String> credentials = null;
@@ -111,6 +112,9 @@ public class TrecSearchThriftServer {
     TServerSocket serverSocket = new TServerSocket(port);
     TrecSearch.Processor<TrecSearch.Iface> searchProcessor =
         new TrecSearch.Processor<TrecSearch.Iface>(new TrecSearchHandler(index, credentials));
+    if (port == 8888) { // return query likelihood score
+      TrecSearchHandler.qlflag = true;
+    }
     
     TThreadPoolServer.Args serverArgs = new TThreadPoolServer.Args(serverSocket);
     serverArgs.maxWorkerThreads(maxThreads);
