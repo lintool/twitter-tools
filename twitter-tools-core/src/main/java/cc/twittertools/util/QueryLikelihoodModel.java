@@ -35,15 +35,54 @@ public class QueryLikelihoodModel {
     this.index = index;
     this.tokenizer = new TweetAnalyzer(Version.LUCENE_43, true);
     this.totalTokens = index.getSumTotalTermFreq(FIELD_TEXT);
-    System.out.println("total number of tokens:" + this.totalTokens);
   }
   
-  public double computeQLScore(String query, String doc) throws IOException {
+  //tokenize a term using TweetAnalyzer(stem=true, version=LUCENE_43)
+  public String stemTerm(String term) throws IOException {
+    TokenStream stream = null;
+    stream = tokenizer.tokenStream("text", new StringReader(term));
+
+    CharTermAttribute charTermAttribute = stream.addAttribute(CharTermAttribute.class);
+    stream.reset();
+    stream.incrementToken();
+    String stemTerm = charTermAttribute.toString();
+    return stemTerm;
+  }
+  
+  public Map<String, Float> parseQuery(String query) throws IOException {
+    String[] phrases = query.trim().split("[,\\s]+");
+    Map<String, Float> weights = new HashMap<String, Float>();
+    for(String phrase: phrases) {
+      if (phrase.length() == 0) {
+        continue;
+      }
+      
+      if (phrase.contains("^")) {
+        String term = phrase.split("\\^")[0];
+        String tokenizeTerm = stemTerm(term);
+        float weight = Float.parseFloat(phrase.split("\\^")[1]);
+        if (weights.containsKey(tokenizeTerm)) {
+          weight = weights.get(tokenizeTerm) + weight;
+        }
+        weights.put(tokenizeTerm, weight);
+      } else {
+        String tokenizeTerm = stemTerm(phrase);
+        float weight = 1.0f/phrases.length;
+        if (weights.containsKey(tokenizeTerm)) {
+          weight += weights.get(tokenizeTerm);
+        }
+        weights.put(tokenizeTerm, weight);
+      }
+    }
+    System.out.println("weights:"+weights.toString());
+    return weights;
+  }
+  
+  public double computeQLScore(Map<String, Float> queryWeights, String doc) throws IOException {
     double score = 0;
-    TokenStream queryStream = tokenizer.tokenStream(FIELD_TEXT, new StringReader(query));
-    List<String> queryTerms = tokenize(queryStream);
     TokenStream docStream = tokenizer.tokenStream(FIELD_TEXT, new StringReader(doc));
     List<String> docTerms = tokenize(docStream);
+    //System.out.println("doc:"+docTerms.toString());
     
     int docLen = 0;
     Map<String, Integer> docTermCountMap = new HashMap<String, Integer>();
@@ -55,23 +94,17 @@ public class QueryLikelihoodModel {
       }
       docLen += 1;
     }
-    
-    System.out.println(doc);
-    for(String queryTerm: queryTerms) {
+
+    for(String queryTerm: queryWeights.keySet()) {
+      float weight = queryWeights.get(queryTerm);
       Term term = new Term(FIELD_TEXT, queryTerm);
-      long termFreqInCorpus2 = 0;
-      DocsEnum de = MultiFields.getTermDocsEnum(index, MultiFields.getLiveDocs(index), FIELD_TEXT, new BytesRef(queryTerm));
-      int document;
-      while((document = de.nextDoc()) != DocsEnum.NO_MORE_DOCS) {
-        termFreqInCorpus2 += de.freq();
-      }
       long termFreqInCorpus = index.totalTermFreq(term);
-      long documentFreq = index.docFreq(term);
+      if (termFreqInCorpus == 0) continue;
       int termFreqInDoc = docTermCountMap.containsKey(queryTerm) ? docTermCountMap.get(queryTerm) : 0;
-      score += Math.log((termFreqInDoc + mu*((double)termFreqInCorpus/totalTokens)) 
+      score += weight * Math.log((termFreqInDoc + mu*((double)termFreqInCorpus/totalTokens)) 
           / (docLen + mu));
-      System.out.println("term: " + queryTerm + " freq in doc: " + termFreqInDoc 
-          + " freq in corpus: " + termFreqInCorpus + " freq in corpus2: " + termFreqInCorpus2 );
+      //System.out.println("term: " + queryTerm + " freq in doc: " + termFreqInDoc 
+      //    + " freq in corpus: " + termFreqInCorpus);
     }
     return score;
   }
@@ -93,4 +126,9 @@ public class QueryLikelihoodModel {
     return output;
   }
   
+  public static void main(String[] args) throws IOException {
+    String query = "  Barbara Walters, chicken pox ";
+    //Map<String, Float> weights = parseQuery(query);
+    //System.out.println(weights.toString());
+  }
 }
