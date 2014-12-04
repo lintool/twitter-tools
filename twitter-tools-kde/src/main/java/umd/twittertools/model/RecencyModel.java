@@ -1,4 +1,4 @@
-package cc.twittertools.model;
+package umd.twittertools.model;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Map;
 
-import com.google.common.collect.Table;
+import umd.twittertools.data.Tweet;
+import umd.twittertools.data.TweetSet;
+import umd.twittertools.eval.Evaluation;
+import umd.twittertools.model.KDEModel.WeightEnum;
 
-import cc.twittertools.data.Tweet;
-import cc.twittertools.data.TweetSet;
-import cc.twittertools.eval.Evaluation;
-import cc.twittertools.model.KDEModel.WeightEnum;
+import com.google.common.collect.Table;
 
 /*
  * implementation of Recency Prior Model of CIKM 03 Paper

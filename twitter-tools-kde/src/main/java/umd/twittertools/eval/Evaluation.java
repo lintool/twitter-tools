@@ -1,11 +1,11 @@
-package cc.twittertools.eval;
+package umd.twittertools.eval;
 
 import java.util.Map;
 
-import com.google.common.collect.Table;
+import umd.twittertools.data.Tweet;
+import umd.twittertools.data.TweetSet;
 
-import cc.twittertools.data.Tweet;
-import cc.twittertools.data.TweetSet;
+import com.google.common.collect.Table;
 
 public class Evaluation {
 	
@@ -26,14 +26,14 @@ public class Evaluation {
 	public static double MAP (int qid, TweetSet tweetSet, 
 			Table<Integer, Long, Integer> qrels, Map<Integer, Integer> numrels) {
 		int TP = 0;
-		double MAP = 0;
+		double AP = 0;
 		for (int i = 0; i < tweetSet.size(); i++) {
 			Tweet tweet = tweetSet.getTweet(i);
 			if (qrels.contains(qid, tweet.getId())) {
 				TP += 1;
-				MAP += TP * 1.0 / (i+1);
+				AP += TP * 1.0 / (i+1);
 			}
 		}
-		return MAP / numrels.get(qid);
+		return AP / numrels.get(qid);
 	}
 }

@@ -1,4 +1,4 @@
-package cc.twittertools.kde;
+package umd.twittertools.kde;
 
 import umontreal.iro.lecuyer.probdist.ContinuousDistribution;
 

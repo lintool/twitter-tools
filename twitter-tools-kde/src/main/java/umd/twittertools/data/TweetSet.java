@@ -1,4 +1,4 @@
-package cc.twittertools.data;
+package umd.twittertools.data;
 
 import java.io.File;
 import java.io.IOException;

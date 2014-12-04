@@ -1,4 +1,4 @@
-package cc.twittertools.run;
+package umd.twittertools.run;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,16 +21,16 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import umd.twittertools.data.TweetSet;
+import umd.twittertools.eval.Evaluation;
+import umd.twittertools.model.KDEModel;
+import umd.twittertools.model.Model;
+import umd.twittertools.model.RecencyModel;
+import umd.twittertools.model.WINModel;
+import umd.twittertools.model.KDEModel.WeightEnum;
+import umd.twittertools.utils.RandomTest;
 import umontreal.iro.lecuyer.util.PrintfFormat;
-import cc.twittertools.data.TweetSet;
-import cc.twittertools.eval.Evaluation;
-import cc.twittertools.model.KDEModel;
-import cc.twittertools.model.Model;
-import cc.twittertools.model.KDEModel.WeightEnum;
-import cc.twittertools.model.RecencyModel;
-import cc.twittertools.model.WINModel;
 import cc.twittertools.search.api.RunQueriesThrift;
-import cc.twittertools.utils.RandomTest;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.HashBasedTable;
@@ -162,7 +162,7 @@ public class RunTemporalModel {
     String testQrelsFile = cmdline.getOptionValue(TEST_QRELS_OPTION);
     
     RunTemporalModel instance = new RunTemporalModel();
-		//instance.train(trainInputFile, trainQrelsFile);
+		instance.train(trainInputFile, trainQrelsFile);
 		instance.test(testInputFile, testQrelsFile);
 		//instance.randomTest(trainInputFile, trainQrelsFile);
 	}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cc.twittertools.data;
+package umd.twittertools.data;
 
 import java.io.BufferedWriter;
 import java.io.File;

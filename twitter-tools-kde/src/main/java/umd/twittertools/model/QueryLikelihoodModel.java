@@ -1,4 +1,4 @@
-package cc.twittertools.model;
+package umd.twittertools.model;
 
 import java.io.IOException;
 import java.io.StringReader;

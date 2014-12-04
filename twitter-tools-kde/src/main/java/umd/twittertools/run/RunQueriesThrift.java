@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cc.twittertools.run;
+package umd.twittertools.run;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -33,11 +33,11 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import cc.twittertools.data.TrecTopic;
-import cc.twittertools.data.TrecTopicSet;
-import cc.twittertools.data.Tweet;
-import cc.twittertools.data.TweetSet;
-import cc.twittertools.model.QueryLikelihoodModel;
+import umd.twittertools.data.TrecTopic;
+import umd.twittertools.data.TrecTopicSet;
+import umd.twittertools.data.Tweet;
+import umd.twittertools.data.TweetSet;
+import umd.twittertools.model.QueryLikelihoodModel;
 import cc.twittertools.search.api.TrecSearchThriftClient;
 import cc.twittertools.thrift.gen.TResult;
 
@@ -145,7 +145,7 @@ public class RunQueriesThrift {
 			long queryTime = query.getQueryTime();
 			TweetSet tweetSet = new TweetSet(query.getQuery(), qid);
 			List<TResult> results = client.search(query.getQuery(), query.getQueryTweetTime(), numResults);
-			qlModel.setCorpus(results); // query likelihood model set corpus.
+			//qlModel.setCorpus(results); // query likelihood model set corpus.
 			Set<Long> tweetIds = new HashSet<Long>();
 			for (TResult result : results) {
 				if (!tweetIds.contains(result.id)) {
@@ -154,13 +154,13 @@ public class RunQueriesThrift {
 					}
 					tweetIds.add(result.id);
 					// compute query likelihood score
-					double score = qlModel.computeScore(query.getQuery(), result.text);
-					Tweet tweet = new Tweet(result.id, result.epoch, queryTime - result.epoch, score);
+					//double score = qlModel.computeScore(query.getQuery(), result.text);
+					Tweet tweet = new Tweet(result.id, result.epoch, queryTime - result.epoch, result.rsv);
 					if (verbose) tweet.setText(result.text);
 					tweetSet.add(tweet);
 				}
 			}
-			tweetSet.sortByQLscore();
+			//tweetSet.sortByQLscore();
 	
 			int rank = 1, counter = 1;
 			double prevScore = 0;

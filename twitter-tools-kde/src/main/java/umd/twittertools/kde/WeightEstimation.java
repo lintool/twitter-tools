@@ -1,9 +1,9 @@
-package cc.twittertools.kde;
+package umd.twittertools.kde;
 
+import umd.twittertools.data.Tweet;
+import umd.twittertools.data.TweetSet;
 import umontreal.iro.lecuyer.probdist.PowerDist;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import cc.twittertools.data.Tweet;
-import cc.twittertools.data.TweetSet;
 
 public class WeightEstimation {
 	

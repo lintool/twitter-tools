@@ -1,4 +1,4 @@
-package cc.twittertools.utils;
+package umd.twittertools.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

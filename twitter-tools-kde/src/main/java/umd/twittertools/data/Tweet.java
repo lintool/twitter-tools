@@ -1,4 +1,4 @@
-package cc.twittertools.data;
+package umd.twittertools.data;
 
 import cc.twittertools.thrift.gen.TResult;
 

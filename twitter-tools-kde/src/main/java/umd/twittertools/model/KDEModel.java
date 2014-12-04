@@ -1,4 +1,4 @@
-package cc.twittertools.model;
+package umd.twittertools.model;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,20 +10,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import com.google.common.base.Charsets;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.MinMaxPriorityQueue;
 import com.google.common.collect.Table;
 import com.google.common.io.Files;
 
+import umd.twittertools.data.Tweet;
+import umd.twittertools.data.TweetSet;
+import umd.twittertools.eval.Evaluation;
+import umd.twittertools.kde.Data;
+import umd.twittertools.kde.WeightEstimation;
+import umd.twittertools.kde.WeightKDE;
 import umontreal.iro.lecuyer.probdist.NormalDist;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import cc.twittertools.data.Tweet;
-import cc.twittertools.data.TweetSet;
-import cc.twittertools.eval.Evaluation;
-import cc.twittertools.kde.Data;
-import cc.twittertools.kde.WeightEstimation;
-import cc.twittertools.kde.WeightKDE;
 
 public class KDEModel extends Model {
 	private static final int UniformWeight = 0;
@@ -41,7 +42,7 @@ public class KDEModel extends Model {
 	private static double[] P30_ALPHA = new double[4];
 	public double[] EVAL_MAP = {0, 0, 0, 0, 0};
 	public double[] EVAL_P30 = {0, 0, 0, 0, 0};
-	private static double begin = 0, end = 1.0, stepSize = 0.02;
+	private static double begin = 0, end = 1.0, stepSize = 0.01;
 	
 	@Override
 	public void computeTMScore(TweetSet tweetSet, double lambda) {
@@ -169,7 +170,7 @@ public class KDEModel extends Model {
 		double[][] p5_per_query = new double[5][numOfquerys];
 		EVAL_MAP = new double[]{0, 0, 0, 0, 0};
 		EVAL_P30 = new double[]{0, 0, 0, 0, 0};
-		P30_ALPHA = MAP_ALPHA = new double[]{0.32, 0.34, 0.08, 0.44};
+		P30_ALPHA = MAP_ALPHA; //= new double[]{0.32, 0.34, 0.08, 0.44};
 		for (int woption = 4; woption >= 0; woption--){ // woption is weight option
 			int counter = 0;
 			for (int qid : query2TweetSet.keySet()) {

@@ -1,4 +1,4 @@
-package cc.twittertools.model;
+package umd.twittertools.model;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -11,14 +11,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import umd.twittertools.data.Tweet;
+import umd.twittertools.data.TweetSet;
+import umd.twittertools.eval.Evaluation;
+import umd.twittertools.model.KDEModel.WeightEnum;
+
 import com.google.common.collect.Multiset.Entry;
 import com.google.common.collect.Table;
 import com.sun.org.apache.xerces.internal.parsers.IntegratedParserConfiguration;
-
-import cc.twittertools.data.Tweet;
-import cc.twittertools.data.TweetSet;
-import cc.twittertools.eval.Evaluation;
-import cc.twittertools.model.KDEModel.WeightEnum;
 
 /* 
  * implementation of Moving Window (WIN) approach of TKDE 12 paper

@@ -1,4 +1,4 @@
-package cc.twittertools.kde;
+package umd.twittertools.kde;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 

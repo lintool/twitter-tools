@@ -1,4 +1,4 @@
-package cc.twittertools.utils;
+package umd.twittertools.utils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cc.twittertools.data.TrecTopic;
-import cc.twittertools.data.TrecTopicSet;
+import umd.twittertools.data.TrecTopic;
+import umd.twittertools.data.TrecTopicSet;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -20,6 +20,7 @@ public class TrainingTestingSplit {
 		TrecTopicSet topics = new TrecTopicSet();
 		topics.addAll(topic2011);
 		topics.addAll(topic2012);
+		//TrecTopicSet topics = TrecTopicSet.fromFile(new File(topicFile));
 		TrecTopicSet trainingTopicSet = new TrecTopicSet();
 		TrecTopicSet testingTopicSet = new TrecTopicSet();
 		for (TrecTopic topic : topics) {
@@ -33,14 +34,10 @@ public class TrainingTestingSplit {
 		TrecTopicSet.writeBack(new File("data/topics.testing.txt"), testingTopicSet);
 	}
 	
-	public static void qrelsSplit(String file1, String file2) throws Exception {
-		List<String> qrels2011 = Files.readLines(new File(file1), Charsets.UTF_8);
-		List<String> qrels2012 = Files.readLines(new File(file2), Charsets.UTF_8);
-		List<String> qrels = new ArrayList<String>();
-		qrels.addAll(qrels2011);
-		qrels.addAll(qrels2012);
-		BufferedWriter trainingWriter = new BufferedWriter(new FileWriter("data/run.training.txt"));
-		BufferedWriter testingWriter = new BufferedWriter(new FileWriter("data/run.testing.txt"));
+	public static void qrelsSplit(String file) throws Exception {
+		List<String> qrels = Files.readLines(new File(file), Charsets.UTF_8);
+		BufferedWriter trainingWriter = new BufferedWriter(new FileWriter("data/run.2013.training.txt"));
+		BufferedWriter testingWriter = new BufferedWriter(new FileWriter("data/run.2013.testing.txt"));
 		for (String line : qrels) {
 			String[] groups = line.split("\\s+");
 			int topicId = Integer.parseInt(groups[0]);
@@ -59,6 +56,6 @@ public class TrainingTestingSplit {
 	
 	public static void main(String[] args) throws Exception {
 		//qrelsSplit("../data/qrels.microblog2013.txt", "../data/qrels.microblog2014.txt");
-		qrelsSplit(args[0], args[1]);
+		qrelsSplit(args[0]);
 	}
 }

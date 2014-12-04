@@ -1,4 +1,4 @@
-package cc.twittertools.utils;
+package umd.twittertools.utils;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Table;
+import umd.twittertools.data.TweetSet;
+import umd.twittertools.model.KDEModel;
+import umd.twittertools.model.RecencyModel;
+import umd.twittertools.model.WINModel;
+import umd.twittertools.run.RunTemporalModel;
 
-import cc.twittertools.data.TweetSet;
-import cc.twittertools.model.KDEModel;
-import cc.twittertools.model.RecencyModel;
-import cc.twittertools.model.WINModel;
-import cc.twittertools.run.RunTemporalModel;
+import com.google.common.collect.Table;
 
 public class RandomTest {
 	

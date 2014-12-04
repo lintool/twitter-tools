@@ -1,4 +1,4 @@
-package cc.twittertools.model;
+package umd.twittertools.model;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import umd.twittertools.data.TweetSet;
+import umd.twittertools.model.KDEModel.WeightEnum;
+
 import com.google.common.base.Charsets;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.io.Files;
-
-import cc.twittertools.data.TweetSet;
-import cc.twittertools.model.KDEModel.WeightEnum;
 
 public class Model {
 	public static final int TIME_INTERVAL = 60*60*24;
