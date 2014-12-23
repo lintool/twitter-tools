@@ -33,7 +33,11 @@ public class FeedbackRelevanceModel extends FeedbackModel {
 			Iterator<TResult> hitIterator = relDocs.iterator();
 			while(hitIterator.hasNext()) {
 				TResult hit = hitIterator.next();
-				rsvs[k++] = hit.getRsv();
+				if (hit.getRsv() > 0) {
+					rsvs[k++] = hit.getRsv();
+				} else {
+					rsvs[k++] = 1.0;
+				}
 			}
 			
 			hitIterator = relDocs.iterator();

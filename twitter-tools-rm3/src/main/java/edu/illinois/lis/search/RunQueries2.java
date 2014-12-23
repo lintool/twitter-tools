@@ -1,19 +1,12 @@
 package edu.illinois.lis.search;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-
-
-
-
-
-
-
-
-
-import cc.twittertools.data.TweetSet;
+import umd.twittertools.data.TweetSet;
 import cc.twittertools.search.api.TrecSearchThriftClient;
 import cc.twittertools.thrift.gen.TResult;
 import cc.twittertools.thrift.gen.TrecSearchException;
@@ -26,7 +19,7 @@ import edu.illinois.lis.utils.Integration;
 import edu.illinois.lis.utils.ParameterBroker;
 import edu.illinois.lis.utils.Stopper;
 
-public class RunQueries {
+public class RunQueries2 {
 	private static final String DEFAULT_RUNTAG = "QL";
 
 	private static final String HOST_OPTION = "host";
@@ -43,7 +36,7 @@ public class RunQueries {
 
 	private static final double ORIG_QUERY_WEIGHT = 0.5;
 	
-	private RunQueries() {}
+	private RunQueries2() {}
 
 	public static void main(String[] args) throws Exception {
 		ParameterBroker params = new ParameterBroker(args[0]);
@@ -155,7 +148,7 @@ public class RunQueries {
 				fbVector.normalizeToOne();
 				fbVector = FeatureVector.interpolate(query.getFeatureVector(), fbVector, ORIG_QUERY_WEIGHT);
 		
-				//System.err.println(fbVector);
+				System.err.println(fbVector);
 				
 				StringBuilder builder = new StringBuilder();
 				Iterator<String> terms = fbVector.iterator();
@@ -171,23 +164,31 @@ public class RunQueries {
 				
 			}
 			List<TResult> results = client.search(queryText, query.getQuerytweettime(), numResults);
+			// removed below codes!
 			// reranked by query likelihood score
-			TweetSet tweetSet = Integration.TResultSet2TweetSet(query, results, true);
-			results = Integration.TweetSet2TResultSet(tweetSet);
+			// TweetSet tweetSet = Integration.TResultSet2TweetSet(query, results, true);
+			// results = Integration.TweetSet2TResultSet(tweetSet);
 			String runTag = params.getParamValue(RUNTAG_OPTION);
 			if(runTag==null) 
 				runTag = DEFAULT_RUNTAG;
 	
 			int i = 1;
 			Iterator<TResult> hitIterator = results.iterator();
+			Set<Long> tweetIds = new HashSet<Long>();
 			while(hitIterator.hasNext()) {
 				TResult hit = hitIterator.next();
 				String qid = query.getTitle().replaceFirst("^MB0*", "");
-				out.println(String.format("%s Q0 %s %d %f %s", qid, hit.getId(), i,
-						hit.getRsv(), runTag));
-	
-				if(i++ >= numResults)
-					break;
+				if (!tweetIds.contains(hit.getId())) {
+					if (hit.retweeted_status_id != 0) {
+						continue; // filter all retweets
+					}
+					tweetIds.add(hit.getId());
+					out.println(String.format("%s Q0 %s %d %f %s", qid, hit.getId(), i,
+							hit.getRsv(), runTag));
+		
+					if(i++ >= numResults)
+						break;
+				}
 			}
 
 		}
