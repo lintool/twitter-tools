@@ -25,7 +25,7 @@ public class GetDate extends EvalFunc<String>{
 			String day= groups[2];
 			return year+" "+month+" "+day;
 		}catch(Exception e){
-			throw new IOException("caught exception",e);
+			throw new IOException("caught exception", e);
 		}
 	}
 

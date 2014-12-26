@@ -1,26 +1,36 @@
 package edu.illinois.lis.search;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import com.google.common.collect.Table;
 
-
-
-
-
+import umd.twittertools.data.Tweet;
+import umd.twittertools.data.TweetSet;
+import umd.twittertools.model.KDEModel;
+import umd.twittertools.model.Model;
+import umd.twittertools.model.QueryLikelihoodModel;
+import umd.twittertools.model.KDEModel.WeightEnum;
+import umd.twittertools.model.RecencyModel;
+import umd.twittertools.model.WINModel;
+import umd.twittertools.run.RunTemporalModel;
 import cc.twittertools.search.api.TrecSearchThriftClient;
 import cc.twittertools.thrift.gen.TResult;
+import cc.twittertools.thrift.gen.TrecSearchException;
 import edu.illinois.lis.document.FeatureVector;
 import edu.illinois.lis.feedback.FeedbackRelevanceModel;
 import edu.illinois.lis.query.GQueries;
 import edu.illinois.lis.query.GQueriesJsonImpl;
 import edu.illinois.lis.query.GQuery;
+import edu.illinois.lis.utils.Integration;
 import edu.illinois.lis.utils.ParameterBroker;
 import edu.illinois.lis.utils.Stopper;
 
-public class RunQueries {
-	private static final String DEFAULT_RUNTAG = "lucene4lm";
+public class RunQueriesWithTemporalFeedback {
+	private static final String DEFAULT_RUNTAG = "QL";
 
 	private static final String HOST_OPTION = "host";
 	private static final String PORT_OPTION = "port";
@@ -32,10 +42,14 @@ public class RunQueries {
 	private static final String GROUP_OPTION = "group";
 	private static final String TOKEN_OPTION = "token";
 	private static final String RUNTAG_OPTION = "runtag";
-
+	private static final String MODEL_OPTION = "model";
+	private static final String ALPHA_OPTION = "alpha";
+	private static final String YEAR_OPTION = "year";
+	private static final String REMOVE_RETWEET_OPTION = "retweet";
+	
 	private static final double ORIG_QUERY_WEIGHT = 0.5;
 	
-	private RunQueries() {}
+	private RunQueriesWithTemporalFeedback() {}
 
 	public static void main(String[] args) throws Exception {
 		ParameterBroker params = new ParameterBroker(args[0]);
@@ -81,6 +95,30 @@ public class RunQueries {
 			System.exit(-1);
 		}
 		
+		boolean rmRetweet = false;
+		try {
+			if (params.getParamValue(REMOVE_RETWEET_OPTION) != null) {
+				rmRetweet = Boolean.parseBoolean(params.getParamValue(REMOVE_RETWEET_OPTION));
+			}
+		} catch (Exception e) {
+			err.println("Invalid " + REMOVE_RETWEET_OPTION + ": " + params.getParamValue(REMOVE_RETWEET_OPTION));
+			System.exit(-1);
+		}
+		
+		Model model = null;
+		double optimalLambda = Double.parseDouble(params.getParamValue(ALPHA_OPTION));
+		String modelOption = params.getParamValue(MODEL_OPTION);
+		if (modelOption.equals("kde")) {
+			model = new KDEModel();
+		} else if (modelOption.equals("win")) {
+			model = new WINModel();
+		} else if (modelOption.equals("recency")) {
+			model = new RecencyModel();
+		} else {
+			err.println("Invalid " + MODEL_OPTION + ": " + params.getParamValue(MODEL_OPTION));
+			System.exit(-1);
+		}
+		
 		// authentication credentials
 		String group = params.getParamValue(GROUP_OPTION);
 		if(group==null) {
@@ -95,12 +133,28 @@ public class RunQueries {
 
 		TrecSearchThriftClient client = new TrecSearchThriftClient(params.getParamValue(HOST_OPTION),
 				Integer.parseInt(params.getParamValue(PORT_OPTION)), group, token);
-
+		
+		String qrelsAddr = null;
+		try {
+			if (params.getParamValue(YEAR_OPTION).equals("2013")) {
+				qrelsAddr = "../data/qrels.microblog2013-2014.txt";
+			} else {
+				qrelsAddr = "../data/qrels.microblog2011-2012.txt";
+			}
+		} catch (Exception e) {
+			err.println("Invalid " + REMOVE_RETWEET_OPTION + ": " + params.getParamValue(REMOVE_RETWEET_OPTION));
+			System.exit(-1);
+		}
+		
+		Table<Integer, Long, Integer> qrels = RunTemporalModel.loadGroundTruth(qrelsAddr);
+		
 		Iterator<GQuery> queryIterator = queries.iterator();
 		while(queryIterator.hasNext()) {
 			GQuery query = queryIterator.next();
-			System.err.println(query.getTitle());
+			//System.err.println(query.getTitle());
 			String queryText = query.getText();
+			int queryId = Integer.parseInt(query.getTitle().replaceFirst("^MB0*", ""));
+			if (queryId % 2 == 0) continue; // remove even topics
 			
 			// stupid hack.  need to lowercase the query vector
 			FeatureVector temp = new FeatureVector(null);
@@ -115,10 +169,27 @@ public class RunQueries {
 			
 			// if we're doing feedback
 			if(fbDocs > 0 && fbTerms > 0) {
-				List<TResult> results = client.search(queryText, query.getQuerytweettime(), fbDocs);
+				List<TResult> results = client.search(queryText, query.getQuerytweettime(), numResults);
+				
+				TweetSet tweetSet = Integration.TResultSet2TweetSet(query, results, rmRetweet);
+				TweetSet oracleSet = TweetSet.getOracleSet(queryId, tweetSet, qrels);
+				if (oracleSet.size() == 0) {
+					System.err.println(oracleSet.size());
+				}
+				
+				if (modelOption.equals("kde")) {
+					model.computeTMScore(tweetSet, oracleSet, WeightEnum.ScoreBasedWeight, optimalLambda);
+				} else {
+					model.computeTMScore(tweetSet, optimalLambda);
+				}
+				tweetSet.sortByTMscore();
+				int fbNum = Math.min(tweetSet.size(), fbDocs);
+				List<Tweet> topTweets = tweetSet.getTweets().subList(0, fbNum);
+				List<TResult> topResults = Integration.TweetSet2TResultSet(topTweets);
+				
 				FeedbackRelevanceModel fb = new FeedbackRelevanceModel();
 				fb.setOriginalQuery(query);
-				fb.setRes(results);
+				fb.setRes(topResults);
 				fb.build(stopper);
 				
 				FeatureVector fbVector = fb.asFeatureVector();
@@ -132,6 +203,7 @@ public class RunQueries {
 				Iterator<String> terms = fbVector.iterator();
 				while(terms.hasNext()) {
 					String term = terms.next();
+					if (!term.matches("\\w+")) continue;
 					if(term.length() < 2)
 						continue;
 					double prob = fbVector.getFeaturetWeight(term);
@@ -142,21 +214,31 @@ public class RunQueries {
 			}
 			
 			List<TResult> results = client.search(queryText, query.getQuerytweettime(), numResults);
+			TweetSet tweetSet = Integration.TResultSet2TweetSet(query, results, true);
+			TweetSet oracleSet = TweetSet.getOracleSet(queryId, tweetSet, qrels);
+			
+			if (modelOption.equals("kde")) {
+				model.computeTMScore(tweetSet, oracleSet, WeightEnum.ScoreBasedWeight, optimalLambda);
+			} else {
+				model.computeTMScore(tweetSet, optimalLambda);
+			}
+			tweetSet.sortByTMscore();
+			results = Integration.TweetSet2TResultSet(tweetSet);
+			
 			String runTag = params.getParamValue(RUNTAG_OPTION);
-			if(runTag==null) 
-				runTag = DEFAULT_RUNTAG;
+			runTag = modelOption;
 
 			int i = 1;
 			Iterator<TResult> hitIterator = results.iterator();
 			while(hitIterator.hasNext()) {
 				TResult hit = hitIterator.next();
-				out.println(String.format("%s Q0 %s %d %f %s", query.getTitle(), hit.getId(), i,
-						hit.getRsv(), runTag));
+				double tmScore = tweetSet.getTweet(i-1).getTMScore();
+				out.println(String.format("%s Q0 %s %d %f %s", queryId, hit.getId(), i,
+						tmScore, runTag));
 
 				if(i++ >= numResults)
 					break;
 			}
-
 		}
 		out.close();
 	}

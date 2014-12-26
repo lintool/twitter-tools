@@ -1,12 +1,17 @@
 package cc.twittertools.hbase;
 
 import java.io.IOException;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
+
+import me.lemire.integercompression.FastPFOR;
+import me.lemire.integercompression.IntWrapper;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -24,14 +29,21 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.core.dom.ThisExpression;
+import org.jcodings.util.ArrayCopy;
+
+import antlr.ByteBuffer;
 
 
 public class WordCountDAO {
-	 private final static int DAY = 60*24;
-	 private final static int INTERVAL = 5;
-	 public static int NUM_INTERVALS = DAY/INTERVAL;
+	 public static int NUM_INTERVALS = 288;
 	 public static final byte[] TABLE_NAME = Bytes.toBytes("wordcount");
 	 public static final byte[] COLUMN_FAMILY = Bytes.toBytes("count");
+	 
+	 //FastPFor compression initialization
+	 private static FastPFOR p4 = new FastPFOR();
+	 private static int blocks = NUM_INTERVALS / 128; // block number of FastPFor compression
+	 private static int left = NUM_INTERVALS % 128; // left number not be compressed
 	 
 	 private static final Logger log = Logger.getLogger(WordCountDAO.class);
 
@@ -74,16 +86,23 @@ public class WordCountDAO {
 	 private static Put mkPut(WordCount w){
 		 log.debug(String.format("Creating Put for %s", w.word));
 
-		 Put p = new Put(w.word);
+		 Put p = new Put(Bytes.toBytes(w.word));
 		 // add integer compression here
 		 // convert 2-d byte array to 1-d byte array
-		 byte[] storage = new byte[NUM_INTERVALS*Integer.SIZE/Byte.SIZE];
-		 for(int i=0; i< NUM_INTERVALS; i++){
-			 for(int j=0; j<Integer.SIZE/Byte.SIZE; j++){
-				storage[i*Integer.SIZE/Byte.SIZE+j] = w.count[i][j]; 
-			 }
-		 }
-		 p.add(COLUMN_FAMILY, w.column_id, storage);
+		 int[] out = new int[blocks*128];
+		 IntWrapper inPos = new IntWrapper(0);
+		 IntWrapper outPos = new IntWrapper(0);
+		 p4.compress(w.count, inPos, blocks*128, out, outPos);
+		 
+		 // the first blocks*128 integers(outPos.get()) are compressed, while the left remains the same
+		 int[] compression = new int[outPos.get()+left];
+		 // copy the compressed integers
+		 System.arraycopy(out, 0, compression, 0, outPos.get()); 
+		 // copy the uncompressed integers
+		 System.arraycopy(w.count, blocks*128, compression, outPos.get(), left); 
+		 
+		 byte[] storage = ArrayCopy.int2byte(compression);
+		 p.add(COLUMN_FAMILY, Bytes.toBytes(w.column_id), storage);
 		 
 		 return p;
 	 }
@@ -132,32 +151,49 @@ public class WordCountDAO {
 	 }
 	 
 	 public static class WordCount{
-		 public byte[] word;
-		 public byte[] column_id;
-		 public byte[][] count;
+		 public String word;
+		 public String column_id;
+		 public int[] count;
+		 public int sum;
+		 
+		 public WordCount(String word){
+			 this.word = word;
+			 this.sum = 0;
+			 this.count = new int[NUM_INTERVALS];
+			 for(int i=0; i < NUM_INTERVALS; i++){
+				 this.count[i] = 0;
+			 }
+		 }
 		 
 		 public WordCount(byte[] word, byte[] column_id){
-			 this.word = word;
-			 this.column_id = column_id;
-			 this.count = new byte[NUM_INTERVALS][];
+			 this.word = new String(word);
+			 this.column_id = new String(column_id);
+			 this.sum = 0;
+			 this.count = new int[NUM_INTERVALS];
 			 for(int i=0; i < NUM_INTERVALS; i++){
-				 this.count[i] = Bytes.toBytes(0);
+				 this.count[i] = 0;
 			 }
 		 }
 		 
 		 public WordCount(String word, String column_id){
-			 this.word = Bytes.toBytes(word);
-			 this.column_id = Bytes.toBytes(column_id);
-			 this.count = new byte[NUM_INTERVALS][];
+			 this.word = word;
+			 this.column_id = column_id;
+			 this.sum = 0;
+			 this.count = new int[NUM_INTERVALS];
 			 for(int i=0; i < NUM_INTERVALS; i++){
-				 this.count[i] = Bytes.toBytes(0);
+				 this.count[i] = 0;
 			 }
 		 }
 		 
-		 private WordCount(byte[] word, byte[] column_id, byte[][] count){
+		 public WordCount(String word, String column_id, int[] count){
 			 this.word = word;
 			 this.column_id = column_id;
-			 this.count = count;
+			 this.sum = 0;
+			 this.count = new int[count.length];
+			 for(int i=0; i < count.length; i++){
+				 this.count[i] = count[i];
+				 sum += this.count[i];
+			 }
 		 }
 		 
 		 public static List<WordCount> GetWordCountFromResults(Result r){
@@ -168,20 +204,53 @@ public class WordCountDAO {
 			 for(byte[] column: familyMap.keySet()){
 				 byte[] value = familyMap.get(column);
 				 // decompression
-				 byte[][] count = new byte[NUM_INTERVALS][Integer.SIZE/Byte.SIZE];
-				 for(int i=0; i<NUM_INTERVALS; i++){
-					 for(int j=0; j<Integer.SIZE/Byte.SIZE; j++){
-						 count[i][j] = value[i*Integer.SIZE/Byte.SIZE+j];
-					 }
-				 }
-				 WordCount w = new WordCount(word, column, count);
+				 // convert byte array to int array
+				 IntBuffer intBuffer = java.nio.ByteBuffer.wrap(value)
+						 .order(ByteOrder.LITTLE_ENDIAN).asIntBuffer();
+				 int[] rawInts = new int[intBuffer.remaining()];
+				 intBuffer.get(rawInts);
+				 
+				 int[] count = new int[NUM_INTERVALS];
+				 IntWrapper inPos = new IntWrapper(0);
+				 IntWrapper outPos = new IntWrapper(0);
+				 p4.uncompress(rawInts, inPos, rawInts.length, count, outPos);
+				 System.arraycopy(rawInts, rawInts.length-left, count, NUM_INTERVALS-left, left);
+				 
+				 WordCount w = new WordCount(new String(word), new String(column), count);
+				 
 				 wordCounts.add(w);
 			 }
 			 return wordCounts;
 		 }
 		 
 		 public void setCount(int interval, int count){
-			 this.count[interval] = Bytes.toBytes(count);
+			 this.count[interval] = count;
+			 this.sum += count;
+		 }
+		 
+		 public int getSum(){
+			 return sum;
+		 }
+		 
+		 @Override
+		 public boolean equals(Object o){
+			 if (!(o instanceof WordCount)) {
+				 return false;
+			 }
+			 if (o == this) {
+				 return true;
+			 }
+			 WordCount w = (WordCount)o;
+			 if(w.word.equals(this.word)  &&
+				w.column_id.equals(this.column_id)) {
+				 for(int i=0; i<NUM_INTERVALS; i++){
+					 if(w.count[i] != this.count[i]){
+						 return false;
+					 }
+				 }
+				 return true;
+			 }
+			 return false;
 		 }
 	 }
 }

@@ -114,7 +114,7 @@ public class RunQueriesThrift {
 
     TrecSearchThriftClient client = new TrecSearchThriftClient(cmdline.getOptionValue(HOST_OPTION),
         Integer.parseInt(cmdline.getOptionValue(PORT_OPTION)), group, token);
-
+    
     for (cc.twittertools.search.TrecTopic query : topicsFile) {
       List<TResult> results = client.search(query.getQuery(),
           query.getQueryTweetTime(), numResults);

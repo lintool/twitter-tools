@@ -45,8 +45,12 @@
         <configuration>
           <programs>
             <program>
-              <mainClass>edu.illinois.lis.search.RunQueries</mainClass>
-              <name>RunQueries</name>
+              <mainClass>edu.illinois.lis.search.RunQueries2</mainClass>
+              <name>RunQueries2</name>
+            </program>
+            <program>
+              <mainClass>edu.illinois.lis.search.RunQueriesWithTemporalFeedback</mainClass>
+              <name>RunTemporalQueries</name>
             </program>
           </programs>
         </configuration>
@@ -86,5 +90,15 @@
       <artifactId>twitter-tools-core</artifactId>
       <version>1.4.2</version>
     </dependency>
+    <dependency>
+      <groupId>cc.twittertools.kde</groupId>
+      <artifactId>twitter-tools-kde</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+		<groupId>ca.umontreal.iro</groupId>
+		<artifactId>ssj</artifactId>
+		<version>2.5</version>
+	</dependency>
   </dependencies>
 </project>

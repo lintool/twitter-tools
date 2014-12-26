@@ -37,23 +37,75 @@
       <artifactId>appassembler-maven-plugin</artifactId>
       <version>1.3.1</version>
       <configuration>
+      	<extraJvmArguments>-Xms512M -Xmx100000M</extraJvmArguments>
         <programs>
           <program>
-            <mainClass>cc.twittertools.hbase.LoadWordCount</mainClass>
-            <name>LoadWordCount</name>
-          </program>              
+            <mainClass>cc.twittertools.entropy.Entropy</mainClass>
+            <name>Entropy</name>
+          </program> 
+          <program>
+            <mainClass>cc.twittertools.entropy.WordEntropy</mainClass>
+            <name>WordEntropy</name>
+          </program> 	
+          <program>
+            <mainClass>cc.twittertools.wordcount.UnigramComparison</mainClass>
+            <name>UnigramComparison</name>
+          </program>   
+          <program>
+            <mainClass>cc.twittertools.wordcount.BigramComparison</mainClass>
+            <name>BigramComparison</name>
+          </program> 
+          <program>
+            <mainClass>cc.twittertools.wordcount.BuildUnigramHuffmanTree</mainClass>
+            <name>BuildUnigramHuffmanTree</name>
+          </program>
+          <program>
+            <mainClass>cc.twittertools.wordcount.BuildBigramHuffmanTree</mainClass>
+            <name>BuildBigramHuffmanTree</name>
+          </program>
+          <program>
+            <mainClass>cc.twittertools.wordcount.LoadUnigramCount</mainClass>
+            <name>LoadUnigramCount</name>
+          </program>
+          <program>
+            <mainClass>cc.twittertools.wordcount.LoadBigramCount</mainClass>
+            <name>LoadBigramCount</name>
+          </program>
+          <program>
+            <mainClass>cc.twittertools.preprocessing.GenerateIDMapping</mainClass>
+            <name>GenerateIDMapping</name>
+          </program>
+          <program>
+            <mainClass>cc.twittertools.wordcount.WordTrendVis</mainClass>
+            <name>WordTrendVis</name>
+          </program>  
+          <program>
+            <mainClass>cc.twittertools.wordcount.WordTrendVisFromCounts</mainClass>
+            <name>WordTrendVisFromCounts</name>
+          </program>        
          </programs>
-       </configuration>                                                              </plugin>
+       </configuration>                                                              
+       </plugin>
     </plugins>
   </build>
 
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+	  <groupId>junit</groupId>
+	  <artifactId>junit</artifactId>
+	  <version>4.8.2</version>
+	</dependency>
+    <!--  Gson dependency -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.2.4</version>
     </dependency>
+	<dependency>
+		<groupId>trove</groupId>
+		<artifactId>trove</artifactId>
+		<version>1.0.2</version>
+	</dependency>
     <dependency>
       <groupId>cc.twittertools</groupId>
       <artifactId>twitter-tools-core</artifactId>
@@ -97,5 +149,10 @@
 		<artifactId>guava</artifactId>
 		<version>17.0</version>
 	</dependency>
+	<dependency>
+      <groupId>me.lemire.integercompression</groupId>
+      <artifactId>JavaFastPFOR</artifactId>
+       <version>0.0.3</version>
+    </dependency>
   </dependencies>
 </project>

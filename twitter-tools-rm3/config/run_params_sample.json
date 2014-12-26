@@ -1,12 +1,16 @@
 {
-"queries"      :  "./data/topics.microblog2011.json",
+"queries"      :  "./data/topics.2011.total.json",
 "stopper"      :  "./data/stoplist.twitter",
+"year"		   :  2011,
 "fb_docs"      :  50,
 "fb_terms"     :  20,
-"host"         :  "<host name>",
-"port"         :  9090,
+"host"         :  "nest.umiacs.umd.edu",
+"port"         :  7000,
 "num_results"  :  1000,
-"group"        :  "<group id>",
-"token"        :  "<group token>",
-"runtag"       :  "<run tag>"
+"group"        :  "jimmy",
+"token"        :  "000000",
+"runtag"       :  "lucene4m",
+"alpha"        :  0.013,
+"retweet"      :  "true",
+"model"        :  "recency"
 }

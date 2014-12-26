@@ -36,7 +36,9 @@ public class LuceneTokenizer extends EvalFunc<DataBag>{
 	        tokenstream.reset();
 	        while (tokenstream.incrementToken()){
 	        	String token = tokenstream.getAttribute(CharTermAttribute.class).toString();
-	        	output.add(mTupleFactory.newTuple(token));
+	        	if (token.length() > 0) {
+	        		output.add(mTupleFactory.newTuple(token));
+	        	}
 	        }
 	        return output;
 	    } catch (Exception e) {

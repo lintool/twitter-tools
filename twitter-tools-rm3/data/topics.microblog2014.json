@@ -1,0 +1,1272 @@
+{
+  "queries": [
+    {
+      "title": "MB171",
+      "text": "Ron Weasley birthday",
+      "epoch": "1.362239025E9",
+      "querytweettime": "307878904759201794",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Ron"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Weasley"
+        },
+        {
+          "weight": 1.0,
+          "feature": "birthday"
+        }
+      ]
+    },
+    {
+      "title": "MB172",
+      "text": "Merging of US Air and American",
+      "epoch": "1.36113568E9",
+      "querytweettime": "303251140382973952",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Merging"
+        },
+        {
+          "weight": 1.0,
+          "feature": "of"
+        },
+        {
+          "weight": 1.0,
+          "feature": "US"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Air"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "American"
+        }
+      ]
+    },
+    {
+      "title": "MB173",
+      "text": "muscle pain from statins",
+      "epoch": "1.364077269E9",
+      "querytweettime": "315589058900418560",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "muscle"
+        },
+        {
+          "weight": 1.0,
+          "feature": "pain"
+        },
+        {
+          "weight": 1.0,
+          "feature": "from"
+        },
+        {
+          "weight": 1.0,
+          "feature": "statins"
+        }
+      ]
+    },
+    {
+      "title": "MB174",
+      "text": "Hubble oldest star",
+      "epoch": "1.363208526E9",
+      "querytweettime": "311945286652137473",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Hubble"
+        },
+        {
+          "weight": 1.0,
+          "feature": "oldest"
+        },
+        {
+          "weight": 1.0,
+          "feature": "star"
+        }
+      ]
+    },
+    {
+      "title": "MB175",
+      "text": "commentary on naming storm Nemo",
+      "epoch": "1.363457988E9",
+      "querytweettime": "312991606120804352",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "commentary"
+        },
+        {
+          "weight": 1.0,
+          "feature": "on"
+        },
+        {
+          "weight": 1.0,
+          "feature": "naming"
+        },
+        {
+          "weight": 1.0,
+          "feature": "storm"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Nemo"
+        }
+      ]
+    },
+    {
+      "title": "MB176",
+      "text": "book club members",
+      "epoch": "1.364608084E9",
+      "querytweettime": "317815458369777664",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "book"
+        },
+        {
+          "weight": 1.0,
+          "feature": "club"
+        },
+        {
+          "weight": 1.0,
+          "feature": "members"
+        }
+      ]
+    },
+    {
+      "title": "MB177",
+      "text": "Boko Haram kidnapped French tourists",
+      "epoch": "1.363913174E9",
+      "querytweettime": "314900794593906688",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Boko"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Haram"
+        },
+        {
+          "weight": 1.0,
+          "feature": "kidnapped"
+        },
+        {
+          "weight": 1.0,
+          "feature": "French"
+        },
+        {
+          "weight": 1.0,
+          "feature": "tourists"
+        }
+      ]
+    },
+    {
+      "title": "MB178",
+      "text": "Tiger Woods regains title",
+      "epoch": "1.364555138E9",
+      "querytweettime": "317593386746007553",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Tiger"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Woods"
+        },
+        {
+          "weight": 1.0,
+          "feature": "regains"
+        },
+        {
+          "weight": 1.0,
+          "feature": "title"
+        }
+      ]
+    },
+    {
+      "title": "MB179",
+      "text": "care of Iditarod dogs",
+      "epoch": "1.364720268E9",
+      "querytweettime": "318285992178089984",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "care"
+        },
+        {
+          "weight": 1.0,
+          "feature": "of"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Iditarod"
+        },
+        {
+          "weight": 1.0,
+          "feature": "dogs"
+        }
+      ]
+    },
+    {
+      "title": "MB180",
+      "text": "Sherlock Elementary BBC CBS",
+      "epoch": "1.364739688E9",
+      "querytweettime": "318367445586939904",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Sherlock"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Elementary"
+        },
+        {
+          "weight": 1.0,
+          "feature": "BBC"
+        },
+        {
+          "weight": 1.0,
+          "feature": "CBS"
+        }
+      ]
+    },
+    {
+      "title": "MB181",
+      "text": "Costa Concordia shipwreck",
+      "epoch": "1.362553013E9",
+      "querytweettime": "309195865883570176",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Costa"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Concordia"
+        },
+        {
+          "weight": 1.0,
+          "feature": "shipwreck"
+        }
+      ]
+    },
+    {
+      "title": "MB182",
+      "text": "Chinua Achebe death",
+      "epoch": "1.36420246E9",
+      "querytweettime": "316114147999899648",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Chinua"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Achebe"
+        },
+        {
+          "weight": 1.0,
+          "feature": "death"
+        }
+      ]
+    },
+    {
+      "title": "MB183",
+      "text": "Evernote hacked",
+      "epoch": "1.362610298E9",
+      "querytweettime": "309436136579821569",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Evernote"
+        },
+        {
+          "weight": 1.0,
+          "feature": "hacked"
+        }
+      ]
+    },
+    {
+      "title": "MB184",
+      "text": "Election of Hugo Chavez successor",
+      "epoch": "1.364621434E9",
+      "querytweettime": "317871452349140993",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Election"
+        },
+        {
+          "weight": 1.0,
+          "feature": "of"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Hugo"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Chavez"
+        },
+        {
+          "weight": 1.0,
+          "feature": "successor"
+        }
+      ]
+    },
+    {
+      "title": "MB185",
+      "text": "National Zoo Panda, insemination",
+      "epoch": "1.364733087E9",
+      "querytweettime": "318339758956896258",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "National"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Zoo"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Panda,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "insemination"
+        }
+      ]
+    },
+    {
+      "title": "MB186",
+      "text": "Dorner, truck, compensation",
+      "epoch": "1.363356033E9",
+      "querytweettime": "312563975852281856",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Dorner,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "truck,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "compensation"
+        }
+      ]
+    },
+    {
+      "title": "MB187",
+      "text": "Pope washed Muslims feet",
+      "epoch": "1.36449204E9",
+      "querytweettime": "317374054011125762",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Pope"
+        },
+        {
+          "weight": 1.0,
+          "feature": "washed"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Muslims"
+        },
+        {
+          "weight": 1.0,
+          "feature": "feet"
+        }
+      ]
+    },
+    {
+      "title": "MB188",
+      "text": "Bombing police headquarters, Kirkuk",
+      "epoch": "1.359884272E9",
+      "querytweettime": "298002354828103680",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Bombing"
+        },
+        {
+          "weight": 1.0,
+          "feature": "police"
+        },
+        {
+          "weight": 1.0,
+          "feature": "headquarters,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Kirkuk"
+        }
+      ]
+    },
+    {
+      "title": "MB189",
+      "text": "injuries by pets",
+      "epoch": "1.364731978E9",
+      "querytweettime": "318335107494727682",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "injuries"
+        },
+        {
+          "weight": 1.0,
+          "feature": "by"
+        },
+        {
+          "weight": 1.0,
+          "feature": "pets"
+        }
+      ]
+    },
+    {
+      "title": "MB190",
+      "text": "Organized crime, sports doping, Australia",
+      "epoch": "1.360234589E9",
+      "querytweettime": "299471690805690368",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Organized"
+        },
+        {
+          "weight": 1.0,
+          "feature": "crime,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "sports"
+        },
+        {
+          "weight": 1.0,
+          "feature": "doping,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Australia"
+        }
+      ]
+    },
+    {
+      "title": "MB191",
+      "text": "Irish laundries apology",
+      "epoch": "1.364214108E9",
+      "querytweettime": "316163003252891648",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Irish"
+        },
+        {
+          "weight": 1.0,
+          "feature": "laundries"
+        },
+        {
+          "weight": 1.0,
+          "feature": "apology"
+        }
+      ]
+    },
+    {
+      "title": "MB192",
+      "text": "whooping cough epidemic",
+      "epoch": "1.363126229E9",
+      "querytweettime": "311600108032643073",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "whooping"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cough"
+        },
+        {
+          "weight": 1.0,
+          "feature": "epidemic"
+        }
+      ]
+    },
+    {
+      "title": "MB193",
+      "text": "Bulgarian protesters self immolate",
+      "epoch": "1.363267101E9",
+      "querytweettime": "312190968029904897",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Bulgarian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "protesters"
+        },
+        {
+          "weight": 1.0,
+          "feature": "self"
+        },
+        {
+          "weight": 1.0,
+          "feature": "immolate"
+        }
+      ]
+    },
+    {
+      "title": "MB194",
+      "text": "cherry blossom Washington",
+      "epoch": "1.364750006E9",
+      "querytweettime": "318410722403028993",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "cherry"
+        },
+        {
+          "weight": 1.0,
+          "feature": "blossom"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Washington"
+        }
+      ]
+    },
+    {
+      "title": "MB195",
+      "text": "Argo wins Oscar",
+      "epoch": "1.36312266E9",
+      "querytweettime": "311585138540679168",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Argo"
+        },
+        {
+          "weight": 1.0,
+          "feature": "wins"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Oscar"
+        }
+      ]
+    },
+    {
+      "title": "MB196",
+      "text": "US fines Google over Street View",
+      "epoch": "1.364615404E9",
+      "querytweettime": "317846160691822593",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "US"
+        },
+        {
+          "weight": 1.0,
+          "feature": "fines"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Google"
+        },
+        {
+          "weight": 1.0,
+          "feature": "over"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Street"
+        },
+        {
+          "weight": 1.0,
+          "feature": "View"
+        }
+      ]
+    },
+    {
+      "title": "MB197",
+      "text": "Mad Men season 6",
+      "epoch": "1.363214953E9",
+      "querytweettime": "311972243464921088",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Mad"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Men"
+        },
+        {
+          "weight": 1.0,
+          "feature": "season"
+        },
+        {
+          "weight": 1.0,
+          "feature": "6"
+        }
+      ]
+    },
+    {
+      "title": "MB198",
+      "text": "Hostess bought by Apollo",
+      "epoch": "1.363709791E9",
+      "querytweettime": "314047744450887680",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Hostess"
+        },
+        {
+          "weight": 1.0,
+          "feature": "bought"
+        },
+        {
+          "weight": 1.0,
+          "feature": "by"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Apollo"
+        }
+      ]
+    },
+    {
+      "title": "MB199",
+      "text": "Ed Koch death",
+      "epoch": "1.36055157E9",
+      "querytweettime": "300801205481906176",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Ed"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Koch"
+        },
+        {
+          "weight": 1.0,
+          "feature": "death"
+        }
+      ]
+    },
+    {
+      "title": "MB200",
+      "text": "UK passes marriage bill",
+      "epoch": "1.364398428E9",
+      "querytweettime": "316936097370345472",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "UK"
+        },
+        {
+          "weight": 1.0,
+          "feature": "passes"
+        },
+        {
+          "weight": 1.0,
+          "feature": "marriage"
+        },
+        {
+          "weight": 1.0,
+          "feature": "bill"
+        }
+      ]
+    },
+    {
+      "title": "MB201",
+      "text": "Higgs Boson discovery",
+      "epoch": "1.363614318E9",
+      "querytweettime": "313647301690265600",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Higgs"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Boson"
+        },
+        {
+          "weight": 1.0,
+          "feature": "discovery"
+        }
+      ]
+    },
+    {
+      "title": "MB202",
+      "text": "Boko Haram, Amnesty opposition",
+      "epoch": "1.364644987E9",
+      "querytweettime": "317970240799641600",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Boko"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Haram,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Amnesty"
+        },
+        {
+          "weight": 1.0,
+          "feature": "opposition"
+        }
+      ]
+    },
+    {
+      "title": "MB203",
+      "text": "Eastern Australia Floods",
+      "epoch": "1.362183711E9",
+      "querytweettime": "307646901010964480",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Eastern"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Australia"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Floods"
+        }
+      ]
+    },
+    {
+      "title": "MB204",
+      "text": "Sotomayor, prosecutor, racial comments",
+      "epoch": "1.362147648E9",
+      "querytweettime": "307495641846788096",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Sotomayor,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "prosecutor,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "racial"
+        },
+        {
+          "weight": 1.0,
+          "feature": "comments"
+        }
+      ]
+    },
+    {
+      "title": "MB205",
+      "text": "Port Said football riot, death sentences",
+      "epoch": "1.36343676E9",
+      "querytweettime": "312902569452257280",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Port"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Said"
+        },
+        {
+          "weight": 1.0,
+          "feature": "football"
+        },
+        {
+          "weight": 1.0,
+          "feature": "riot,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "death"
+        },
+        {
+          "weight": 1.0,
+          "feature": "sentences"
+        }
+      ]
+    },
+    {
+      "title": "MB206",
+      "text": "yarn bombing",
+      "epoch": "1.364757721E9",
+      "querytweettime": "318443081445826561",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "yarn"
+        },
+        {
+          "weight": 1.0,
+          "feature": "bombing"
+        }
+      ]
+    },
+    {
+      "title": "MB207",
+      "text": "David Cameron, apology, Amritsar",
+      "epoch": "1.361598917E9",
+      "querytweettime": "305194097205989376",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "David"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Cameron,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "apology,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Amritsar"
+        }
+      ]
+    },
+    {
+      "title": "MB208",
+      "text": "Olympics drops wrestling",
+      "epoch": "1.360700146E9",
+      "querytweettime": "301424378380443650",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Olympics"
+        },
+        {
+          "weight": 1.0,
+          "feature": "drops"
+        },
+        {
+          "weight": 1.0,
+          "feature": "wrestling"
+        }
+      ]
+    },
+    {
+      "title": "MB209",
+      "text": "Chelyabinsk meteor damage",
+      "epoch": "1.36381608E9",
+      "querytweettime": "314493552841351169",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Chelyabinsk"
+        },
+        {
+          "weight": 1.0,
+          "feature": "meteor"
+        },
+        {
+          "weight": 1.0,
+          "feature": "damage"
+        }
+      ]
+    },
+    {
+      "title": "MB210",
+      "text": "arrest of Craig Wilson for drive-by shooting in D.C.",
+      "epoch": "1.363384088E9",
+      "querytweettime": "312681647080349696",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "arrest"
+        },
+        {
+          "weight": 1.0,
+          "feature": "of"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Craig"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Wilson"
+        },
+        {
+          "weight": 1.0,
+          "feature": "for"
+        },
+        {
+          "weight": 1.0,
+          "feature": "drive-by"
+        },
+        {
+          "weight": 1.0,
+          "feature": "shooting"
+        },
+        {
+          "weight": 1.0,
+          "feature": "in"
+        },
+        {
+          "weight": 1.0,
+          "feature": "D.C."
+        }
+      ]
+    },
+    {
+      "title": "MB211",
+      "text": "Downton Abbey, Lady Mary, beau",
+      "epoch": "1.362429851E9",
+      "querytweettime": "308679287005904897",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Downton"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Abbey,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Lady"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Mary,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "beau"
+        }
+      ]
+    },
+    {
+      "title": "MB212",
+      "text": "Kate Middleton maternity wear",
+      "epoch": "1.364649834E9",
+      "querytweettime": "317990570574356480",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Kate"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Middleton"
+        },
+        {
+          "weight": 1.0,
+          "feature": "maternity"
+        },
+        {
+          "weight": 1.0,
+          "feature": "wear"
+        }
+      ]
+    },
+    {
+      "title": "MB213",
+      "text": "US Embassy in Ankara bombed",
+      "epoch": "1.359825022E9",
+      "querytweettime": "297753842307715072",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "US"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Embassy"
+        },
+        {
+          "weight": 1.0,
+          "feature": "in"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Ankara"
+        },
+        {
+          "weight": 1.0,
+          "feature": "bombed"
+        }
+      ]
+    },
+    {
+      "title": "MB214",
+      "text": "math Common Core",
+      "epoch": "1.364305599E9",
+      "querytweettime": "316546744328544256",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "math"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Common"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Core"
+        }
+      ]
+    },
+    {
+      "title": "MB215",
+      "text": "snow blower problems",
+      "epoch": "1.364702197E9",
+      "querytweettime": "318210196910505985",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "snow"
+        },
+        {
+          "weight": 1.0,
+          "feature": "blower"
+        },
+        {
+          "weight": 1.0,
+          "feature": "problems"
+        }
+      ]
+    },
+    {
+      "title": "MB216",
+      "text": "Type II diabetes research",
+      "epoch": "1.364466602E9",
+      "querytweettime": "317222039876419584",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Type"
+        },
+        {
+          "weight": 1.0,
+          "feature": "II"
+        },
+        {
+          "weight": 1.0,
+          "feature": "diabetes"
+        },
+        {
+          "weight": 1.0,
+          "feature": "research"
+        }
+      ]
+    },
+    {
+      "title": "MB217",
+      "text": "Pope candidates",
+      "epoch": "1.363111447E9",
+      "querytweettime": "311538107818336256",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Pope"
+        },
+        {
+          "weight": 1.0,
+          "feature": "candidates"
+        }
+      ]
+    },
+    {
+      "title": "MB218",
+      "text": "Sinkhole rescues",
+      "epoch": "1.363116981E9",
+      "querytweettime": "311561319088283648",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Sinkhole"
+        },
+        {
+          "weight": 1.0,
+          "feature": "rescues"
+        }
+      ]
+    },
+    {
+      "title": "MB219",
+      "text": "Russian meteorite conspiracy",
+      "epoch": "1.361650959E9",
+      "querytweettime": "305412377162166273",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Russian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "meteorite"
+        },
+        {
+          "weight": 1.0,
+          "feature": "conspiracy"
+        }
+      ]
+    },
+    {
+      "title": "MB220",
+      "text": "Shahbag protest",
+      "epoch": "1.363220707E9",
+      "querytweettime": "311996377477545986",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Shahbag"
+        },
+        {
+          "weight": 1.0,
+          "feature": "protest"
+        }
+      ]
+    },
+    {
+      "title": "MB221",
+      "text": "HIV baby cured",
+      "epoch": "1.362684966E9",
+      "querytweettime": "309749316845715456",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "HIV"
+        },
+        {
+          "weight": 1.0,
+          "feature": "baby"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cured"
+        }
+      ]
+    },
+    {
+      "title": "MB222",
+      "text": "\"Oz, The Great and Powerful\" opens",
+      "epoch": "1.363327932E9",
+      "querytweettime": "312446111732334592",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "\"Oz,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "The"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Great"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Powerful\""
+        },
+        {
+          "weight": 1.0,
+          "feature": "opens"
+        }
+      ]
+    },
+    {
+      "title": "MB223",
+      "text": "dog off leash",
+      "epoch": "1.364599369E9",
+      "querytweettime": "317778905006227456",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "dog"
+        },
+        {
+          "weight": 1.0,
+          "feature": "off"
+        },
+        {
+          "weight": 1.0,
+          "feature": "leash"
+        }
+      ]
+    },
+    {
+      "title": "MB224",
+      "text": "dark pool trading",
+      "epoch": "1.364762652E9",
+      "querytweettime": "318463763571433472",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "dark"
+        },
+        {
+          "weight": 1.0,
+          "feature": "pool"
+        },
+        {
+          "weight": 1.0,
+          "feature": "trading"
+        }
+      ]
+    },
+    {
+      "title": "MB225",
+      "text": "Barbara Walters, chicken pox",
+      "epoch": "1.363108799E9",
+      "querytweettime": "311527001297137664",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Barbara"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Walters,"
+        },
+        {
+          "weight": 1.0,
+          "feature": "chicken"
+        },
+        {
+          "weight": 1.0,
+          "feature": "pox"
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,12 @@ package cc.twittertools.search.local;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.io.StringReader;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.TimeZone;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -27,6 +33,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.core.WhitespaceTokenizer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -43,6 +53,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import cc.twittertools.index.IndexStatuses;
+import cc.twittertools.index.LowerCaseEntityPreservingFilter;
 import cc.twittertools.index.IndexStatuses.StatusField;
 
 /**
@@ -55,7 +66,7 @@ public class SearchStatuses {
   private static final String DEFAULT_QID = "MB01";
   private static final String DEFAULT_Q = "BBC World Service staff cuts";
   private static final long DEFAULT_MAX_ID = 34952194402811905L;
-  private static final int DEFAULT_NUM_RESULTS = 10;
+  private static final int DEFAULT_NUM_RESULTS = 2147483647;
   private static final String DEFAULT_RUNTAG = "lucene4lm";
 
   private static final String INDEX_OPTION = "index";
@@ -144,9 +155,28 @@ public class SearchStatuses {
     int i = 1;
     for (ScoreDoc scoreDoc : rs.scoreDocs) {
       Document hit = searcher.doc(scoreDoc.doc);
-
-      out.println(String.format("%s Q0 %s %d %f %s", qid,
-          hit.getField(StatusField.ID.name).numericValue(), i, scoreDoc.score, runtag));
+      
+      String epoch = hit.getField(StatusField.EPOCH.name).stringValue();
+      Date date = new Date(Long.parseLong(epoch) * 1000);
+      DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy HH:mm:ss z");
+      dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+      Tokenizer source = new WhitespaceTokenizer(Version.LUCENE_43, new StringReader(hit.toString()));
+      TokenStream tokenstream = new LowerCaseEntityPreservingFilter(source);
+      tokenstream.reset();
+      int freq = 0;
+      while (tokenstream.incrementToken()){
+        String token = tokenstream.getAttribute(CharTermAttribute.class).toString();
+        if(token.equals(queryText)){
+          freq++;
+        }
+      }
+      
+      /*out.println(String.format("%s %s %d %d %d %d", 
+          hit.getField(StatusField.ID.name).numericValue(), date, hour, minute, i, freq));*/
+      out.println(hit.getField(StatusField.ID.name).numericValue() + "," 
+          + dateFormat.format(date) + "," + i +"," + freq +"," + epoch);
+      /*out.println(String.format("%s Q0 %s %d %f %s", qid,
+          hit.getField(StatusField.ID.name).numericValue(), i, scoreDoc.score, runtag));*/
       if (verbose) {
         out.println("# " + hit.toString().replaceAll("[\\n\\r]+", " "));
       }

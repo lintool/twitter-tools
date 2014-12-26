@@ -18,15 +18,26 @@ package cc.twittertools.search.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
 import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.core.WhitespaceTokenizer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
@@ -39,11 +50,13 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import cc.twittertools.index.IndexStatuses;
+import cc.twittertools.index.LowerCaseEntityPreservingFilter;
 import cc.twittertools.index.IndexStatuses.StatusField;
 import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
 import cc.twittertools.thrift.gen.TrecSearch;
 import cc.twittertools.thrift.gen.TrecSearchException;
+import cc.twittertools.util.QueryLikelihoodModel;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -55,7 +68,9 @@ public class TrecSearchHandler implements TrecSearch.Iface {
       new QueryParser(Version.LUCENE_43, StatusField.TEXT.name, IndexStatuses.ANALYZER);
 
   private final IndexSearcher searcher;
+  private final QueryLikelihoodModel qlModel;;
   private final Map<String, String> credentials;
+  public static boolean QLFlag = false;
 
   public TrecSearchHandler(File indexPath, @Nullable Map<String, String> credentials)
       throws IOException {
@@ -68,8 +83,9 @@ public class TrecSearchHandler implements TrecSearch.Iface {
     IndexReader reader = DirectoryReader.open(FSDirectory.open(indexPath));
     searcher = new IndexSearcher(reader);
     searcher.setSimilarity(new LMDirichletSimilarity(2500.0f));
+    qlModel = new QueryLikelihoodModel(reader);
   }
-
+  
   public List<TResult> search(TQuery query) throws TrecSearchException {
     Preconditions.checkNotNull(query);
 
@@ -88,8 +104,8 @@ public class TrecSearchHandler implements TrecSearch.Iface {
     try {
       Filter filter =
           NumericRangeFilter.newLongRange(StatusField.ID.name, 0L, query.max_id, true, true);
-
       Query q = QUERY_PARSER.parse(query.text);
+      Map<String, Float> weights = qlModel.parseQuery(query.text);
       int num = query.num_results > 10000 ? 10000 : query.num_results;
       TopDocs rs = searcher.search(q, filter, num);
       for (ScoreDoc scoreDoc : rs.scoreDocs) {
@@ -100,7 +116,11 @@ public class TrecSearchHandler implements TrecSearch.Iface {
         p.screen_name = hit.get(StatusField.SCREEN_NAME.name);
         p.epoch = (Long) hit.getField(StatusField.EPOCH.name).numericValue();
         p.text = hit.get(StatusField.TEXT.name);
-        p.rsv = scoreDoc.score;
+        if (QLFlag) {
+          p.rsv = qlModel.computeQLScore(weights, p.text);
+        } else {
+          p.rsv = scoreDoc.score;
+        }
 
         p.followers_count = (Integer) hit.getField(StatusField.FOLLOWERS_COUNT.name).numericValue();
         p.statuses_count = (Integer) hit.getField(StatusField.STATUSES_COUNT.name).numericValue();
@@ -135,7 +155,18 @@ public class TrecSearchHandler implements TrecSearch.Iface {
       e.printStackTrace();
       throw new TrecSearchException(e.getMessage());
     }
-
+    
+    if (QLFlag) {
+      Comparator<TResult> comparator = new Comparator<TResult>() {
+        @Override
+        public int compare(TResult t1, TResult t2) {
+          double diff = t1.rsv - t2.rsv;
+          return (diff == 0) ? 0 : (diff > 0) ? -1 : 1;
+        }
+      };
+      Collections.sort(results, comparator);
+    }
+    
     long endTime = System.currentTimeMillis();
     LOG.info(String.format("%4dms %s", (endTime - startTime), query.toString()));
 
