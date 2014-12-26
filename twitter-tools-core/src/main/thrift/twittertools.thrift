@@ -21,7 +21,8 @@ struct TQuery {
   2: string token,
   3: string text,
   4: i64 max_id,
-  5: i32 num_results
+  5: i32 num_results,
+  6: bool ql = false // compute true QL scores
 }
  
 exception TrecSearchException {

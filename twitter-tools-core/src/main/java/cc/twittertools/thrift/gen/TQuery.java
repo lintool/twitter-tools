@@ -43,6 +43,7 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
   private static final org.apache.thrift.protocol.TField TEXT_FIELD_DESC = new org.apache.thrift.protocol.TField("text", org.apache.thrift.protocol.TType.STRING, (short)3);
   private static final org.apache.thrift.protocol.TField MAX_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("max_id", org.apache.thrift.protocol.TType.I64, (short)4);
   private static final org.apache.thrift.protocol.TField NUM_RESULTS_FIELD_DESC = new org.apache.thrift.protocol.TField("num_results", org.apache.thrift.protocol.TType.I32, (short)5);
+  private static final org.apache.thrift.protocol.TField QL_FIELD_DESC = new org.apache.thrift.protocol.TField("ql", org.apache.thrift.protocol.TType.BOOL, (short)6);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
@@ -55,6 +56,7 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
   public String text; // required
   public long max_id; // required
   public int num_results; // required
+  public boolean ql; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -62,7 +64,8 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     TOKEN((short)2, "token"),
     TEXT((short)3, "text"),
     MAX_ID((short)4, "max_id"),
-    NUM_RESULTS((short)5, "num_results");
+    NUM_RESULTS((short)5, "num_results"),
+    QL((short)6, "ql");
 
     private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -87,6 +90,8 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
           return MAX_ID;
         case 5: // NUM_RESULTS
           return NUM_RESULTS;
+        case 6: // QL
+          return QL;
         default:
           return null;
       }
@@ -129,6 +134,7 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
   // isset id assignments
   private static final int __MAX_ID_ISSET_ID = 0;
   private static final int __NUM_RESULTS_ISSET_ID = 1;
+  private static final int __QL_ISSET_ID = 2;
   private byte __isset_bitfield = 0;
   public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
@@ -143,11 +149,15 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
     tmpMap.put(_Fields.NUM_RESULTS, new org.apache.thrift.meta_data.FieldMetaData("num_results", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+    tmpMap.put(_Fields.QL, new org.apache.thrift.meta_data.FieldMetaData("ql", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BOOL)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
     org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(TQuery.class, metaDataMap);
   }
 
   public TQuery() {
+    this.ql = false;
+
   }
 
   public TQuery(
@@ -155,7 +165,8 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     String token,
     String text,
     long max_id,
-    int num_results)
+    int num_results,
+    boolean ql)
   {
     this();
     this.group = group;
@@ -165,6 +176,8 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     setMax_idIsSet(true);
     this.num_results = num_results;
     setNum_resultsIsSet(true);
+    this.ql = ql;
+    setQlIsSet(true);
   }
 
   /**
@@ -183,6 +196,7 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     }
     this.max_id = other.max_id;
     this.num_results = other.num_results;
+    this.ql = other.ql;
   }
 
   public TQuery deepCopy() {
@@ -198,6 +212,8 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     this.max_id = 0;
     setNum_resultsIsSet(false);
     this.num_results = 0;
+    this.ql = false;
+
   }
 
   public String getGroup() {
@@ -318,6 +334,29 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __NUM_RESULTS_ISSET_ID, value);
   }
 
+  public boolean isQl() {
+    return this.ql;
+  }
+
+  public TQuery setQl(boolean ql) {
+    this.ql = ql;
+    setQlIsSet(true);
+    return this;
+  }
+
+  public void unsetQl() {
+    __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __QL_ISSET_ID);
+  }
+
+  /** Returns true if field ql is set (has been assigned a value) and false otherwise */
+  public boolean isSetQl() {
+    return EncodingUtils.testBit(__isset_bitfield, __QL_ISSET_ID);
+  }
+
+  public void setQlIsSet(boolean value) {
+    __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __QL_ISSET_ID, value);
+  }
+
   public void setFieldValue(_Fields field, Object value) {
     switch (field) {
     case GROUP:
@@ -360,6 +399,14 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
       }
       break;
 
+    case QL:
+      if (value == null) {
+        unsetQl();
+      } else {
+        setQl((Boolean)value);
+      }
+      break;
+
     }
   }
 
@@ -379,6 +426,9 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
 
     case NUM_RESULTS:
       return Integer.valueOf(getNum_results());
+
+    case QL:
+      return Boolean.valueOf(isQl());
 
     }
     throw new IllegalStateException();
@@ -401,6 +451,8 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
       return isSetMax_id();
     case NUM_RESULTS:
       return isSetNum_results();
+    case QL:
+      return isSetQl();
     }
     throw new IllegalStateException();
   }
@@ -463,6 +515,15 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
         return false;
     }
 
+    boolean this_present_ql = true;
+    boolean that_present_ql = true;
+    if (this_present_ql || that_present_ql) {
+      if (!(this_present_ql && that_present_ql))
+        return false;
+      if (this.ql != that.ql)
+        return false;
+    }
+
     return true;
   }
 
@@ -494,6 +555,11 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     list.add(present_num_results);
     if (present_num_results)
       list.add(num_results);
+
+    boolean present_ql = true;
+    list.add(present_ql);
+    if (present_ql)
+      list.add(ql);
 
     return list.hashCode();
   }
@@ -556,6 +622,16 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
         return lastComparison;
       }
     }
+    lastComparison = Boolean.valueOf(isSetQl()).compareTo(other.isSetQl());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetQl()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ql, other.ql);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
     return 0;
   }
 
@@ -606,6 +682,10 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
     if (!first) sb.append(", ");
     sb.append("num_results:");
     sb.append(this.num_results);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("ql:");
+    sb.append(this.ql);
     first = false;
     sb.append(")");
     return sb.toString();
@@ -692,6 +772,14 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
             }
             break;
+          case 6: // QL
+            if (schemeField.type == org.apache.thrift.protocol.TType.BOOL) {
+              struct.ql = iprot.readBool();
+              struct.setQlIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+            }
+            break;
           default:
             org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
         }
@@ -728,6 +816,9 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
       oprot.writeFieldBegin(NUM_RESULTS_FIELD_DESC);
       oprot.writeI32(struct.num_results);
       oprot.writeFieldEnd();
+      oprot.writeFieldBegin(QL_FIELD_DESC);
+      oprot.writeBool(struct.ql);
+      oprot.writeFieldEnd();
       oprot.writeFieldStop();
       oprot.writeStructEnd();
     }
@@ -761,7 +852,10 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
       if (struct.isSetNum_results()) {
         optionals.set(4);
       }
-      oprot.writeBitSet(optionals, 5);
+      if (struct.isSetQl()) {
+        optionals.set(5);
+      }
+      oprot.writeBitSet(optionals, 6);
       if (struct.isSetGroup()) {
         oprot.writeString(struct.group);
       }
@@ -777,12 +871,15 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
       if (struct.isSetNum_results()) {
         oprot.writeI32(struct.num_results);
       }
+      if (struct.isSetQl()) {
+        oprot.writeBool(struct.ql);
+      }
     }
 
     @Override
     public void read(org.apache.thrift.protocol.TProtocol prot, TQuery struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
-      BitSet incoming = iprot.readBitSet(5);
+      BitSet incoming = iprot.readBitSet(6);
       if (incoming.get(0)) {
         struct.group = iprot.readString();
         struct.setGroupIsSet(true);
@@ -802,6 +899,10 @@ public class TQuery implements org.apache.thrift.TBase<TQuery, TQuery._Fields>, 
       if (incoming.get(4)) {
         struct.num_results = iprot.readI32();
         struct.setNum_resultsIsSet(true);
+      }
+      if (incoming.get(5)) {
+        struct.ql = iprot.readBool();
+        struct.setQlIsSet(true);
       }
     }
   }
