@@ -57,22 +57,21 @@ public class QueryLikelihoodModel {
         continue;
       }
       
-      if (phrase.contains("^")) { // weighted query, like 'world^0.3 bbc^0.2 service^0.5'
+      String tokenizeTerm = null;
+      float weight = 0.0f;
+      if (phrase.contains("^")) {
         String term = phrase.split("\\^")[0];
-        String tokenizeTerm = stemTerm(term);
-        float weight = Float.parseFloat(phrase.split("\\^")[1]);
-        if (weights.containsKey(tokenizeTerm)) {
-          weight = weights.get(tokenizeTerm) + weight;
-        }
-        weights.put(tokenizeTerm, weight);
-      } else { // normal query
-        String tokenizeTerm = stemTerm(phrase);
-        float weight = 1.0f/phrases.length;
-        if (weights.containsKey(tokenizeTerm)) {
-          weight += weights.get(tokenizeTerm);
-        }
-        weights.put(tokenizeTerm, weight);
+        tokenizeTerm = stemTerm(term);
+        weight = Float.parseFloat(phrase.split("\\^")[1]);
+
+      } else {
+        tokenizeTerm = stemTerm(phrase);
+        weight = 1.0f/phrases.length;
       }
+      if (weights.containsKey(tokenizeTerm)) {
+        weight = weights.get(tokenizeTerm) + weight;
+      }
+      weights.put(tokenizeTerm, weight);
     }
     System.out.println("weights:"+weights.toString());
     return weights;
@@ -85,7 +84,6 @@ public class QueryLikelihoodModel {
     //System.out.println("doc:"+docTerms.toString());
     
     int docLen = 0;
-    // get document term frequency
     Map<String, Integer> docTermCountMap = new HashMap<String, Integer>();
     for (String term: docTerms) {
       if (docTermCountMap.containsKey(term)) {
@@ -97,9 +95,9 @@ public class QueryLikelihoodModel {
     }
 
     for(String queryTerm: queryWeights.keySet()) {
-      float weight = queryWeights.get(queryTerm); // term weight
+      float weight = queryWeights.get(queryTerm);
       Term term = new Term(FIELD_TEXT, queryTerm);
-      long termFreqInCorpus = index.totalTermFreq(term); // collection term frequency
+      long termFreqInCorpus = index.totalTermFreq(term);
       if (termFreqInCorpus == 0) continue;
       int termFreqInDoc = docTermCountMap.containsKey(queryTerm) ? docTermCountMap.get(queryTerm) : 0;
       score += weight * Math.log((termFreqInDoc + mu*((double)termFreqInCorpus/totalTokens)) 
