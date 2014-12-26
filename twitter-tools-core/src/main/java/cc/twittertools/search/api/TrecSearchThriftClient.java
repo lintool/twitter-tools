@@ -47,7 +47,7 @@ public class TrecSearchThriftClient {
     this.port = port;
   }
 
-  public List<TResult> search(String query, long maxId, int numResults) throws TException {
+  public List<TResult> search(String query, long maxId, int numResults, boolean scoreQL) throws TException {
     TTransport transport = new TSocket(host, port);
     transport.open();
 
@@ -60,10 +60,15 @@ public class TrecSearchThriftClient {
 
     q.group = group;
     q.token = token;
+    q.ql = scoreQL;
 
     List<TResult> results = client.search(q);
     transport.close();
 
     return results;
+  }
+
+  public List<TResult> search(String query, long maxId, int numResults) throws TException {
+    return search(query, maxId, numResults, false);
   }
 }

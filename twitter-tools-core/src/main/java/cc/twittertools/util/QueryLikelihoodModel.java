@@ -11,17 +11,20 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.util.Version;
 
 import cc.twittertools.index.TweetAnalyzer;
 
 public class QueryLikelihoodModel {
   private static final String FIELD_TEXT = "text";
   private static final double mu = 2500.0;
-  private static IndexReader index;
-  private static TweetAnalyzer tokenizer;
+  private IndexReader index;
+  private TweetAnalyzer tokenizer;
   private long totalTokens;
   
   public QueryLikelihoodModel(IndexReader index) throws IOException {
+    this.index = index;
+    this.tokenizer = new TweetAnalyzer(Version.LUCENE_43, true);
     this.totalTokens = index.getSumTotalTermFreq(FIELD_TEXT);
   }
 
@@ -61,7 +64,7 @@ public class QueryLikelihoodModel {
       }
       weights.put(tokenizeTerm, weight);
     }
-    System.out.println("weights:"+weights.toString());
+
     return weights;
   }
   

@@ -45,6 +45,7 @@ public class RunQueriesThrift {
   private static final String TOKEN_OPTION = "token";
   private static final String RUNTAG_OPTION = "runtag";
   private static final String VERBOSE_OPTION = "verbose";
+  private static final String QL_OPTION = "ql";
 
   private RunQueriesThrift() {}
 
@@ -67,6 +68,7 @@ public class RunQueriesThrift {
     options.addOption(OptionBuilder.withArgName("string").hasArg()
         .withDescription("runtag").create(RUNTAG_OPTION));
     options.addOption(new Option(VERBOSE_OPTION, "print out complete document"));
+    options.addOption(new Option(QL_OPTION, "print out complete document"));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -109,6 +111,7 @@ public class RunQueriesThrift {
     String token = cmdline.hasOption(TOKEN_OPTION) ? cmdline.getOptionValue(TOKEN_OPTION) : null;
 
     boolean verbose = cmdline.hasOption(VERBOSE_OPTION);
+    boolean useQL = cmdline.hasOption(QL_OPTION);
 
     PrintStream out = new PrintStream(System.out, true, "UTF-8");
 
@@ -117,7 +120,7 @@ public class RunQueriesThrift {
     
     for (cc.twittertools.search.TrecTopic query : topicsFile) {
       List<TResult> results = client.search(query.getQuery(),
-          query.getQueryTweetTime(), numResults);
+          query.getQueryTweetTime(), numResults, useQL);
       int i = 1;
       Set<Long> tweetIds = new HashSet<Long>();
       for (TResult result : results) {
