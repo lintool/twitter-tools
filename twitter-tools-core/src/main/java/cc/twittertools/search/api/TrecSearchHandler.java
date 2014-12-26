@@ -73,6 +73,8 @@ public class TrecSearchHandler implements TrecSearch.Iface {
   public List<TResult> search(TQuery query) throws TrecSearchException {
     Preconditions.checkNotNull(query);
 
+    LOG.info(String.format("Incoming request (%s, %s)", query.group, query.token));
+
     // Verify credentials.
     if (credentials != null && (!credentials.containsKey(query.group) ||
         !credentials.get(query.group).equals(query.token))) {
