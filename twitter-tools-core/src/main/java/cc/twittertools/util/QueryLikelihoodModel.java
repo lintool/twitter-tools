@@ -7,21 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.lucene.analysis.Analyzer.TokenStreamComponents;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.index.DocsEnum;
-import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.MultiFields;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.index.Terms;
-import org.apache.lucene.util.BytesRef;
-import org.apache.lucene.util.Version;
 
-import cc.twittertools.index.LowerCaseEntityPreservingFilter;
 import cc.twittertools.index.TweetAnalyzer;
 
 public class QueryLikelihoodModel {
@@ -32,13 +22,11 @@ public class QueryLikelihoodModel {
   private long totalTokens;
   
   public QueryLikelihoodModel(IndexReader index) throws IOException {
-    this.index = index;
-    this.tokenizer = new TweetAnalyzer(Version.LUCENE_43, true);
     this.totalTokens = index.getSumTotalTermFreq(FIELD_TEXT);
   }
-  
+
   //tokenize a term using TweetAnalyzer(stem=true, version=LUCENE_43)
-  public String stemTerm(String term) throws IOException {
+  private String stemTerm(String term) throws IOException {
     TokenStream stream = null;
     stream = tokenizer.tokenStream("text", new StringReader(term));
 
@@ -48,7 +36,7 @@ public class QueryLikelihoodModel {
     String stemTerm = charTermAttribute.toString();
     return stemTerm;
   }
-  
+
   public Map<String, Float> parseQuery(String query) throws IOException {
     String[] phrases = query.trim().split("[,\\s]+");
     Map<String, Float> weights = new HashMap<String, Float>();
@@ -107,8 +95,8 @@ public class QueryLikelihoodModel {
     }
     return score;
   }
-  
-  public static List<String> tokenize(TokenStream tokenstream) {
+
+  private static List<String> tokenize(TokenStream tokenstream) {
     List<String> output = new ArrayList<String>();
     try {
       tokenstream.reset();
@@ -123,11 +111,5 @@ public class QueryLikelihoodModel {
       e.printStackTrace();
     }
     return output;
-  }
-  
-  public static void main(String[] args) throws IOException {
-    String query = "  Barbara Walters, chicken pox ";
-    //Map<String, Float> weights = parseQuery(query);
-    //System.out.println(weights.toString());
   }
 }

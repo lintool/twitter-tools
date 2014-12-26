@@ -112,9 +112,6 @@ public class TrecSearchThriftServer {
     TServerSocket serverSocket = new TServerSocket(port);
     TrecSearch.Processor<TrecSearch.Iface> searchProcessor =
         new TrecSearch.Processor<TrecSearch.Iface>(new TrecSearchHandler(index, credentials));
-    if (port == 7000 || port == 7001) { // return query likelihood score
-      TrecSearchHandler.QLFlag = true;
-    }
     
     TThreadPoolServer.Args serverArgs = new TThreadPoolServer.Args(serverSocket);
     serverArgs.maxWorkerThreads(maxThreads);

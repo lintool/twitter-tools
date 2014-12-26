@@ -18,26 +18,17 @@ package cc.twittertools.search.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Nullable;
 
 import org.apache.log4j.Logger;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.core.WhitespaceTokenizer;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
@@ -50,7 +41,6 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import cc.twittertools.index.IndexStatuses;
-import cc.twittertools.index.LowerCaseEntityPreservingFilter;
 import cc.twittertools.index.IndexStatuses.StatusField;
 import cc.twittertools.thrift.gen.TQuery;
 import cc.twittertools.thrift.gen.TResult;
@@ -70,7 +60,6 @@ public class TrecSearchHandler implements TrecSearch.Iface {
   private final IndexSearcher searcher;
   private final QueryLikelihoodModel qlModel;;
   private final Map<String, String> credentials;
-  public static boolean QLFlag = false;
 
   public TrecSearchHandler(File indexPath, @Nullable Map<String, String> credentials)
       throws IOException {
@@ -116,7 +105,7 @@ public class TrecSearchHandler implements TrecSearch.Iface {
         p.screen_name = hit.get(StatusField.SCREEN_NAME.name);
         p.epoch = (Long) hit.getField(StatusField.EPOCH.name).numericValue();
         p.text = hit.get(StatusField.TEXT.name);
-        if (QLFlag) {
+        if (query.ql) {
           p.rsv = qlModel.computeQLScore(weights, p.text);
         } else {
           p.rsv = scoreDoc.score;
@@ -156,7 +145,7 @@ public class TrecSearchHandler implements TrecSearch.Iface {
       throw new TrecSearchException(e.getMessage());
     }
     
-    if (QLFlag) {
+    if (query.ql) {
       Comparator<TResult> comparator = new Comparator<TResult>() {
         @Override
         public int compare(TResult t1, TResult t2) {
