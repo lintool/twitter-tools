@@ -1,3 +1,9 @@
+Version 1.4.3
+=============
+December 26, 2014
+
++ API serving the Tweets2013 collection for TREC 2014, includes minor code fixes during TREC evaluations that have been merged back to master
+
 Version 1.4.2
 =============
 March 15, 2014
