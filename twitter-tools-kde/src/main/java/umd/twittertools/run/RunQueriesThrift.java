@@ -145,7 +145,6 @@ public class RunQueriesThrift {
 			long queryTime = query.getQueryTime();
 			TweetSet tweetSet = new TweetSet(query.getQuery(), qid);
 			List<TResult> results = client.search(query.getQuery(), query.getQueryTweetTime(), numResults);
-			//qlModel.setCorpus(results); // query likelihood model set corpus.
 			Set<Long> tweetIds = new HashSet<Long>();
 			for (TResult result : results) {
 				if (!tweetIds.contains(result.id)) {
@@ -153,14 +152,11 @@ public class RunQueriesThrift {
 						continue; // filter all retweets
 					}
 					tweetIds.add(result.id);
-					// compute query likelihood score
-					//double score = qlModel.computeScore(query.getQuery(), result.text);
 					Tweet tweet = new Tweet(result.id, result.epoch, queryTime - result.epoch, result.rsv);
 					if (verbose) tweet.setText(result.text);
 					tweetSet.add(tweet);
 				}
 			}
-			//tweetSet.sortByQLscore();
 	
 			int rank = 1, counter = 1;
 			double prevScore = 0;
