@@ -12,7 +12,6 @@ import umd.twittertools.data.Tweet;
 import umd.twittertools.data.TweetSet;
 import umd.twittertools.model.KDEModel;
 import umd.twittertools.model.Model;
-import umd.twittertools.model.QueryLikelihoodModel;
 import umd.twittertools.model.KDEModel.WeightEnum;
 import umd.twittertools.model.RecencyModel;
 import umd.twittertools.model.WINModel;
