@@ -39,6 +39,7 @@ which will run a simple baseline query likelihood retrieval.  All runnable progr
 {
 "queries"      :  "./data/topics.microblog2012.txt",
 "retweet"	   :  true or false <control whether to remove retweets in query expansion>
+"year"         :  "2011" or "2013",
 "host"         :  "<host_name>",
 "port"         :  9090,
 "num_results"  :  1000,
@@ -64,7 +65,6 @@ To run RunTemporalQueries, you need to build twitter-tools-kde repo to a jar fil
 In addition, we add following arguments in config/params_run.json file to control the performance of RunTemporalQueries class: 
 ```
 {
-"year"         :  "2011" or "2013",
 "model"        :  <temporal model option, can be "kde", "win", "recency">,
 "alpha"        :  <alpha value for specific temporal model which obtains best performance during training>
 }
