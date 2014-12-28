@@ -37,7 +37,6 @@ import umd.twittertools.data.TrecTopic;
 import umd.twittertools.data.TrecTopicSet;
 import umd.twittertools.data.Tweet;
 import umd.twittertools.data.TweetSet;
-import umd.twittertools.model.QueryLikelihoodModel;
 import cc.twittertools.search.api.TrecSearchThriftClient;
 import cc.twittertools.thrift.gen.TResult;
 
@@ -53,8 +52,6 @@ public class RunQueriesThrift {
 	private static final String RUNTAG_OPTION = "runtag";
 	private static final String VERBOSE_OPTION = "verbose";
 	private static final String MU_OPTION = "mu";
-	
-	private static QueryLikelihoodModel qlModel = new QueryLikelihoodModel();
 	
 	private RunQueriesThrift() {
 	}
@@ -115,9 +112,6 @@ public class RunQueriesThrift {
 			if (cmdline.hasOption(NUM_RESULTS_OPTION)) {
 				numResults = Integer.parseInt(cmdline
 						.getOptionValue(NUM_RESULTS_OPTION));
-			}
-			if (cmdline.hasOption(MU_OPTION)) {
-				QueryLikelihoodModel.MU = Double.parseDouble(cmdline.getOptionValue(MU_OPTION));
 			}
 		} catch (NumberFormatException e) {
 			System.err.println("Invalid " + NUM_RESULTS_OPTION + ": "

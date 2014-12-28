@@ -27,15 +27,15 @@
       <configuration>
         <programs>
           <program>
-            <mainClass>cc.twittertools.run.RunQueriesThrift</mainClass>
+            <mainClass>umd.twittertools.run.RunQueriesThrift</mainClass>
             <name>RunQueriesThrift</name>
           </program> 
           <program>
-            <mainClass>cc.twittertools.data.TrainingTestingSplit</mainClass>
+            <mainClass>umd.twittertools.data.TrainingTestingSplit</mainClass>
             <name>DataSplit</name>
           </program> 
           <program>
-            <mainClass>cc.twittertools.run.RunTemporalModel</mainClass>
+            <mainClass>umd.twittertools.run.RunTemporalModel</mainClass>
             <name>RunTemporalModel</name>
           </program> 
          </programs>
