@@ -108,7 +108,11 @@ public class TrecSearchThriftServer {
       System.err.println("Error: " + index + " does not exist!");
       System.exit(-1);
     }
-
+    
+    if (port == 7000 || port == 7001) { // return query likelihood score
+      TrecSearchHandler.QLFlag = true;
+    }
+    
     TServerSocket serverSocket = new TServerSocket(port);
     TrecSearch.Processor<TrecSearch.Iface> searchProcessor =
         new TrecSearch.Processor<TrecSearch.Iface>(new TrecSearchHandler(index, credentials));

@@ -60,6 +60,7 @@ public class TrecSearchHandler implements TrecSearch.Iface {
   private final IndexSearcher searcher;
   private final QueryLikelihoodModel qlModel;;
   private final Map<String, String> credentials;
+  public static boolean QLFlag = false;
 
   public TrecSearchHandler(File indexPath, @Nullable Map<String, String> credentials)
       throws IOException {
@@ -105,7 +106,7 @@ public class TrecSearchHandler implements TrecSearch.Iface {
         p.screen_name = hit.get(StatusField.SCREEN_NAME.name);
         p.epoch = (Long) hit.getField(StatusField.EPOCH.name).numericValue();
         p.text = hit.get(StatusField.TEXT.name);
-        if (query.ql) {
+        if (QLFlag) {
           p.rsv = qlModel.computeQLScore(weights, p.text);
         } else {
           p.rsv = scoreDoc.score;
@@ -145,7 +146,7 @@ public class TrecSearchHandler implements TrecSearch.Iface {
       throw new TrecSearchException(e.getMessage());
     }
     
-    if (query.ql) {
+    if (QLFlag) {
       Comparator<TResult> comparator = new Comparator<TResult>() {
         @Override
         public int compare(TResult t1, TResult t2) {
