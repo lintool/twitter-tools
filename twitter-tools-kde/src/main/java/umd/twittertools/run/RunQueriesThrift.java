@@ -138,7 +138,7 @@ public class RunQueriesThrift {
 			Integer qid = query.getId();
 			long queryTime = query.getQueryTime();
 			TweetSet tweetSet = new TweetSet(query.getQuery(), qid);
-			List<TResult> results = client.search(query.getQuery(), query.getQueryTweetTime(), numResults);
+			List<TResult> results = client.search(query.getQuery(), query.getQueryTweetTime(), numResults, true);
 			Set<Long> tweetIds = new HashSet<Long>();
 			for (TResult result : results) {
 				if (!tweetIds.contains(result.id)) {

@@ -5,7 +5,7 @@
   <artifactId>twitter-tools-core</artifactId>
   <packaging>jar</packaging>
   <name>Twitter Tools (core)</name>
-  <version>1.4.3-SNAPSHOT</version>
+  <version>1.4.4-SNAPSHOT</version>
   <description>Twitter tools for researchers</description>
   <url>http://twittertools.cc</url>
 
