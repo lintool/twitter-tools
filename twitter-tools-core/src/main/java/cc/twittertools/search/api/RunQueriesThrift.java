@@ -127,6 +127,9 @@ public class RunQueriesThrift {
         if (!tweetIds.contains(result.id)) {
           // The TREC official qrels don't have the "MB" prefix and trailing zeros, so we perform
           // this transformation so that trec_eval doesn't complain.
+          if (result.retweeted_status_id != 0) {
+            continue; // filter all retweets
+          }
           String qid = query.getId().replaceFirst("^MB0*", "");
           tweetIds.add(result.id);
           out.println(String.format("%s Q0 %d %d %f %s", qid, result.id, i, result.rsv, runtag));

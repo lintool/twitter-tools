@@ -109,7 +109,7 @@ public class TrecSearchThriftServer {
       System.exit(-1);
     }
     
-    if (port == 7000 || port == 7001) { // return query likelihood score
+    if (port >= 7000 && port <= 7100) { // return query likelihood score
       TrecSearchHandler.QLFlag = true;
     }
     
