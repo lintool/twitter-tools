@@ -6,11 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.MinMaxPriorityQueue;
-
 import umd.twittertools.data.Tweet;
 import umd.twittertools.data.TweetSet;
-import umd.twittertools.model.QueryLikelihoodModel;
 import cc.twittertools.thrift.gen.TResult;
 import edu.illinois.lis.query.GQuery;
 
