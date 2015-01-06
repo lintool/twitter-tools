@@ -176,7 +176,7 @@
 <top>
 <num> Number: MB076 </num>
 <query> Celebrity DUI violations </query>
-<querytime> Tue Feb 08 10:34:12 +0000 20 </querytime>
+<querytime> Tue Feb 08 10:34:12 +0000 2011 </querytime>
 <querytweettime> 34922941233762304 </querytweettime>
 </top>
 
