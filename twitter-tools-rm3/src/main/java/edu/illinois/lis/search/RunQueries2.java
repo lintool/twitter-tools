@@ -6,16 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import umd.twittertools.data.TweetSet;
 import cc.twittertools.search.api.TrecSearchThriftClient;
 import cc.twittertools.thrift.gen.TResult;
-import cc.twittertools.thrift.gen.TrecSearchException;
 import edu.illinois.lis.document.FeatureVector;
 import edu.illinois.lis.feedback.FeedbackRelevanceModel;
 import edu.illinois.lis.query.GQueries;
 import edu.illinois.lis.query.GQueriesJsonImpl;
 import edu.illinois.lis.query.GQuery;
-import edu.illinois.lis.utils.Integration;
 import edu.illinois.lis.utils.ParameterBroker;
 import edu.illinois.lis.utils.Stopper;
 
@@ -110,10 +107,8 @@ public class RunQueries2 {
 		Iterator<GQuery> queryIterator = queries.iterator();
 		while(queryIterator.hasNext()) {
 			GQuery query = queryIterator.next();
-			//System.err.println(query.getTitle());
 			String queryText = query.getText();
 			int queryId = Integer.parseInt(query.getTitle().replaceFirst("^MB0*", ""));
-			//if (queryId % 2 == 0) continue; // remove even topics
 			
 			// stupid hack.  need to lowercase the query vector
 			FeatureVector temp = new FeatureVector(null);
@@ -124,7 +119,6 @@ public class RunQueries2 {
 			}
 			temp.normalizeToOne();
 			query.setFeatureVector(temp);
-			
 			
 			// if we're doing feedback
 			if(fbDocs > 0 && fbTerms > 0) {
@@ -148,7 +142,7 @@ public class RunQueries2 {
 				fbVector.normalizeToOne();
 				fbVector = FeatureVector.interpolate(query.getFeatureVector(), fbVector, ORIG_QUERY_WEIGHT);
 		
-				System.err.println(fbVector);
+				//System.err.println(fbVector);
 				
 				StringBuilder builder = new StringBuilder();
 				Iterator<String> terms = fbVector.iterator();
@@ -161,16 +155,14 @@ public class RunQueries2 {
 					builder.append(term + "^" + prob + " ");
 				}
 				queryText = builder.toString().trim();
-				
 			}
-			List<TResult> results = client.search(queryText, query.getQuerytweettime(), numResults);
-			// removed below codes!
-			// reranked by query likelihood score
-			// TweetSet tweetSet = Integration.TResultSet2TweetSet(query, results, true);
-			// results = Integration.TweetSet2TResultSet(tweetSet);
+
+			// Request max number of hits because we're going to throw away retweets.
+			List<TResult> results = client.search(queryText, query.getQuerytweettime(), 10000, true);
 			String runTag = params.getParamValue(RUNTAG_OPTION);
-			if(runTag==null) 
+			if (runTag==null) { 
 				runTag = DEFAULT_RUNTAG;
+			}
 	
 			int i = 1;
 			Iterator<TResult> hitIterator = results.iterator();
