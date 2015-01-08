@@ -1,13 +1,16 @@
 {
 "queries"      :  "./data/topics.2011-2012.json",
 "stopper"      :  "./data/stoplist.twitter",
-"fb_docs"      :  0,
-"fb_terms"     :  0,
+"year"		   :  2011,
+"fb_docs"      :  50,
+"fb_terms"     :  20,
 "host"         :  "nest.umiacs.umd.edu",
-"port"         :  7080,
+"port"         :  7070,
 "num_results"  :  1000,
 "group"        :  "jimmy",
 "token"        :  "000000",
-"runtag"       :  "baseline",
-"retweet"      :  "false"
+"runtag"       :  "lucene4m",
+"alpha"        :  0.023,
+"retweet"      :  "true",
+"model"        :  "recency"
 }

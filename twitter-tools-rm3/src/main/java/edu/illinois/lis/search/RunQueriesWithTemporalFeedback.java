@@ -105,10 +105,20 @@ public class RunQueriesWithTemporalFeedback {
 		}
 		
 		Model model = null;
+		WeightEnum weight = null;
 		double optimalLambda = Double.parseDouble(params.getParamValue(ALPHA_OPTION));
 		String modelOption = params.getParamValue(MODEL_OPTION);
-		if (modelOption.equals("kde")) {
+		if (modelOption.startsWith("kde")) {
 			model = new KDEModel();
+			if (modelOption.equals("kde-score")) {
+				weight = WeightEnum.ScoreBasedWeight;
+			} else if (modelOption.equals("kde-uniform")) { 
+				weight = WeightEnum.UniformWeight;
+			} else if (modelOption.equals("kde-rank")) {
+				weight = WeightEnum.RankBasedWeight;
+			} else if (modelOption.equals("kde-oracle")) {
+				weight = WeightEnum.FeedbackWeight;
+			}
 		} else if (modelOption.equals("win")) {
 			model = new WINModel();
 		} else if (modelOption.equals("recency")) {
@@ -153,7 +163,7 @@ public class RunQueriesWithTemporalFeedback {
 			//System.err.println(query.getTitle());
 			String queryText = query.getText();
 			int queryId = Integer.parseInt(query.getTitle().replaceFirst("^MB0*", ""));
-			if (queryId % 2 == 0) continue; // remove even topics
+			//if (queryId % 2 == 0) continue; // remove even topics
 			
 			// stupid hack.  need to lowercase the query vector
 			FeatureVector temp = new FeatureVector(null);
@@ -176,8 +186,8 @@ public class RunQueriesWithTemporalFeedback {
 					System.err.println(oracleSet.size());
 				}
 				
-				if (modelOption.equals("kde")) {
-					model.computeTMScore(tweetSet, oracleSet, WeightEnum.ScoreBasedWeight, optimalLambda);
+				if (modelOption.startsWith("kde")) {
+					model.computeTMScore(tweetSet, oracleSet, weight, optimalLambda);
 				} else {
 					model.computeTMScore(tweetSet, optimalLambda);
 				}
@@ -216,8 +226,8 @@ public class RunQueriesWithTemporalFeedback {
 			TweetSet tweetSet = Integration.TResultSet2TweetSet(query, results, true);
 			TweetSet oracleSet = TweetSet.getOracleSet(queryId, tweetSet, qrels);
 			
-			if (modelOption.equals("kde")) {
-				model.computeTMScore(tweetSet, oracleSet, WeightEnum.ScoreBasedWeight, optimalLambda);
+			if (modelOption.startsWith("kde")) {
+				model.computeTMScore(tweetSet, oracleSet, weight, optimalLambda);
 			} else {
 				model.computeTMScore(tweetSet, optimalLambda);
 			}

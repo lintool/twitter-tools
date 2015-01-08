@@ -39,15 +39,13 @@ public class ExtractGqueriesFromTrecFormat {
 		
 		JsonArray outputJsonArray = new JsonArray();
 		for(edu.illinois.lis.query.TrecTemporalTopic query : topicsFile) {
-			
-
+			String text = query.getQuery().replaceAll("\"", "");
 			JsonObject outputQueryObject = new JsonObject();
 			outputQueryObject.addProperty("title", query.getId());
-			outputQueryObject.addProperty("text", query.getQuery());
+			outputQueryObject.addProperty("text", text);
 			outputQueryObject.addProperty("epoch", Double.toString(query.getEpoch()));
 			outputQueryObject.addProperty("querytweettime", Long.toString(query.getQueryTweetTime()));
 			
-			String text = query.getQuery();
 			String[] toks = text.split(" ");
 			
 			JsonArray modelArray = new JsonArray();

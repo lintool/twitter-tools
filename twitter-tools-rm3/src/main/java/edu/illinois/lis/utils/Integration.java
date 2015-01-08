@@ -22,6 +22,7 @@ public class Integration {
 		TweetSet tweetSet = new TweetSet(queryText, queryId);
 		//qlModel.setCorpus(results); // query likelihood model set corpus.
 		Set<Long> tweetIds = new HashSet<Long>();
+		int rank = 0;
 		for (TResult result : results) {
 			if (!tweetIds.contains(result.id)) {
 				if (rmRetweet) {
@@ -30,11 +31,10 @@ public class Integration {
 					}
 				}
 				tweetIds.add(result.id);
-				// compute query likelihood score
-				// double score = qlModel.computeScore(queryText, result.text);
 				Tweet tweet = new Tweet(result.id, result.epoch, queryTime - result.epoch, result.rsv);
 				tweet.setText(result.text);
 				tweet.setRsv(result.rsv);
+				tweet.setRank(++rank);
 				tweetSet.add(tweet);
 			}
 		}
