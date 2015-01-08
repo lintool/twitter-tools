@@ -178,7 +178,7 @@ public class RunQueriesWithTemporalFeedback {
 			
 			// if we're doing feedback
 			if(fbDocs > 0 && fbTerms > 0) {
-				List<TResult> results = client.search(queryText, query.getQuerytweettime(), numResults);
+				List<TResult> results = client.search(queryText, query.getQuerytweettime(), numResults, true);
 				
 				TweetSet tweetSet = Integration.TResultSet2TweetSet(query, results, rmRetweet);
 				TweetSet oracleSet = TweetSet.getOracleSet(queryId, tweetSet, qrels);
@@ -222,7 +222,8 @@ public class RunQueriesWithTemporalFeedback {
 				
 			}
 			
-			List<TResult> results = client.search(queryText, query.getQuerytweettime(), numResults);
+			// Request max number of hits because we're going to throw away retweets.
+			List<TResult> results = client.search(queryText, query.getQuerytweettime(), 10000, true);
 			TweetSet tweetSet = Integration.TResultSet2TweetSet(query, results, true);
 			TweetSet oracleSet = TweetSet.getOracleSet(queryId, tweetSet, qrels);
 			
