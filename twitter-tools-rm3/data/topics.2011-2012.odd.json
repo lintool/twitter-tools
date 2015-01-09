@@ -1,0 +1,1144 @@
+{
+  "queries": [
+    {
+      "title": "MB01",
+      "text": "BBC World Service staff cuts",
+      "epoch": "1.297168227E9",
+      "querytweettime": "34952194402811904",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "BBC"
+        },
+        {
+          "weight": 1.0,
+          "feature": "World"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Service"
+        },
+        {
+          "weight": 1.0,
+          "feature": "staff"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cuts"
+        }
+      ]
+    },
+    {
+      "title": "MB03",
+      "text": "Haiti Aristide return",
+      "epoch": "1.297200733E9",
+      "querytweettime": "35088534306033665",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Haiti"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Aristide"
+        },
+        {
+          "weight": 1.0,
+          "feature": "return"
+        }
+      ]
+    },
+    {
+      "title": "MB05",
+      "text": "NIST computer security",
+      "epoch": "1.296841449E9",
+      "querytweettime": "33581589627666432",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "NIST"
+        },
+        {
+          "weight": 1.0,
+          "feature": "computer"
+        },
+        {
+          "weight": 1.0,
+          "feature": "security"
+        }
+      ]
+    },
+    {
+      "title": "MB07",
+      "text": "Pakistan diplomat arrest murder",
+      "epoch": "1.297205793E9",
+      "querytweettime": "35109758973255680",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Pakistan"
+        },
+        {
+          "weight": 1.0,
+          "feature": "diplomat"
+        },
+        {
+          "weight": 1.0,
+          "feature": "arrest"
+        },
+        {
+          "weight": 1.0,
+          "feature": "murder"
+        }
+      ]
+    },
+    {
+      "title": "MB09",
+      "text": "Toyota Recall",
+      "epoch": "1.297201286E9",
+      "querytweettime": "35090855064764416",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Toyota"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Recall"
+        }
+      ]
+    },
+    {
+      "title": "MB11",
+      "text": "Kubica crash",
+      "epoch": "1.296988723E9",
+      "querytweettime": "34199299428581376",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Kubica"
+        },
+        {
+          "weight": 1.0,
+          "feature": "crash"
+        }
+      ]
+    },
+    {
+      "title": "MB13",
+      "text": "Oprah Winfrey half-sister",
+      "epoch": "1.295883821E9",
+      "querytweettime": "29565006546735104",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Oprah"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Winfrey"
+        },
+        {
+          "weight": 1.0,
+          "feature": "half-sister"
+        }
+      ]
+    },
+    {
+      "title": "MB15",
+      "text": "Thorpe return in 2012 Olympics",
+      "epoch": "1.296390025E9",
+      "querytweettime": "31688182005235712",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Thorpe"
+        },
+        {
+          "weight": 1.0,
+          "feature": "return"
+        },
+        {
+          "weight": 1.0,
+          "feature": "in"
+        },
+        {
+          "weight": 1.0,
+          "feature": "2012"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Olympics"
+        }
+      ]
+    },
+    {
+      "title": "MB17",
+      "text": "White Stripes breakup",
+      "epoch": "1.29667402E9",
+      "querytweettime": "32879343399084032",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "White"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Stripes"
+        },
+        {
+          "weight": 1.0,
+          "feature": "breakup"
+        }
+      ]
+    },
+    {
+      "title": "MB19",
+      "text": "Cuomo budget cuts",
+      "epoch": "1.297121102E9",
+      "querytweettime": "34754540519563264",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Cuomo"
+        },
+        {
+          "weight": 1.0,
+          "feature": "budget"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cuts"
+        }
+      ]
+    },
+    {
+      "title": "MB21",
+      "text": "Emanuel residency court rulings",
+      "epoch": "1.29627021E9",
+      "querytweettime": "31185639047172097",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Emanuel"
+        },
+        {
+          "weight": 1.0,
+          "feature": "residency"
+        },
+        {
+          "weight": 1.0,
+          "feature": "court"
+        },
+        {
+          "weight": 1.0,
+          "feature": "rulings"
+        }
+      ]
+    },
+    {
+      "title": "MB23",
+      "text": "Amtrak train service",
+      "epoch": "1.297195465E9",
+      "querytweettime": "35066441501900800",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Amtrak"
+        },
+        {
+          "weight": 1.0,
+          "feature": "train"
+        },
+        {
+          "weight": 1.0,
+          "feature": "service"
+        }
+      ]
+    },
+    {
+      "title": "MB25",
+      "text": "TSA airport screening",
+      "epoch": "1.296762729E9",
+      "querytweettime": "33251413001764864",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "TSA"
+        },
+        {
+          "weight": 1.0,
+          "feature": "airport"
+        },
+        {
+          "weight": 1.0,
+          "feature": "screening"
+        }
+      ]
+    },
+    {
+      "title": "MB27",
+      "text": "reduce energy consumption",
+      "epoch": "1.296793198E9",
+      "querytweettime": "33379210437337088",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "reduce"
+        },
+        {
+          "weight": 1.0,
+          "feature": "energy"
+        },
+        {
+          "weight": 1.0,
+          "feature": "consumption"
+        }
+      ]
+    },
+    {
+      "title": "MB29",
+      "text": "global warming and weather",
+      "epoch": "1.297127157E9",
+      "querytweettime": "34779934836785152",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "global"
+        },
+        {
+          "weight": 1.0,
+          "feature": "warming"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "weather"
+        }
+      ]
+    },
+    {
+      "title": "MB31",
+      "text": "Special Olympics athletes",
+      "epoch": "1.296809042E9",
+      "querytweettime": "33445664922800129",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Special"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Olympics"
+        },
+        {
+          "weight": 1.0,
+          "feature": "athletes"
+        }
+      ]
+    },
+    {
+      "title": "MB33",
+      "text": "Dog Whisperer Cesar Millan\u0027s techniques",
+      "epoch": "1.296156474E9",
+      "querytweettime": "30708594202648576",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Dog"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Whisperer"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Cesar"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Millan\u0027s"
+        },
+        {
+          "weight": 1.0,
+          "feature": "techniques"
+        }
+      ]
+    },
+    {
+      "title": "MB35",
+      "text": "Sargent Shriver tributes",
+      "epoch": "1.295853497E9",
+      "querytweettime": "29437816727404544",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Sargent"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Shriver"
+        },
+        {
+          "weight": 1.0,
+          "feature": "tributes"
+        }
+      ]
+    },
+    {
+      "title": "MB37",
+      "text": "Giffords\u0027 recovery",
+      "epoch": "1.296756303E9",
+      "querytweettime": "33224462191038464",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Giffords\u0027"
+        },
+        {
+          "weight": 1.0,
+          "feature": "recovery"
+        }
+      ]
+    },
+    {
+      "title": "MB39",
+      "text": "Egyptian curfew",
+      "epoch": "1.296238449E9",
+      "querytweettime": "31052423128686592",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Egyptian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "curfew"
+        }
+      ]
+    },
+    {
+      "title": "MB41",
+      "text": "Obama birth certificate",
+      "epoch": "1.296496554E9",
+      "querytweettime": "32134993337647104",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Obama"
+        },
+        {
+          "weight": 1.0,
+          "feature": "birth"
+        },
+        {
+          "weight": 1.0,
+          "feature": "certificate"
+        }
+      ]
+    },
+    {
+      "title": "MB43",
+      "text": "Kucinich olive pit lawsuit",
+      "epoch": "1.296288365E9",
+      "querytweettime": "31261786745339904",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Kucinich"
+        },
+        {
+          "weight": 1.0,
+          "feature": "olive"
+        },
+        {
+          "weight": 1.0,
+          "feature": "pit"
+        },
+        {
+          "weight": 1.0,
+          "feature": "lawsuit"
+        }
+      ]
+    },
+    {
+      "title": "MB45",
+      "text": "political campaigns and social media",
+      "epoch": "1.296564749E9",
+      "querytweettime": "32421023961841667",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "political"
+        },
+        {
+          "weight": 1.0,
+          "feature": "campaigns"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "social"
+        },
+        {
+          "weight": 1.0,
+          "feature": "media"
+        }
+      ]
+    },
+    {
+      "title": "MB47",
+      "text": "organic farming requirements",
+      "epoch": "1.297123967E9",
+      "querytweettime": "34766556445540352",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "organic"
+        },
+        {
+          "weight": 1.0,
+          "feature": "farming"
+        },
+        {
+          "weight": 1.0,
+          "feature": "requirements"
+        }
+      ]
+    },
+    {
+      "title": "MB49",
+      "text": "carbon monoxide law",
+      "epoch": "1.296600263E9",
+      "querytweettime": "32569981321347074",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "carbon"
+        },
+        {
+          "weight": 1.0,
+          "feature": "monoxide"
+        },
+        {
+          "weight": 1.0,
+          "feature": "law"
+        }
+      ]
+    },
+    {
+      "title": "MB51",
+      "text": "British Government cuts",
+      "epoch": "1.297209406E9",
+      "querytweettime": "35124912364457984",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "British"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Government"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cuts"
+        }
+      ]
+    },
+    {
+      "title": "MB53",
+      "text": "river boat cruises",
+      "epoch": "1.297209107E9",
+      "querytweettime": "35123660406657024",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "river"
+        },
+        {
+          "weight": 1.0,
+          "feature": "boat"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cruises"
+        }
+      ]
+    },
+    {
+      "title": "MB55",
+      "text": "berries and weight loss",
+      "epoch": "1.297127651E9",
+      "querytweettime": "34782005925249024",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "berries"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "weight"
+        },
+        {
+          "weight": 1.0,
+          "feature": "loss"
+        }
+      ]
+    },
+    {
+      "title": "MB57",
+      "text": "Chicago blizzard",
+      "epoch": "1.296683586E9",
+      "querytweettime": "32919462151720960",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Chicago"
+        },
+        {
+          "weight": 1.0,
+          "feature": "blizzard"
+        }
+      ]
+    },
+    {
+      "title": "MB59",
+      "text": "Glen Beck",
+      "epoch": "1.297182692E9",
+      "querytweettime": "35012866822119424",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Glen"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Beck"
+        }
+      ]
+    },
+    {
+      "title": "MB61",
+      "text": "Hu Jintao visit to the United States",
+      "epoch": "1.297106962E9",
+      "querytweettime": "34695232985645056",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Hu"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Jintao"
+        },
+        {
+          "weight": 1.0,
+          "feature": "visit"
+        },
+        {
+          "weight": 1.0,
+          "feature": "to"
+        },
+        {
+          "weight": 1.0,
+          "feature": "the"
+        },
+        {
+          "weight": 1.0,
+          "feature": "United"
+        },
+        {
+          "weight": 1.0,
+          "feature": "States"
+        }
+      ]
+    },
+    {
+      "title": "MB63",
+      "text": "Bieber and Stewart trading places",
+      "epoch": "1.296938061E9",
+      "querytweettime": "33986811273420800",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Bieber"
+        },
+        {
+          "weight": 1.0,
+          "feature": "and"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Stewart"
+        },
+        {
+          "weight": 1.0,
+          "feature": "trading"
+        },
+        {
+          "weight": 1.0,
+          "feature": "places"
+        }
+      ]
+    },
+    {
+      "title": "MB65",
+      "text": "Michelle Obama\u0027s obesity campaign",
+      "epoch": "1.297045859E9",
+      "querytweettime": "34438945404092416",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Michelle"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Obama\u0027s"
+        },
+        {
+          "weight": 1.0,
+          "feature": "obesity"
+        },
+        {
+          "weight": 1.0,
+          "feature": "campaign"
+        }
+      ]
+    },
+    {
+      "title": "MB67",
+      "text": "Boston Celtics championship",
+      "epoch": "1.297039978E9",
+      "querytweettime": "34414281218859008",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Boston"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Celtics"
+        },
+        {
+          "weight": 1.0,
+          "feature": "championship"
+        }
+      ]
+    },
+    {
+      "title": "MB69",
+      "text": "high taxes",
+      "epoch": "1.297197263E9",
+      "querytweettime": "35073980729802752",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "high"
+        },
+        {
+          "weight": 1.0,
+          "feature": "taxes"
+        }
+      ]
+    },
+    {
+      "title": "MB71",
+      "text": "Australian Open Djokovic vs. Murray",
+      "epoch": "1.29639098E9",
+      "querytweettime": "31692185296441344",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Australian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Open"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Djokovic"
+        },
+        {
+          "weight": 1.0,
+          "feature": "vs."
+        },
+        {
+          "weight": 1.0,
+          "feature": "Murray"
+        }
+      ]
+    },
+    {
+      "title": "MB73",
+      "text": "Iran nuclear program",
+      "epoch": "1.29682331E9",
+      "querytweettime": "33505508052701184",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Iran"
+        },
+        {
+          "weight": 1.0,
+          "feature": "nuclear"
+        },
+        {
+          "weight": 1.0,
+          "feature": "program"
+        }
+      ]
+    },
+    {
+      "title": "MB75",
+      "text": "Aguilera super bowl fail",
+      "epoch": "1.297202182E9",
+      "querytweettime": "35094611483426816",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Aguilera"
+        },
+        {
+          "weight": 1.0,
+          "feature": "super"
+        },
+        {
+          "weight": 1.0,
+          "feature": "bowl"
+        },
+        {
+          "weight": 1.0,
+          "feature": "fail"
+        }
+      ]
+    },
+    {
+      "title": "MB77",
+      "text": "NCIS",
+      "epoch": "1.297079585E9",
+      "querytweettime": "34580405671698432",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "NCIS"
+        }
+      ]
+    },
+    {
+      "title": "MB79",
+      "text": "Saleh Yemen overthrow",
+      "epoch": "1.296849805E9",
+      "querytweettime": "33616636950880256",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Saleh"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Yemen"
+        },
+        {
+          "weight": 1.0,
+          "feature": "overthrow"
+        }
+      ]
+    },
+    {
+      "title": "MB81",
+      "text": "smartphone success",
+      "epoch": "1.29714295E9",
+      "querytweettime": "34846177434275840",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "smartphone"
+        },
+        {
+          "weight": 1.0,
+          "feature": "success"
+        }
+      ]
+    },
+    {
+      "title": "MB83",
+      "text": "Stuxnet Worm effects",
+      "epoch": "1.297159024E9",
+      "querytweettime": "34913594311311361",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Stuxnet"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Worm"
+        },
+        {
+          "weight": 1.0,
+          "feature": "effects"
+        }
+      ]
+    },
+    {
+      "title": "MB85",
+      "text": "Best Buy improve sales",
+      "epoch": "1.297123556E9",
+      "querytweettime": "34764832553041920",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Best"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Buy"
+        },
+        {
+          "weight": 1.0,
+          "feature": "improve"
+        },
+        {
+          "weight": 1.0,
+          "feature": "sales"
+        }
+      ]
+    },
+    {
+      "title": "MB87",
+      "text": "chicken recipes",
+      "epoch": "1.297206977E9",
+      "querytweettime": "35114725998215168",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "chicken"
+        },
+        {
+          "weight": 1.0,
+          "feature": "recipes"
+        }
+      ]
+    },
+    {
+      "title": "MB89",
+      "text": "Supreme Court cases",
+      "epoch": "1.296699914E9",
+      "querytweettime": "32987948139941888",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Supreme"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Court"
+        },
+        {
+          "weight": 1.0,
+          "feature": "cases"
+        }
+      ]
+    },
+    {
+      "title": "MB91",
+      "text": "Michelle Obama fashion",
+      "epoch": "1.296343262E9",
+      "querytweettime": "31492039682039808",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Michelle"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Obama"
+        },
+        {
+          "weight": 1.0,
+          "feature": "fashion"
+        }
+      ]
+    },
+    {
+      "title": "MB93",
+      "text": "fashion week in NYC",
+      "epoch": "1.297164372E9",
+      "querytweettime": "34936026753404928",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "fashion"
+        },
+        {
+          "weight": 1.0,
+          "feature": "week"
+        },
+        {
+          "weight": 1.0,
+          "feature": "in"
+        },
+        {
+          "weight": 1.0,
+          "feature": "NYC"
+        }
+      ]
+    },
+    {
+      "title": "MB95",
+      "text": "Facebook privacy",
+      "epoch": "1.297201765E9",
+      "querytweettime": "35092866069962752",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Facebook"
+        },
+        {
+          "weight": 1.0,
+          "feature": "privacy"
+        }
+      ]
+    },
+    {
+      "title": "MB97",
+      "text": "college student aid",
+      "epoch": "1.297203537E9",
+      "querytweettime": "35100296694861824",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "college"
+        },
+        {
+          "weight": 1.0,
+          "feature": "student"
+        },
+        {
+          "weight": 1.0,
+          "feature": "aid"
+        }
+      ]
+    },
+    {
+      "title": "MB99",
+      "text": "Superbowl commercials",
+      "epoch": "1.297204895E9",
+      "querytweettime": "35105993557807104",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Superbowl"
+        },
+        {
+          "weight": 1.0,
+          "feature": "commercials"
+        }
+      ]
+    },
+    {
+      "title": "MB101",
+      "text": "Natalie Portman in Black Swan",
+      "epoch": "1.297183756E9",
+      "querytweettime": "35017330933108736",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Natalie"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Portman"
+        },
+        {
+          "weight": 1.0,
+          "feature": "in"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Black"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Swan"
+        }
+      ]
+    },
+    {
+      "title": "MB103",
+      "text": "Tea Party caucus",
+      "epoch": "1.297123136E9",
+      "querytweettime": "34763068797886464",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Tea"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Party"
+        },
+        {
+          "weight": 1.0,
+          "feature": "caucus"
+        }
+      ]
+    },
+    {
+      "title": "MB105",
+      "text": "The Avengers",
+      "epoch": "1.297132768E9",
+      "querytweettime": "34803471081275392",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "The"
+        },
+        {
+          "weight": 1.0,
+          "feature": "Avengers"
+        }
+      ]
+    },
+    {
+      "title": "MB107",
+      "text": "Somalian piracy",
+      "epoch": "1.297165726E9",
+      "querytweettime": "34941706969288704",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Somalian"
+        },
+        {
+          "weight": 1.0,
+          "feature": "piracy"
+        }
+      ]
+    },
+    {
+      "title": "MB109",
+      "text": "Gasland",
+      "epoch": "1.297034202E9",
+      "querytweettime": "34390055866859520",
+      "model": [
+        {
+          "weight": 1.0,
+          "feature": "Gasland"
+        }
+      ]
+    }
+  ]
+}
