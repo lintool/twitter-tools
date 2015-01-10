@@ -10,7 +10,7 @@
 "group"        :  "jimmy",
 "token"        :  "000000",
 "runtag"       :  "lucene4m",
-"alpha"        :  0.14,
+"alpha"        :  0.06,
 "retweet"      :  "true",
-"model"        :  "kde-oracle"
+"model"        :  "kde-rank"
 }

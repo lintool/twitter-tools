@@ -1,5 +1,5 @@
 {
-"queries"      :  "./data/topics.2011-2012.json",
+"queries"      :  "./data/topics.2011-2012.odd.json",
 "stopper"      :  "./data/stoplist.twitter",
 "year"		   :  2011,
 "fb_docs"      :  50,
@@ -10,7 +10,7 @@
 "group"        :  "jimmy",
 "token"        :  "000000",
 "runtag"       :  "lucene4m",
-"alpha"        :  0.14,
+"alpha"        :  0.02,
 "retweet"      :  "true",
-"model"        :  "kde-oracle"
+"model"        :  "kde-score"
 }

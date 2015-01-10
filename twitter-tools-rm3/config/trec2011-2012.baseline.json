@@ -4,7 +4,7 @@
 "fb_docs"      :  0,
 "fb_terms"     :  0,
 "host"         :  "nest.umiacs.umd.edu",
-"port"         :  7080,
+"port"         :  7070,
 "num_results"  :  1000,
 "group"        :  "jimmy",
 "token"        :  "000000",
