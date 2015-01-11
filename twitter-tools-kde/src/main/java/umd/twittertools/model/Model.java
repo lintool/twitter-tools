@@ -19,7 +19,7 @@ public class Model {
 	public static boolean debug = true;
 	public static boolean per_query = true;
 	public static int numOfquerys;
-	public static String outputDir = "output/";
+	public static String outputDir = "./";
 	
 	public void computeTMScore(TweetSet tweetSet, double lambda){}
 	

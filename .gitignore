@@ -1,6 +1,7 @@
 twitter-tools-core/.classpath
 twitter-tools-core/.project
 twitter-tools-core/target/
+twitter-tools-kde/target/
 twitter-tools-rm3/.classpath
 twitter-tools-rm3/.project
 twitter-tools-rm3/target/
@@ -18,6 +19,7 @@ etc/trec_eval
 data/qrels.microblog2011.txt
 data/qrels.microblog2012.txt
 data/qrels.microblog2013.txt
+data/qrels.microblog2014.txt
 data/queries.trec2005efficiency.txt
 *~
 .DS_Store
