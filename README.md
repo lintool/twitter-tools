@@ -19,7 +19,7 @@ The Microblog track in 2014 will use the "evaluation as a service" (EaaS) model 
 
 Note that the file is password protected with the same username/password combination as the TREC 2014 Active Participants site: you should have received the username/password when you signed up for TREC 2014. Please do not publicize this information. 
 
-Getting Stated
+Getting Started
 --------------
 
 The main Maven artifact for the TREC Microblog API is `twitter-tools-core`. The latest releases of Maven artifacts are available at [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Ccc.twittertools).
