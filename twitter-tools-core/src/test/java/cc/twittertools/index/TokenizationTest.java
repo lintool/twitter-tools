@@ -61,7 +61,7 @@ public class TokenizationTest {
     Analyzer analyzer = new TweetAnalyzer(Version.LUCENE_43);
 
     for (int i = 0; i < examples.length; i++) {
-      verify((String[]) examples[i][1], parseKeywords(analyzer, (String) examples[i][0]));
+      verify((String[]) examples[i][1], parse(analyzer, (String) examples[i][0]));
     }
   }
 
@@ -72,10 +72,10 @@ public class TokenizationTest {
     }
   }
 
-  public List<String> parseKeywords(Analyzer analyzer, String keywords) throws IOException {
+  private List<String> parse(Analyzer analyzer, String tweet) throws IOException {
     List<String> list = Lists.newArrayList();
 
-    TokenStream tokenStream = analyzer.tokenStream(null, new StringReader(keywords));
+    TokenStream tokenStream = analyzer.tokenStream(null, new StringReader(tweet));
     CharTermAttribute cattr = tokenStream.addAttribute(CharTermAttribute.class);
     tokenStream.reset();
     while (tokenStream.incrementToken()) {

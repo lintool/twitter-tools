@@ -16,28 +16,46 @@
 
 package cc.twittertools.index;
 
+import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.core.WhitespaceTokenizer;
 import org.apache.lucene.analysis.en.PorterStemFilter;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.util.Version;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 public final class TweetAnalyzer extends Analyzer {
   private final Version matchVersion;
   private final boolean stemming;
+  private final Set<String> stopwords;
 
   public TweetAnalyzer(Version matchVersion, boolean stemming) {
-    this.matchVersion = Preconditions.checkNotNull(matchVersion);
-    this.stemming = stemming;
+    this(matchVersion, stemming, null);
   }
 
   public TweetAnalyzer(Version matchVersion) {
-    this(matchVersion, true);
+    this(matchVersion, true, null);
+  }
+
+  public TweetAnalyzer() {
+    this(Version.LUCENE_43, true, null);
+  }
+
+  public TweetAnalyzer(Version matchVersion, boolean stemming, Set<String> stopwords) {
+    this.matchVersion = Preconditions.checkNotNull(matchVersion);
+    this.stemming = stemming;
+    this.stopwords = stopwords;
   }
 
   @Override
@@ -45,6 +63,11 @@ public final class TweetAnalyzer extends Analyzer {
     Tokenizer source = new WhitespaceTokenizer(matchVersion, reader);
     TokenStream filter = new LowerCaseEntityPreservingFilter(source);
 
+    if (stopwords != null) {
+      // stop words
+      CharArraySet charArraySet = new CharArraySet(matchVersion, stopwords, true);
+      filter = new StopFilter(matchVersion, filter, charArraySet);
+    }
     if (stemming) {
       // Porter stemmer ignores words which are marked as keywords
       filter = new PorterStemFilter(filter);
@@ -52,4 +75,21 @@ public final class TweetAnalyzer extends Analyzer {
     return new TokenStreamComponents(source, filter);
   }
 
+  public List<String> tokenize(String tweet) throws IOException {
+    List<String> list = Lists.newArrayList();
+
+    TokenStream tokenStream = this.tokenStream(null, new StringReader(tweet));
+    CharTermAttribute cattr = tokenStream.addAttribute(CharTermAttribute.class);
+    tokenStream.reset();
+    while (tokenStream.incrementToken()) {
+      if (cattr.toString().length() == 0) {
+        continue;
+      }
+      list.add(cattr.toString());
+    }
+    tokenStream.end();
+    tokenStream.close();
+
+    return list;
+  }
 }
