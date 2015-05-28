@@ -67,6 +67,11 @@ public class AsyncHTMLStatusBlockCrawler {
   private static final int WAIT_BEFORE_RETRY = 1000;
   private static final Timer timer = new Timer(true);
 
+  enum Format {
+    JSON,
+    CBOR
+  }
+  
   private static final JsonParser JSON_PARSER = new JsonParser();
   private static final Gson GSON = new Gson();
 
@@ -75,6 +80,7 @@ public class AsyncHTMLStatusBlockCrawler {
   private final File repair;
   private final AsyncHttpClient asyncHttpClient;
   private final boolean noFollow;
+  private final Format output_format;
 
   // key = statud id, value = tweet JSON
   private final ConcurrentSkipListMap<Long, String> crawl = new ConcurrentSkipListMap<Long, String>();
@@ -85,9 +91,10 @@ public class AsyncHTMLStatusBlockCrawler {
   private final AtomicInteger connections = new AtomicInteger(0);
 
   public AsyncHTMLStatusBlockCrawler(File file, String output, String repair,
-      boolean noFollow) throws IOException {
+      boolean noFollow, Format output_format) throws IOException {
     this.file = Preconditions.checkNotNull(file);
     this.noFollow = noFollow;
+    this.output_format = output_format;
 
     if (!file.exists()) {
       throw new IOException(file + " does not exist!");
@@ -125,7 +132,7 @@ public class AsyncHTMLStatusBlockCrawler {
     return String.format("http://twitter.com/%s/status/%d", username, id);
   }
 
-  public void fetch() throws IOException {
+  public void fetch() throws Exception {
     long start = System.currentTimeMillis();
     LOG.info("Processing " + file);
 
@@ -182,11 +189,16 @@ public class AsyncHTMLStatusBlockCrawler {
     LOG.info("Writing tweets...");
     int written = 0;
 
-    OutputStreamWriter out = new OutputStreamWriter(new GZIPOutputStream(
-        new FileOutputStream(output)), "UTF-8");
+    CrawlerOutputWriter out;
+    if (output_format == Format.CBOR) {
+      out = new CBOROutput(output);
+    } else {
+      out = new GZipJSONOutput(output);
+    }
+    out.open();
     for (Map.Entry<Long, String> entry : crawl.entrySet()) {
       written++;
-      out.write(entry.getValue() + "\n");
+      out.write(entry.getValue());
     }
     out.close();
 
@@ -195,12 +207,12 @@ public class AsyncHTMLStatusBlockCrawler {
     if (this.repair != null) {
       LOG.info("Writing repair data file...");
       written = 0;
-      out = new OutputStreamWriter(new FileOutputStream(repair), "UTF-8");
+      OutputStreamWriter repair_out = new OutputStreamWriter(new FileOutputStream(repair), "UTF-8");
       for (Map.Entry<Long, String> entry : crawl_repair.entrySet()) {
         written++;
-        out.write(entry.getValue() + "\n");
+        repair_out.write(entry.getValue() + "\n");
       }
-      out.close();
+      repair_out.close();
 
       LOG.info(written + " statuses need repair.");
     }
@@ -375,6 +387,7 @@ public class AsyncHTMLStatusBlockCrawler {
   private static final String OUTPUT_OPTION = "output";
   private static final String REPAIR_OPTION = "repair";
   private static final String NOFOLLOW_OPTION = "noFollow";
+  private static final String FORMAT_OPTION = "cbor";
 
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
@@ -387,6 +400,7 @@ public class AsyncHTMLStatusBlockCrawler {
         .withDescription("output repair file (can be used later as a data file)")
         .create(REPAIR_OPTION));
     options.addOption(NOFOLLOW_OPTION, NOFOLLOW_OPTION, false, "don't follow 301 redirects");
+    options.addOption(FORMAT_OPTION, FORMAT_OPTION, false, "use CBOR format");
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -407,6 +421,11 @@ public class AsyncHTMLStatusBlockCrawler {
     String output = cmdline.getOptionValue(OUTPUT_OPTION);
     String repair = cmdline.getOptionValue(REPAIR_OPTION);
     boolean noFollow = cmdline.hasOption(NOFOLLOW_OPTION);
-    new AsyncHTMLStatusBlockCrawler(new File(data), output, repair, noFollow).fetch();
+    boolean cbor = cmdline.hasOption(FORMAT_OPTION);
+    Format output_format = Format.JSON;
+    if (cbor) {
+      output_format = Format.CBOR;
+    }
+    new AsyncHTMLStatusBlockCrawler(new File(data), output, repair, noFollow, output_format).fetch();
   }
 }
