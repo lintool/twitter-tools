@@ -230,7 +230,7 @@ public class AsyncHTMLStatusBlockCrawler {
 
     private int httpStatus = -1;
 
-    private HTMLStatusExtractor extractor = new HTMLStatusExtractor();
+    // private HTMLStatusExtractor extractor = new HTMLStatusExtractor();
 
     public TweetFetcherHandler(long id, String username, String url, int numRetries,
         boolean followRedirects, String line) {
@@ -310,12 +310,12 @@ public class AsyncHTMLStatusBlockCrawler {
       try {
         String html = response.getResponseBody("UTF-8");
 
-        JsonObject status = extractor.extractTweet(html);
+        // JsonObject status = extractor.extractTweet(html);
 
         // save the requested id
-        status.addProperty("requested_id", new Long(id));
+        // status.addProperty("requested_id", new Long(id));
 
-        crawl.put(id, GSON.toJson(status));
+        crawl.put(id, html);
         connections.decrementAndGet();
 
         return response;

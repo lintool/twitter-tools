@@ -32,9 +32,9 @@ public class HTMLStatusExtractor {
   public SimpleDateFormat date_fmt = new SimpleDateFormat("EEE MMM d kk:mm:ss Z yyyy");
   public JsonNodeFactory jfac;
 
-  public HTMLStatusExtractor(JsonNodeFactory jfac) {
+  public HTMLStatusExtractor() {
     date_fmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-    this.jfac = jfac;
+    this.jfac = JsonNodeFactory.instance;
   }
 
   public static Map<String, String> splitQuery(URL url) 
@@ -158,8 +158,7 @@ public class HTMLStatusExtractor {
       html_file.close();
     }
 
-    JsonNodeFactory fac = JsonNodeFactory.instance;
-    HTMLStatusExtractor hse = new HTMLStatusExtractor(fac);
+    HTMLStatusExtractor hse = new HTMLStatusExtractor();
     ObjectNode json = hse.extractTweet(buf.toString());
     System.out.println(json);
   }

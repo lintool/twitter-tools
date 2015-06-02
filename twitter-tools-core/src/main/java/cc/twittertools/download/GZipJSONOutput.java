@@ -5,13 +5,19 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.zip.GZIPOutputStream;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import cc.twittertools.corpus.data.HTMLStatusExtractor;
+
 public class GZipJSONOutput implements CrawlerOutputWriter {
 
   protected File output_file;
   protected OutputStreamWriter out;
+  protected HTMLStatusExtractor ext;
   
   public GZipJSONOutput(File output_file) {
     this.output_file = output_file;
+    ext = new HTMLStatusExtractor();
   }
 
   @Override
@@ -22,7 +28,8 @@ public class GZipJSONOutput implements CrawlerOutputWriter {
 
   @Override
   public void write(String s) throws Exception {
-    out.write(s + "\n");
+    ObjectNode json = ext.extractTweet(s);
+    out.write(json.toString() + "\n");
   }
 
   @Override
