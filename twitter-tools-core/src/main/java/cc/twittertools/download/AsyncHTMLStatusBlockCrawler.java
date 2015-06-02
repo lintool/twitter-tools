@@ -16,8 +16,6 @@
 
 package cc.twittertools.download;
 
-import cc.twittertools.corpus.data.HTMLStatusExtractor;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,8 +28,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.zip.GZIPOutputStream;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -39,14 +35,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClientConfig;
@@ -72,9 +63,6 @@ public class AsyncHTMLStatusBlockCrawler {
     CBOR
   }
   
-  private static final JsonParser JSON_PARSER = new JsonParser();
-  private static final Gson GSON = new Gson();
-
   private final File file;
   private final File output;
   private final File repair;
@@ -321,10 +309,6 @@ public class AsyncHTMLStatusBlockCrawler {
         return response;
       } catch (IOException e) {
         LOG.warn("Error (" + e + "): " + url);
-        retry();
-        return response;
-      } catch (JsonSyntaxException e) {
-        LOG.warn("Unable to parse embedded JSON: " + url);
         retry();
         return response;
       } catch (NullPointerException e) {
