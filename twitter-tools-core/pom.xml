@@ -48,7 +48,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  </properties>
+  	<jackson.version>2.5.0</jackson.version>
+  </properties>  
 
   <build>
     <plugins>
@@ -199,6 +200,11 @@
       <version>1.2</version>
     </dependency>
     <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.10</version>
+    </dependency>
+    <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.4</version>
@@ -265,6 +271,28 @@
       <artifactId>jsoup</artifactId>
       <version>1.7.3</version>
     </dependency>
+   <dependency>
+    <!-- Note: core-annotations version x.y.0 is generally compatible with
+         (identical to) version x.y.1, x.y.2, etc. -->
+   	<groupId>com.fasterxml.jackson.core</groupId>
+   	<artifactId>jackson-annotations</artifactId>
+   	<version>${jackson.version}</version>
+  </dependency>
+  <dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>${jackson.version}</version>
+  </dependency>
+  	<dependency>
+  		<groupId>com.fasterxml.jackson.dataformat</groupId>
+  		<artifactId>jackson-dataformat-cbor</artifactId>
+  		<version>2.5.3</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.fasterxml.jackson.core</groupId>
+  		<artifactId>jackson-databind</artifactId>
+  		<version>${jackson.version}</version>
+  	</dependency>
   </dependencies>
 
 </project>
