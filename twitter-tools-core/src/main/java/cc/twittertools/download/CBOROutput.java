@@ -62,8 +62,8 @@ public class CBOROutput extends GZipJSONOutput {
     final JsonNodeFactory jf = JsonNodeFactory.instance;
     
     ObjectNode cca_obj = jf.objectNode();
-    long id = Long.parseLong(json.get("user").get("id").toString());
-    String username = json.get("user").get("screen_name").toString();
+    long id = json.get("id").asLong();
+    String username = json.get("user").get("screen_name").textValue();
     String url = AsyncHTMLStatusBlockCrawler.getUrl(id, username);
     cca_obj.put("url", url);
     cca_obj.put("timestamp", System.currentTimeMillis());
