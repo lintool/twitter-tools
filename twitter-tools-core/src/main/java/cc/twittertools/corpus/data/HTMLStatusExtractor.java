@@ -1,26 +1,16 @@
 package cc.twittertools.corpus.data;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.TimeZone;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -29,13 +19,22 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class HTMLStatusExtractor {
 
   public SimpleDateFormat date_fmt = new SimpleDateFormat("EEE MMM d kk:mm:ss Z yyyy");
+  public JsonNodeFactory jfac;
 
-  public HTMLStatusExtractor() {
+  public HTMLStatusExtractor(JsonNodeFactory jfac) {
     date_fmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+    this.jfac = jfac;
   }
 
   public static Map<String, String> splitQuery(URL url) 
@@ -51,54 +50,52 @@ public class HTMLStatusExtractor {
     return query_pairs;
   }
 
-  public JsonObject extractTweet(String html) 
+  public ObjectNode extractTweet(String html) 
       throws java.net.MalformedURLException, java.io.UnsupportedEncodingException {
-    JsonObject status = new JsonObject();
+    ObjectNode status = jfac.objectNode();
 
     Document doc = Jsoup.parse(html);
     Element tweet_div = doc.select("div.permalink-tweet").first();
 
     String tweet_text = tweet_div.select("p.tweet-text").first().text();
-    status.addProperty("text", tweet_text);
+    status.put("text", tweet_text);
 
     String tweet_id = tweet_div.attr("data-tweet-id");
-    status.addProperty("id_str", tweet_id);
-    status.addProperty("id", Long.parseLong(tweet_id));
+    status.put("id_str", tweet_id);
+    status.put("id", Long.parseLong(tweet_id));
 
     String timestamp = doc.select("span.js-short-timestamp").first().attr("data-time");
     Date created_at = new Date();
     created_at.setTime(Long.parseLong(timestamp) * 1000);
-    status.addProperty("created_at", date_fmt.format(created_at));
+    status.put("created_at", date_fmt.format(created_at));
 
     Elements js_stats_retweets = doc.select("li.js-stat-retweets");
     if (!js_stats_retweets.isEmpty()) {
-      status.addProperty("retweeted", true);
+      status.put("retweeted", true);
       String count = js_stats_retweets.select("strong").first().text();
-      status.addProperty("retweet_count", Long.parseLong(count));
+      status.put("retweet_count", Long.parseLong(count));
     } else {
-      status.addProperty("retweeted", false);
-      status.addProperty("retweet_count", 0);
+      status.put("retweeted", false);
+      status.put("retweet_count", 0);
     }
     Elements js_stats_favs = doc.select("li.js-stat-favorites");
-    status.addProperty("favorited", !js_stats_favs.isEmpty());
+    status.put("favorited", !js_stats_favs.isEmpty());
 
 
     // User subfield
-    JsonObject user = new JsonObject();
+    ObjectNode user = status.putObject("user");
     String user_id = tweet_div.attr("data-user-id");
-    user.addProperty("id_str", user_id);
-    user.addProperty("id", Long.parseLong(user_id));
+    user.put("id_str", user_id);
+    user.put("id", Long.parseLong(user_id));
     String screen_name = tweet_div.attr("data-screen-name");
-    user.addProperty("screen_name", screen_name);
+    user.put("screen_name", screen_name);
     String user_name = tweet_div.attr("data-name");
-    user.addProperty("name", user_name);
-
-    status.add("user", user);
+    user.put("name", user_name);
 
     // Geo information
     Elements tweet_loc = doc.select("a.tweet-geo-text");
     if (!tweet_loc.isEmpty()) {
-      JsonObject location = new JsonObject();
+      ObjectNode location = status.putObject("location");
       Element loc = tweet_loc.first();
       // Adding http to avoid malformed URL exception
       URL url = new URL("http:" + loc.attr("href"));
@@ -113,11 +110,10 @@ public class HTMLStatusExtractor {
         String[] coordinates = lat_and_long.split(",");
         double latitude = Double.parseDouble(coordinates[0]);
         double longitude = Double.parseDouble(coordinates[1]);
-        location.addProperty("latitude", latitude);
-        location.addProperty("longitude", longitude);
+        location.put("latitude", latitude);
+        location.put("longitude", longitude);
       }
-      location.addProperty("location_text", loc.text());
-      status.add("location", location);
+      location.put("location_text", loc.text());
     }
 
     return status;
@@ -162,9 +158,9 @@ public class HTMLStatusExtractor {
       html_file.close();
     }
 
-    HTMLStatusExtractor hse = new HTMLStatusExtractor();
-    JsonObject json = hse.extractTweet(buf.toString());
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    System.out.println(gson.toJson(json));
+    JsonNodeFactory fac = JsonNodeFactory.instance;
+    HTMLStatusExtractor hse = new HTMLStatusExtractor(fac);
+    ObjectNode json = hse.extractTweet(buf.toString());
+    System.out.println(json);
   }
 }
