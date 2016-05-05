@@ -18,6 +18,7 @@ etc/trec_eval
 data/qrels.microblog2011.txt
 data/qrels.microblog2012.txt
 data/qrels.microblog2013.txt
+data/qrels.microblog2014.txt
 data/queries.trec2005efficiency.txt
 *~
 .DS_Store
