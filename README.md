@@ -1,23 +1,27 @@
 Twitter Tools
 =============
 
-This is a collection of tools for the TREC Microblog Track, which contains the official search API for TREC 2014 (which was also used in TREC 2013). Please join the mailing list for discussion at [trec-microblog@googlegroups.com](http://groups.google.com/group/trec-microblog).
+This repo holds a collection of tools for the TREC Microblog tracks, which officially ended in 2015. The track mailing list can be found at [trec-microblog@googlegroups.com](http://groups.google.com/group/trec-microblog).
 
-Participating in TREC 2014
---------------------------
+Archival Documents
+------------------
 
-In order to participate in the TREC 2014 Microblog track, you need to register to participate in TREC. See the [call for participation](http://trec.nist.gov/pubs/call2014.html). The call will close in late May.
++ [TREC 2013 API Specifications](https://github.com/lintool/twitter-tools/wiki/TREC-2013-API-Specifications)
++ [TREC 2013 Track Guidelines](https://github.com/lintool/twitter-tools/wiki/TREC-2013-Track-Guidelines)
++ [TREC 2014 Track Guidelines](https://github.com/lintool/twitter-tools/wiki/TREC-2014-Track-Guidelines)
++ [TREC 2015 Track Guidelines](https://github.com/lintool/twitter-tools/wiki/TREC-2015-Track-Guidelines)
 
-The Microblog track in 2014 will use the "evaluation as a service" (EaaS) model (more below), where teams interact with the official corpus via a common API. Thus, you need to request access to the API via the following steps:
+API Access
+----------
 
-**NOTE**: If you participated in TREC 2013 and already have access to the API, you do not need to do anything.
+The Microblog tracks in 2013 and 2014 used the "evaluation as a service" (EaaS) model, where teams interact with the official corpus via a common API. Although the evaluation has ended, the API is still available for researcher use.
+
+To request access to the API, follow these steps:
 
 1. Fill out the [API usage agreement](http://lintool.github.io/twitter-tools/API-agreement.pdf).
 2. Email the usage agreement to `microblog-request@nist.gov`.
 3. After NIST receives your request, you will receive an access token from NIST.
-4. The code for accessing the API can be found in this repository. The endpoint of API itself (i.e., hostname, port) can be found at [this location](http://www.umiacs.umd.edu/~jimmylin/trec2014microblog/servers.txt).
-
-Note that the file is password protected with the same username/password combination as the TREC 2014 Active Participants site: you should have received the username/password when you signed up for TREC 2014. Please do not publicize this information. 
+4. The code for accessing the API can be found in this repository. The endpoint of API itself (i.e., hostname, port) will be provided by NIST.
 
 Getting Stated
 --------------
@@ -36,15 +40,6 @@ Once you've cloned the repository, change directory into `twitter-tools-core` an
 $ cd twitter-tools-core
 $ mvn clean package appassembler:assemble
 ```
-
-To automatically generate project files for Eclipse:
-
-```
-$ mvn eclipse:clean
-$ mvn eclipse:eclipse
-```
-
-You can then use Eclipse's Import "Existing Projects into Workspace" functionality to import the project.
 
 For more information, see the [project wiki](https://github.com/lintool/twitter-tools/wiki).
 
@@ -72,17 +67,25 @@ sh target/appassembler/bin/RunQueriesBaselineThrift \
 Note that `trec_eval` is included in `twitter-tools/etc` (just needs to be compiled), and the qrels are stored in `twitter-tools/data` (just needs to be uncompressed), so you can evaluate as follows:
 
 ```
-../etc/trec_eval ../data/qrels.microblog2011.txt run.microblog2011.raw.txt
+../etc/trec_eval.9.0/trec_eval ../data/qrels.microblog2011.txt run.microblog2011.raw.txt
 ```
 
 Similar commands will allow you to replicate runs for TREC 2012 and TREC 2013. With `trec_eval`, you should get *exactly* the following results:
 
-```
-             TREC 2011         TREC 2012         TREC 2013
-             MAP     P30       MAP     P30       MAP    P30
-raw        0.3050  0.3483    0.1815  0.2932    0.2044 0.3761
-baseline   0.3576  0.4000    0.2091  0.3311    0.2532 0.4450
-```
+MAP       | raw    | baseline
+----------|--------|---------
+TREC 2011 | 0.3050 | 0.3576
+TREC 2012 | 0.1751 | 0.2091
+TREC 2013 | 0.2044 | 0.2532
+TREC 2014 | 0.3090 | 0.3924
+
+P30       | raw    | baseline
+----------|--------|---------
+TREC 2011 | 0.3483 | 0.4000
+TREC 2012 | 0.2831 | 0.3311
+TREC 2013 | 0.3761 | 0.4450
+TREC 2014 | 0.5145 | 0.6182
+
 
 License
 -------
@@ -90,7 +93,7 @@ License
 Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
 
-Acknowledgements
-----------------
+Acknowledgments
+---------------
 
 This work is supported in part by the National Science Foundation under award [IIS-1218043](http://www.nsf.gov/awardsearch/showAward?AWD_ID=1218043). Any opinions, findings, and conclusions or recommendations expressed are those of the researchers and do not necessarily reflect the views of the National Science Foundation.
