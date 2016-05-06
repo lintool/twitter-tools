@@ -76,11 +76,9 @@ public class ExtractTermStatisticsFromIndex {
 
     long missingCnt = 0;
     int skippedTerms = 0;
-    BytesRef bytes = new BytesRef();
+    BytesRef bytes;
     while ( (bytes = termsEnum.next()) != null) {
-      byte[] buf = new byte[bytes.length];
-      System.arraycopy(bytes.bytes, 0, buf, 0, bytes.length);
-      String term = new String(buf, "UTF-8");
+      String term = new String(bytes.bytes, "UTF-8");
       int df = termsEnum.docFreq();
       long cf = termsEnum.totalTermFreq();
 
