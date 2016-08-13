@@ -79,6 +79,7 @@ public class ExtractSubcollection {
     }
 
     String outputFile = cmdline.getOptionValue(OUTPUT_OPTION);
+    String missingFile = cmdline.getOptionValue(MISSING_OPTION);
     String collectionPath = cmdline.getOptionValue(COLLECTION_OPTION);
 
     LongOpenHashSet tweetids = new LongOpenHashSet();
@@ -127,7 +128,7 @@ public class ExtractSubcollection {
     LOG.info("Storing missing tweetids...");
 
     out = new BufferedWriter(new OutputStreamWriter(
-        new FileOutputStream(outputFile), "UTF-8"));
+        new FileOutputStream(missingFile), "UTF-8"));
     LongIterator iter = tweetids.iterator();
     while (iter.hasNext()) {
       long t = iter.nextLong();
