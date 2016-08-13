@@ -16,13 +16,17 @@
 
 package cc.twittertools.util;
 
+import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -42,7 +46,9 @@ public class ExtractSubcollection {
 
   private static final String COLLECTION_OPTION = "collection";
   private static final String ID_OPTION = "tweetids";
-
+  private static final String OUTPUT_OPTION = "output";
+  private static final String MISSING_OPTION = "missing";
+  
   @SuppressWarnings("static-access")
   public static void main(String[] args) throws Exception {
     Options options = new Options();
@@ -51,6 +57,10 @@ public class ExtractSubcollection {
         .withDescription("source collection directory").create(COLLECTION_OPTION));
     options.addOption(OptionBuilder.withArgName("file").hasArg()
         .withDescription("list of tweetids").create(ID_OPTION));
+    options.addOption(OptionBuilder.withArgName("file").hasArg()
+        .withDescription("output JSON").create(OUTPUT_OPTION));
+    options.addOption(OptionBuilder.withArgName("file").hasArg()
+        .withDescription("file to store missing tweeids").create(MISSING_OPTION));
 
     CommandLine cmdline = null;
     CommandLineParser parser = new GnuParser();
@@ -61,12 +71,14 @@ public class ExtractSubcollection {
       System.exit(-1);
     }
 
-    if (!cmdline.hasOption(COLLECTION_OPTION) || !cmdline.hasOption(ID_OPTION)) {
+    if (!cmdline.hasOption(COLLECTION_OPTION) || !cmdline.hasOption(ID_OPTION) || 
+        !cmdline.hasOption(OUTPUT_OPTION) || !cmdline.hasOption(MISSING_OPTION)) {
       HelpFormatter formatter = new HelpFormatter();
       formatter.printHelp(ExtractSubcollection.class.getName(), options);
       System.exit(-1);
     }
 
+    String outputFile = cmdline.getOptionValue(OUTPUT_OPTION);
     String collectionPath = cmdline.getOptionValue(COLLECTION_OPTION);
 
     LongOpenHashSet tweetids = new LongOpenHashSet();
@@ -94,15 +106,37 @@ public class ExtractSubcollection {
       System.exit(-1);
     }
 
-    PrintStream out = new PrintStream(System.out, true, "UTF-8");
+    // Store tweet ids we've already seen to dedup.
+    LongOpenHashSet seen = new LongOpenHashSet();
+
+    Writer out = new BufferedWriter(new OutputStreamWriter(
+        new FileOutputStream(outputFile), "UTF-8"));
+    
     StatusStream stream = new JsonStatusCorpusReader(file);
     Status status;
     while ((status = stream.next()) != null) {
-      if (tweetids.contains(status.getId())) {
-        out.println(status.getJsonObject().toString());
+      if (tweetids.contains(status.getId()) && !seen.contains(status.getId())) {
+        out.write(status.getJsonObject().toString() + "\n");
+        seen.add(status.getId());
       }
     }
     stream.close();
     out.close();
+
+    LOG.info("Extracted " + seen.size() + " tweetids.");
+    LOG.info("Storing missing tweetids...");
+
+    out = new BufferedWriter(new OutputStreamWriter(
+        new FileOutputStream(outputFile), "UTF-8"));
+    LongIterator iter = tweetids.iterator();
+    while (iter.hasNext()) {
+      long t = iter.nextLong();
+      if (!seen.contains(t)) {
+        out.write(t + "\n");
+      }
+    }
+    out.close();
+    
+    LOG.info("Done!");
   }
 }
