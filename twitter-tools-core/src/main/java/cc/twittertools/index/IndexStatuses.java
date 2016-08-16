@@ -215,8 +215,8 @@ public class IndexStatuses {
 
         doc.add(new Field(StatusField.TEXT.name, status.getText(), textOptions));
 
-        doc.add(new IntField(StatusField.FRIENDS_COUNT.name, status.getFollowersCount(), Store.YES));
-        doc.add(new IntField(StatusField.FOLLOWERS_COUNT.name, status.getFriendsCount(), Store.YES));
+        doc.add(new IntField(StatusField.FRIENDS_COUNT.name, status.getFriendsCount(), Store.YES));
+        doc.add(new IntField(StatusField.FOLLOWERS_COUNT.name, status.getFollowersCount(), Store.YES));
         doc.add(new IntField(StatusField.STATUSES_COUNT.name, status.getStatusesCount(), Store.YES));
 
         long inReplyToStatusId = status.getInReplyToStatusId();
