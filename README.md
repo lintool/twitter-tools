@@ -23,7 +23,7 @@ To request access to the API, follow these steps:
 3. After NIST receives your request, you will receive an access token from NIST.
 4. The code for accessing the API can be found in this repository. The endpoint of API itself (i.e., hostname, port) will be provided by NIST.
 
-Getting Stated
+Getting Started
 --------------
 
 The main Maven artifact for the TREC Microblog API is `twitter-tools-core`. The latest releases of Maven artifacts are available at [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Ccc.twittertools).
