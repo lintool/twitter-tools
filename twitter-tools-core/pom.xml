@@ -101,6 +101,10 @@
               <name>ExtractSubcollection</name>
             </program>
             <program>
+              <mainClass>cc.twittertools.util.ExtractSubcollectionUsers</mainClass>
+              <name>ExtractSubcollectionUsers</name>
+            </program>
+            <program>
               <mainClass>cc.twittertools.util.VerifySubcollection</mainClass>
               <name>VerifySubcollection</name>
               <jvmSettings>

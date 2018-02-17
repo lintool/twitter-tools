@@ -88,7 +88,6 @@ public class ExtractSubcollectionUsers {
 
     String s;
     while ((s = br.readLine()) != null) {
-      System.out.println(s);
       userids.add(Long.parseLong(s));
     }
     br.close();
@@ -104,21 +103,26 @@ public class ExtractSubcollectionUsers {
     Writer out = new BufferedWriter(new OutputStreamWriter(
         new FileOutputStream(outputFile), "UTF-8"));
 
+    int cnt = 0;
+    long total = 0;
     StatusStream stream = new JsonStatusCorpusReader(file);
     Status status;
     while ((status = stream.next()) != null) {
-      //System.out.println(status.getScreenname() + "\t" + status.getUserId() + "\t" + status.getText());
-
+      total++;
+      if (total % 1000000 == 0) {
+        LOG.info(total + " tweets processed");
+      }
       if (userids.contains(status.getUserId())) {
-        System.out.println(status.getScreenname() + "\t" + status.getText());
+        cnt++;
+        LOG.info(status.getScreenname() + "\t" + status.getText().replaceAll("[\\n\\r]+", " "));
         out.write(status.getJsonObject().toString() + "\n");
       }
     }
     stream.close();
     out.close();
 
-    LOG.info("Extracted " + " tweetids.");
-    LOG.info("Storing missing tweetids...");
+    LOG.info("Processed " + total + " tweets.");
+    LOG.info("Extracted " + cnt + " tweets.");
 
     LOG.info("Done!");
   }
