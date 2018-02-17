@@ -16,13 +16,12 @@
 
 package cc.twittertools.corpus.data;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
-import org.apache.log4j.Logger;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.log4j.Logger;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * Object representing a status.
@@ -34,6 +33,7 @@ public class Status {
   private static final String DATE_FORMAT = "EEE MMM d k:m:s ZZZZZ yyyy"; //"Fri Mar 29 11:03:41 +0000 2013"; 
   private long id;
   private String screenname;
+  private long userId;
   private String createdAt;
   private long epoch;
   private String text;
@@ -61,6 +61,9 @@ public class Status {
     return screenname;
   }
 
+  public long getUserId() {
+    return userId;
+  }
 
   public String getCreatedAt() {
     return createdAt;
@@ -144,6 +147,7 @@ public class Status {
     status.text = obj.get("text").getAsString();
     status.id = obj.get("id").getAsLong();
     status.screenname = obj.get("user").getAsJsonObject().get("screen_name").getAsString();
+    status.userId = obj.get("user").getAsJsonObject().get("id").getAsLong();
     status.createdAt = obj.get("created_at").getAsString();
 
     try {
