@@ -119,7 +119,7 @@ public class ExtractSubcollectionUserInteractions {
       }
       if (userids.contains(status.getRetweetedUserId())) {
         cnt++;
-        LOG.info("Retweet:" + status.getScreenname() + "\t" + status.getText().replaceAll("[\\n\\r]+", " "));
+        LOG.info("Retweet: " + status.getScreenname() + "\t" + status.getText().replaceAll("[\\n\\r]+", " "));
         out.write(status.getJsonObject().toString() + "\n");
       }
     }
